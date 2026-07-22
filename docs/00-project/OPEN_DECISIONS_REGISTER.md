@@ -20,7 +20,7 @@
 | OD-016 | Smartschool OAuth client, redirect URIs and minimum allowed scopes | Open — Smartschool request | Smartschool login |
 | OD-017 | Policy for conflicts, disabled accounts and pupils temporarily missing from OneRoster | Open | Roster sync production |
 | OD-018 | Verify all extracted rules against the 2026-2027 school regulations before September production use | Open — mandatory annual check | Launch |
-| OD-019 | Approve or change candidate pattern rule: 3 L3/L4 records in same category within 15 school days trigger follow-up review, not sanction | Open — product owner decision | Behaviour rules engine |
+| OD-019 | Repeated-behaviour P1/P2 timing: 3 same-category L3/L4 records within 6 class lesson contacts require follow-up; recurrence within 4 contacts after the conversation prompts school-support review | Locked — Phase 1B-D1 | Behaviour rules engine |
 | OD-020 | Exact school procedure when a pupil refuses the smartphone pouch; whether and by whom devices may be retained | Open — school procedure | Device workflow |
 | OD-021 | Exact distinction between KlasKompas `documented classroom warning` and official school warning/agenda/Smartschool note | Open — school procedure | Behaviour/LVS mapping |
 | OD-022 | Which order measures may a subject teacher initiate independently versus only after director/delegate consultation? | Open — school procedure | Formal escalation |
@@ -28,12 +28,13 @@
 | OD-024 | Authority and standard deadlines for make-up ordinary quizzes/tasks versus official examinations | Open — school/Oase procedure | Make-up module |
 | OD-025 | Obtain and audit the Chromebook/laptop brochure referenced in the regulations | Open — source needed | Technology behaviour rules |
 | OD-026 | Decide pupil-facing language presentation for universal expectations: Dutch only or Dutch + English/Spanish | Open — product owner decision | September materials |
-| OD-027 | Approve recovery window and active-pattern closure rules | Open — product owner/school review | Behaviour rules engine |
+| OD-027 | Active pattern closes after 6 consecutive class lesson contacts without recurrence, explicit successful review, or replacement by an official school process | Locked — Phase 1B-D1 | Behaviour rules engine |
 
 ## Binding references
 
 - `SCOPE_LOCK_PHASE_1A_v1.0.md`
 - `PHASE_1B_SCHOOL_POLICY_AND_ACCESS_INTAKE_v0.1.md`
+- `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
 - `../01-behaviour-framework/SCHOOL_POLICY_ALIGNMENT_REGISTER_v0.1.md`
 - `../01-behaviour-framework/TEACHER_AUTHORITY_MATRIX_v0.1.md`
 - `../01-behaviour-framework/UNIVERSAL_EXPECTATIONS_v0.2.md`
