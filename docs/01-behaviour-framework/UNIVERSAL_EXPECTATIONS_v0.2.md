@@ -1,6 +1,6 @@
 # Universal Classroom Expectations v0.2
 
-**Status:** first school-aligned design version  
+**Status:** first school-aligned design version; language presentation locked by 1B-D2  
 **Audience:** second-grade pupils in English and Spanish lessons  
 **Design goal:** six short expectations that remain the same across classes while routines and support can vary.
 
@@ -14,6 +14,16 @@ The expectations must be:
 - compatible with the school regulations;
 - restorative rather than permanently labelling;
 - usable in both English and Spanish lessons.
+
+## Approved language presentation
+
+Dutch is always the primary pupil-facing language. A class may show:
+
+- Dutch only;
+- Dutch with supporting English;
+- Dutch with supporting Spanish.
+
+Dutch cannot be disabled in version 1. English and Spanish are not shown together. Formal L3-L5 teacher-response text and official Smartschool/LVS communication remain Dutch-first. Optional L1/L2 routine prompts may also be offered in the subject language.
 
 ## 1. We start and finish according to the routine
 
@@ -140,17 +150,35 @@ We respond to correction, tell the truth about what happened, complete a reasona
 
 These six expectations condense the regulations; they do not replace them. Formal school rules on attendance, lateness, devices, safety, order measures and disciplinary procedures remain authoritative.
 
-## Display version for pupils
+## Approved pupil-facing display text
+
+| No. | Dutch — primary | English — supporting | Spanish — supporting |
+|---|---|---|---|
+| 1 | Start en eindig volgens de routine. | Start and finish with the routine. | Empieza y termina siguiendo la rutina. |
+| 2 | Werk actief mee en volg de instructie. | Work actively and follow instructions. | Participa activamente y sigue las instrucciones. |
+| 3 | Laat iedereen leren. | Let everyone learn. | Deja que todos aprendan. |
+| 4 | Behandel iedereen respectvol en houd het veilig. | Treat everyone with respect and keep it safe. | Trata a todos con respeto y actúa de forma segura. |
+| 5 | Gebruik materiaal en technologie zoals afgesproken. | Use materials and technology as agreed. | Usa el material y la tecnología según lo acordado. |
+| 6 | Neem verantwoordelijkheid en herstel wat fout loopt. | Take responsibility and put things right. | Asume tu responsabilidad y repara lo ocurrido. |
+
+The shorter display wording `volg de instructie` does not remove the internal requirement that instructions must be reasonable and school-conform.
+
+## Display examples
+
+English lesson:
 
 ```text
-1. Start and finish according to the routine.
-2. Work actively and follow reasonable instructions.
-3. Let everyone learn.
-4. Treat people respectfully and keep everyone safe.
-5. Use material and technology only as agreed.
-6. Take responsibility and repair what goes wrong.
+LAAT IEDEREEN LEREN
+Let everyone learn.
 ```
 
-## Open design question
+Spanish lesson:
 
-Before the September launch, decide whether the pupil-facing version is shown only in Dutch or also in English and Spanish. The behavioural meaning must remain identical across languages.
+```text
+LAAT IEDEREEN LEREN
+Deja que todos aprendan.
+```
+
+## Binding decision
+
+See `../00-project/DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`.
