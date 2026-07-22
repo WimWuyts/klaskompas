@@ -31,12 +31,14 @@ Additional product-design drafts:
 7. `TEACHER_RESPONSE_LADDER_v0.2.md`
 8. `BEHAVIOUR_PATTERN_RULES_v0.1.md`
 9. `CLASSROOM_QUICK_INTERACTION_SPEC_v0.1.md`
+10. `CROSS_DEVICE_REALTIME_SYNC_SPEC_v0.1.md`
 
 Approved decision records:
 
-10. `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
-11. `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
-12. `DECISION_1B_D3_DIRECT_CLASSROOM_RESPONSES_v1.0.md`
+11. `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
+12. `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
+13. `DECISION_1B_D3_DIRECT_CLASSROOM_RESPONSES_v1.0.md`
+14. `DECISION_1B_D4_DEVICE_LAYOUT_AND_REALTIME_SYNC_v1.0.md`
 
 ## Checkpoint status
 
@@ -46,6 +48,7 @@ Approved decision records:
 | 1B.1 Teacher authority | Drafted, not locked | Ordinary direct classroom responses are locked; formal order measures still require clarification of “in consultation with director/delegate” |
 | 1B.2 Smartschool/LVS | Partially complete | Official platform role confirmed; technical roster/write access and field mapping open |
 | 1B.3 Privacy/governance | Partially complete | School board responsibility, access rights and general retention confirmed; external-app approval open |
+| Device/UI product contract | Substantially locked | Dedicated device layouts, seat-plan defaults and cross-device realtime behaviour approved; final technology remains open |
 
 ## Approved Phase 1B decisions
 
@@ -86,6 +89,23 @@ Approved on 22 July 2026:
 - refusal or an unworkable lesson opens L5 school consultation, never an automatic formal sanction;
 - serious incidents bypass the L4 map entirely.
 
+### 1B-D4 — device layouts and cross-device realtime synchronisation
+
+Approved on 22 July 2026:
+
+- laptop uses a dedicated teacher command centre with lesson/context panel, central seat plan or class grid and fixed pupil/action panel;
+- tablet uses a touch-first, nearly full-screen seat plan with slide-over controls;
+- phone uses a rapid alphabetical list/grid with search, quick actions and optional simplified seat plan;
+- laptop and tablet default to the seat plan when configured;
+- a behaviour-related seat move is temporary for the current lesson unless explicitly saved as permanent;
+- one teacher may use laptop, tablet and phone in the same canonical lesson session;
+- a confirmed change on one connected device propagates automatically to the others without refresh;
+- the product target is propagation within two seconds after server acceptance under normal connectivity;
+- offline changes remain visibly pending and replay idempotently after reconnection;
+- duplicate retries do not create duplicate records;
+- incompatible concurrent edits create visible conflicts and are never silently overwritten;
+- privacy mode hides pupil-identifying operational information immediately.
+
 ## Important conclusions
 
 - Classroom routines and ordinary organisational responses can be designed now.
@@ -96,6 +116,8 @@ Approved on 22 July 2026:
 - Examination make-up is an official Oase/director/class-council workflow.
 - Real pupil data remain prohibited until school approval.
 - Behaviour publication to Smartschool/LVS remains blocked until an official write route is confirmed.
+- Cross-device KlasKompas synchronisation is separate from Smartschool publication.
+- The final stack must prove realtime subscriptions/server push, idempotency, record versioning, conflict handling, encrypted local queue support and revocable device sessions.
 
 ## Sources still needed
 
@@ -108,7 +130,7 @@ Approved on 22 July 2026:
 
 ## Next review decisions for project owner
 
-- whether the first prototype should use a seat plan by default;
 - distinction between internal documented warning and official school warning;
 - treatment of smartphone-pouch refusal pending school procedure;
-- which ordinary follow-up and parent-contact actions should appear in the first prototype.
+- which ordinary follow-up and parent-contact actions should appear in the first prototype;
+- whether cross-device presence should show custom device names or generic labels only.
