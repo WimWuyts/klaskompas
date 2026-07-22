@@ -27,7 +27,7 @@
 | OD-023 | Immediate temporary removal from class: prior approval versus immediate handover followed by notification | Open — school procedure | Serious/lesson-removal flow |
 | OD-024 | Authority and standard deadlines for make-up ordinary quizzes/tasks versus official examinations | Open — school/Oase procedure | Make-up module |
 | OD-025 | Obtain and audit the Chromebook/laptop brochure referenced in the regulations | Open — source needed | Technology behaviour rules |
-| OD-026 | Decide pupil-facing language presentation for universal expectations: Dutch only or Dutch + English/Spanish | Open — product owner decision | September materials |
+| OD-026 | Pupil-facing expectations use mandatory Dutch primary text with optional supporting English or Spanish per class; formal and official communication remains Dutch-first | Locked — Phase 1B-D2 | September materials |
 | OD-027 | Active pattern closes after 6 consecutive class lesson contacts without recurrence, explicit successful review, or replacement by an official school process | Locked — Phase 1B-D1 | Behaviour rules engine |
 
 ## Binding references
@@ -35,6 +35,7 @@
 - `SCOPE_LOCK_PHASE_1A_v1.0.md`
 - `PHASE_1B_SCHOOL_POLICY_AND_ACCESS_INTAKE_v0.1.md`
 - `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
+- `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
 - `../01-behaviour-framework/SCHOOL_POLICY_ALIGNMENT_REGISTER_v0.1.md`
 - `../01-behaviour-framework/TEACHER_AUTHORITY_MATRIX_v0.1.md`
 - `../01-behaviour-framework/UNIVERSAL_EXPECTATIONS_v0.2.md`
