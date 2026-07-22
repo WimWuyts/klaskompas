@@ -1,6 +1,6 @@
 # Behaviour Pattern Rules v0.1
 
-**Status:** candidate consistency rules for review; not school policy  
+**Status:** timing rule approved as Phase 1B-D1 on 22 July 2026; remaining implementation details stay under review  
 **Goal:** make repeated behaviour visible and trigger timely follow-up without producing an automatic sanction or pupil score.
 
 ## 1. Fundamental rule
@@ -9,7 +9,7 @@ Counts create a **review obligation**, not a sanction.
 
 KlasKompas may say:
 
-> “This is the third documented incident in the same category within the active window. A follow-up review is required.”
+> “This is the third documented incident in the same category within the last six lessons with this class. A follow-up conversation is required.”
 
 It may not say:
 
@@ -26,44 +26,52 @@ For the same observable behaviour within one lesson:
 
 A second L3 warning is not used merely to postpone the response already announced.
 
-## 3. Cross-lesson candidate trigger
+## 3. Approved cross-lesson trigger
 
-### Candidate rule P1
+### Rule P1 — approved in decision 1B-D1
 
-Three L3/L4 records in the **same behaviour category** within a rolling window of **15 school days** create a required follow-up task.
+Three L3/L4 records in the **same behaviour category** within the **last six lesson contacts with that class** create a required follow-up task.
+
+A `lesson contact` is a completed lesson session for the relevant class and teacher context. Calendar days, holidays and lessons with unrelated classes do not advance this window.
 
 The follow-up task is:
 
 ```text
 short pupil conversation
+→ name the factual pattern
 → check context and preventive support
 → agree one observable next-step expectation
 → decide whether school consultation is needed
 ```
 
-This trigger is provisional. It must be tested with fictional scenarios and approved by the project owner before product code treats it as a default.
+The trigger creates no automatic sanction and does not itself create an official school warning.
 
-## 4. Post-conversation trigger
+## 4. Approved post-conversation trigger
 
-### Candidate rule P2
+### Rule P2 — approved in decision 1B-D1
 
-If the same category is recorded again after the follow-up conversation and within the remaining active window, the app prompts:
+If the same category receives another L3/L4 record **within four lesson contacts with that class after the follow-up conversation**, the app prompts the teacher to:
 
-- review whether preventive support was applied;
-- consult the behaviour coach/student-support route if appropriate;
+- review the earlier observable agreement;
+- verify whether the planned preventive support was applied;
+- consult the class teacher, behaviour coach or student-support route where appropriate;
 - request an official school measure only through the authorised gate.
 
-Again, this is a prompt, not an automatic measure.
+This remains a prompt, not an automatic measure.
 
-## 5. Recovery and closure
+If four lesson contacts pass without another formal record in the same category, P2 is not triggered by a later isolated event. A later pattern must satisfy P1 again.
 
-An active pattern can close when:
+## 5. Approved recovery and closure
 
-- no new record in the same category occurs for 10 school days after follow-up; or
+An active pattern closes when:
+
+- no new L3/L4 record in the same category occurs for **six consecutive lesson contacts with that class** after follow-up; or
 - the teacher explicitly closes it after a successful review; or
-- the school replaces it with an official support/order process.
+- the school replaces it with an official support or order process.
 
 Closing a pattern removes it from the active dashboard. Historical records remain subject to the approved retention policy and are never silently rewritten.
+
+A closed pattern does not permanently lower a pupil's status. A later pattern starts from the normal P1 rule unless an authorised official school process is still active.
 
 ## 6. Category separation
 
@@ -90,6 +98,8 @@ Examples:
 9. `material_or_space_misuse_non_serious`
 
 Serious categories are flagged separately and never counted into this mechanism.
+
+The exact category wording and mappings remain reviewable until the behaviour matrix is approved.
 
 ## 8. Prevention check before escalation
 
@@ -118,13 +128,20 @@ A pupil tile does not remain red because of historical incidents. The class scre
 
 Detailed history is visible only after opening the private pupil view.
 
-## 10. Scenarios to test before approval
+## 10. Required tests before implementation acceptance
 
-- three low-level incidents that self-correct quickly;
-- three L3 records from different teachers/categories;
-- repeated behaviour caused by an unclear task;
-- repeated device refusal;
-- behaviour after a successful follow-up conversation;
-- serious incident occurring during an active minor pattern;
-- pupil with an approved classroom accommodation;
-- teacher corrects an erroneous record.
+- three L3/L4 incidents in the same category across exactly six lesson contacts;
+- an older incident falling outside the six-contact window;
+- classes taught at different weekly frequencies;
+- repeated behaviour within four contacts after the follow-up conversation;
+- later isolated behaviour after the four-contact P2 window;
+- six consecutive contacts without recurrence closing an active pattern;
+- unrelated categories remaining separate;
+- lateness excluded from the mechanism;
+- a serious incident bypassing P1/P2;
+- a pupil with an approved classroom accommodation;
+- correction or withdrawal of an erroneous record recalculating the pattern auditably.
+
+## 11. Binding decision reference
+
+- `../00-project/DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
