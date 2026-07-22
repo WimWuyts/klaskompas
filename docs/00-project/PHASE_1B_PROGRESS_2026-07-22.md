@@ -36,13 +36,14 @@ Approved decision records:
 
 10. `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
 11. `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
+12. `DECISION_1B_D3_DIRECT_CLASSROOM_RESPONSES_v1.0.md`
 
 ## Checkpoint status
 
 | Checkpoint | Status | Notes |
 |---|---|---|
 | 1B.1 School policy source | Substantially complete | School regulations extracted; internal staff procedures and laptop brochure still required |
-| 1B.1 Teacher authority | Drafted, not locked | Formal order measures require clarification of “in consultation with director/delegate” |
+| 1B.1 Teacher authority | Drafted, not locked | Ordinary direct classroom responses are locked; formal order measures still require clarification of “in consultation with director/delegate” |
 | 1B.2 Smartschool/LVS | Partially complete | Official platform role confirmed; technical roster/write access and field mapping open |
 | 1B.3 Privacy/governance | Partially complete | School board responsibility, access rights and general retention confirmed; external-app approval open |
 
@@ -68,6 +69,23 @@ Approved on 22 July 2026:
 - L3-L5 response text, the private teacher interface and official Smartschool/LVS or parent communication remain Dutch-first;
 - the six approved short formulations are stored in Dutch, English and Spanish under one stable semantic rule set.
 
+### 1B-D3 — direct classroom responses
+
+Approved on 22 July 2026:
+
+- every ordinary behaviour category has one default L4 classroom response and no more than one approved alternative;
+- the response is shown and confirmed before the L3 warning is spoken;
+- recurrence in the same lesson applies the announced L4 response instead of creating another warning;
+- routine problems are repaired by completing the missed routine;
+- instruction disruption defaults to a seat change;
+- non-start/off-task and group disruption default to a bounded individual-work response;
+- unauthorised smartphone use defaults to the numbered classroom pouch;
+- unauthorised laptop use defaults to closing the device and using an equivalent paper task;
+- non-serious disrespect defaults to separation and pausing the interaction;
+- material or space misuse defaults to stopping and restoring;
+- refusal or an unworkable lesson opens L5 school consultation, never an automatic formal sanction;
+- serious incidents bypass the L4 map entirely.
+
 ## Important conclusions
 
 - Classroom routines and ordinary organisational responses can be designed now.
@@ -90,7 +108,7 @@ Approved on 22 July 2026:
 
 ## Next review decisions for project owner
 
-- preferred direct classroom responses per behaviour category;
 - whether the first prototype should use a seat plan by default;
 - distinction between internal documented warning and official school warning;
-- treatment of smartphone-pouch refusal pending school procedure.
+- treatment of smartphone-pouch refusal pending school procedure;
+- which ordinary follow-up and parent-contact actions should appear in the first prototype.
