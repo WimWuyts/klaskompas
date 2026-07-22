@@ -3,7 +3,7 @@
 | ID | Decision | Status | Needed before |
 |---|---|---|---|
 | OD-001 | Internal project name remains `KlasKompas`; public name may change later | Locked — Phase 1A | Public design |
-| OD-002 | Technology stack for web/PWA and backend | Open | Production code |
+| OD-002 | Technology stack for web/PWA and backend | Open — candidate must satisfy D4 realtime, idempotency, concurrency, encrypted queue and audit requirements | Production code |
 | OD-003 | Hosting and data location | Open | Production data |
 | OD-004 | Version 1 has one teacher user; technical authentication model and future account isolation still to choose | Partially locked | Backend build |
 | OD-005 | Smartschool OneRoster 1.1 is preferred source for classes and pupils; CSV remains development/emergency fallback | Partially locked | Import/sync function |
@@ -30,6 +30,7 @@
 | OD-026 | Pupil-facing expectations use mandatory Dutch primary text with optional supporting English or Spanish per class; formal and official communication remains Dutch-first | Locked — Phase 1B-D2 | September materials |
 | OD-027 | Active pattern closes after 6 consecutive class lesson contacts without recurrence, explicit successful review, or replacement by an official school process | Locked — Phase 1B-D1 | Behaviour rules engine |
 | OD-028 | Default and approved alternative L4 classroom responses per ordinary behaviour category; formal measures remain behind L5 school gate | Locked — Phase 1B-D3 | Behaviour rules and quick interaction |
+| OD-029 | Dedicated laptop command centre, touch-first tablet view and rapid phone view; seat plan defaults on laptop/tablet and teacher changes synchronise server-mediated across connected devices with visible offline/conflict states | Locked — Phase 1B-D4 | UI architecture and backend sync |
 
 ## Binding references
 
@@ -38,6 +39,7 @@
 - `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
 - `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
 - `DECISION_1B_D3_DIRECT_CLASSROOM_RESPONSES_v1.0.md`
+- `DECISION_1B_D4_DEVICE_LAYOUT_AND_REALTIME_SYNC_v1.0.md`
 - `../01-behaviour-framework/SCHOOL_POLICY_ALIGNMENT_REGISTER_v0.1.md`
 - `../01-behaviour-framework/TEACHER_AUTHORITY_MATRIX_v0.1.md`
 - `../01-behaviour-framework/UNIVERSAL_EXPECTATIONS_v0.2.md`
@@ -48,4 +50,6 @@
 - `../04-architecture/SMARTSCHOOL_INTEGRATION_BOUNDARY_v0.1.md`
 - `../04-architecture/SMARTSCHOOL_ACCESS_AND_LVS_MAPPING_v0.1.md`
 - `../04-architecture/DIRECT_RESPONSE_CONFIGURATION_CONTRACT_v0.1.md`
+- `../04-architecture/CLASSROOM_QUICK_INTERACTION_SPEC_v0.1.md`
+- `../04-architecture/CROSS_DEVICE_REALTIME_SYNC_SPEC_v0.1.md`
 - `../../research/SMARTSCHOOL_INTEGRATION_RESEARCH_2026-07-22.md`
