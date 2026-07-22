@@ -32,6 +32,10 @@ Additional product-design drafts:
 8. `BEHAVIOUR_PATTERN_RULES_v0.1.md`
 9. `CLASSROOM_QUICK_INTERACTION_SPEC_v0.1.md`
 
+Approved decision records:
+
+10. `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
+
 ## Checkpoint status
 
 | Checkpoint | Status | Notes |
@@ -40,6 +44,17 @@ Additional product-design drafts:
 | 1B.1 Teacher authority | Drafted, not locked | Formal order measures require clarification of “in consultation with director/delegate” |
 | 1B.2 Smartschool/LVS | Partially complete | Official platform role confirmed; technical roster/write access and field mapping open |
 | 1B.3 Privacy/governance | Partially complete | School board responsibility, access rights and general retention confirmed; external-app approval open |
+
+## Approved Phase 1B decision
+
+### 1B-D1 — repeated-behaviour pattern timing
+
+Approved on 22 July 2026:
+
+- P1: three same-category L3/L4 records within the last six lesson contacts with the class require a short follow-up conversation;
+- P2: another same-category L3/L4 record within four lesson contacts after that conversation prompts review and possible school-support consultation;
+- closure: six consecutive lesson contacts without recurrence, explicit successful review, or replacement by an official school process;
+- counts create review obligations, never automatic sanctions.
 
 ## Important conclusions
 
@@ -63,8 +78,8 @@ Additional product-design drafts:
 
 ## Next review decisions for project owner
 
-- candidate repeated-behaviour trigger: 3 records in same category within 15 school days;
-- recovery/closure window;
 - pupil-facing languages for expectations;
 - preferred direct classroom responses per behaviour category;
-- whether the first prototype should use a seat plan by default.
+- whether the first prototype should use a seat plan by default;
+- distinction between internal documented warning and official school warning;
+- treatment of smartphone-pouch refusal pending school procedure.
