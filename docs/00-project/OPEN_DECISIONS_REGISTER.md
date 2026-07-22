@@ -22,7 +22,7 @@
 | OD-018 | Verify all extracted rules against the 2026-2027 school regulations before September production use | Open — mandatory annual check | Launch |
 | OD-019 | Repeated-behaviour P1/P2 timing: 3 same-category L3/L4 records within 6 class lesson contacts require follow-up; recurrence within 4 contacts after the conversation prompts school-support review | Locked — Phase 1B-D1 | Behaviour rules engine |
 | OD-020 | Exact school procedure when a pupil refuses the smartphone pouch; whether and by whom devices may be retained | Open — school procedure | Device workflow |
-| OD-021 | Exact distinction between KlasKompas `documented classroom warning` and official school warning/agenda/Smartschool note | Open — school procedure | Behaviour/LVS mapping |
+| OD-021 | L3 is an `internal classroom record with announced response`; it and L4 remain private/local by default, while official warnings, parent contact and Smartschool/LVS records are separate linked objects requiring the authorised school gate and explicit publication confirmation | Locked — Phase 1B-D5 | Behaviour/LVS mapping |
 | OD-022 | Which order measures may a subject teacher initiate independently versus only after director/delegate consultation? | Open — school procedure | Formal escalation |
 | OD-023 | Immediate temporary removal from class: prior approval versus immediate handover followed by notification | Open — school procedure | Serious/lesson-removal flow |
 | OD-024 | Authority and standard deadlines for make-up ordinary quizzes/tasks versus official examinations | Open — school/Oase procedure | Make-up module |
@@ -40,6 +40,7 @@
 - `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
 - `DECISION_1B_D3_DIRECT_CLASSROOM_RESPONSES_v1.0.md`
 - `DECISION_1B_D4_DEVICE_LAYOUT_AND_REALTIME_SYNC_v1.0.md`
+- `DECISION_1B_D5_INTERNAL_OFFICIAL_RECORD_BOUNDARY_v1.0.md`
 - `../01-behaviour-framework/SCHOOL_POLICY_ALIGNMENT_REGISTER_v0.1.md`
 - `../01-behaviour-framework/TEACHER_AUTHORITY_MATRIX_v0.1.md`
 - `../01-behaviour-framework/UNIVERSAL_EXPECTATIONS_v0.2.md`
@@ -52,4 +53,5 @@
 - `../04-architecture/DIRECT_RESPONSE_CONFIGURATION_CONTRACT_v0.1.md`
 - `../04-architecture/CLASSROOM_QUICK_INTERACTION_SPEC_v0.1.md`
 - `../04-architecture/CROSS_DEVICE_REALTIME_SYNC_SPEC_v0.1.md`
+- `../04-architecture/INTERNAL_OFFICIAL_RECORD_BOUNDARY_v0.1.md`
 - `../../research/SMARTSCHOOL_INTEGRATION_RESEARCH_2026-07-22.md`
