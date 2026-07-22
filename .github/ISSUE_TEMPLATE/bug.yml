@@ -1,0 +1,26 @@
+name: Bug
+about: Fout in werking, data of autorisatie
+labels: ["bug"]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Waargenomen gedrag
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Verwacht gedrag
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproductiestappen met fictieve data
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Mogelijke privacy- of securityimpact

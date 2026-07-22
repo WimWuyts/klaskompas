@@ -1,0 +1,29 @@
+name: Functie
+about: Voorstel voor een nieuwe productfunctie
+labels: ["feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Probleem
+      description: Welk concreet leerkrachtprobleem wordt opgelost?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Gewenst resultaat
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptatiecriteria
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy- en veiligheidsimpact
+    validations:
+      required: true
