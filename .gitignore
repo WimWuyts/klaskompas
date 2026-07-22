@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Build output
+.next/
+dist/
+build/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local databases and exports
+*.sqlite
+*.sqlite3
+*.db
+exports/
+private-data/
+real-student-data/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

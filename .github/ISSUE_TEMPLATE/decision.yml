@@ -1,0 +1,24 @@
+name: Beslissing
+about: Product-, beleid-, privacy- of architectuurbeslissing
+labels: ["decision"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Beslisvraag
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Opties en gevolgen
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Aanbeveling
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Bronnen en bewijs
