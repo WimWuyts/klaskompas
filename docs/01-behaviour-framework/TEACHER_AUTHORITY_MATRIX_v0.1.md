@@ -1,6 +1,6 @@
 # Teacher Authority Matrix v0.1
 
-**Status:** preliminary interpretation of the 2025-2026 school regulations with approved Phase 1B-D5 terminology  
+**Status:** preliminary interpretation of the 2025-2026 school regulations with approved Phase 1B-D5 and D6 terminology  
 **Important:** internal staff procedures can narrow or clarify these permissions. When uncertain, KlasKompas must choose the more restrictive route.
 
 ## 1. Authority statuses
@@ -25,7 +25,9 @@
 | Assigned seat / seat change | `classroom_management_autonomous` | Assign or change a place to restore learning conditions | Present it as an official order measure or permanent punishment | Confirm local practice for long-term seat changes |
 | Temporarily individual work | `classroom_management_autonomous` | Move a pupil from group work to individual work for the activity | Exclude the pupil from teaching or assessment without support | Confirm if prolonged use requires notification |
 | Repeat entry/transition/clean-up routine | `classroom_management_autonomous` | Require the missed routine to be completed correctly | Use collective or humiliating punishment | None |
-| Phone into numbered pouch | `classroom_management_autonomous` | Ask the pupil to place the device in the classroom pouch | Keep the device beyond the authorised routine or invent a confiscation period | Clarify refusal and end-of-lesson return process |
+| Smartphone prohibited / temporary pedagogical exception | `classroom_management_autonomous` | Keep every lesson in `prohibited` mode by default; explicitly start and stop one bounded pedagogical-use window | Treat third-stage classes as automatically exempt or leave authorised use active beyond the activity | None for product rule |
+| Phone into numbered pouch | `classroom_management_autonomous` | Direct the pupil to place the device in the numbered classroom pouch for the remainder of the lesson | Keep the device beyond the authorised routine, physically seize it as a KlasKompas instruction or invent a confiscation period | None for ordinary compliance route |
+| Refusal of phone-pouch instruction | `factual_recording_autonomous` + `school_consultation_required` | Create an internal factual record under `reasonable_instruction_not_followed` and open L5 school follow-up | Repeat warnings indefinitely or impose an automatic formal consequence | Confirm receiving school role and official consequence within the general L5 procedure |
 | Close laptop / switch to paper task | `classroom_management_autonomous` | Stop unauthorised device use and provide an equivalent task | Remove access needed for approved accommodations | Confirm Chromebook/laptop brochure |
 | L3 internal classroom record with announced response | `factual_recording_autonomous` | Record observable behaviour, expectation and announced L4 classroom response as a teacher-private working record | Call it an official warning, agenda note, Smartschool/LVS record or school order measure | Boundary locked by 1B-D5; official workflow and destination remain open |
 | L4 direct classroom response | `classroom_management_autonomous` + `factual_recording_autonomous` | Apply and record the approved response linked to the L3 source record | Convert completion or refusal automatically into a formal measure | None for internal route; refusal handling continues through L5 |
@@ -72,6 +74,6 @@ When an action could reasonably be understood as an official order measure rathe
 5. May a teacher remove a pupil immediately and notify the behaviour coach afterwards, or is prior contact required?
 6. Who may initiate parent contact for repeated classroom behaviour?
 7. Which restorative practices may a subject teacher conduct independently?
-8. What is the exact phone refusal/confiscation process?
+8. Which authorised role receives a smartphone-refusal L5 request and what official consequence may follow?
 9. What additional rules are in the Chromebook/laptop brochure?
 10. Which ordinary assessments may the subject teacher schedule for make-up without Oase involvement?
