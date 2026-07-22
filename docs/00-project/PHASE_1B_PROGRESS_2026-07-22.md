@@ -35,6 +35,7 @@ Additional product-design drafts:
 Approved decision records:
 
 10. `DECISION_1B_D1_BEHAVIOUR_PATTERN_RULE_v1.0.md`
+11. `DECISION_1B_D2_LANGUAGE_PRESENTATION_v1.0.md`
 
 ## Checkpoint status
 
@@ -45,7 +46,7 @@ Approved decision records:
 | 1B.2 Smartschool/LVS | Partially complete | Official platform role confirmed; technical roster/write access and field mapping open |
 | 1B.3 Privacy/governance | Partially complete | School board responsibility, access rights and general retention confirmed; external-app approval open |
 
-## Approved Phase 1B decision
+## Approved Phase 1B decisions
 
 ### 1B-D1 — repeated-behaviour pattern timing
 
@@ -55,6 +56,17 @@ Approved on 22 July 2026:
 - P2: another same-category L3/L4 record within four lesson contacts after that conversation prompts review and possible school-support consultation;
 - closure: six consecutive lesson contacts without recurrence, explicit successful review, or replacement by an official school process;
 - counts create review obligations, never automatic sanctions.
+
+### 1B-D2 — pupil-facing language presentation
+
+Approved on 22 July 2026:
+
+- Dutch is mandatory and visually primary for pupil-facing expectations;
+- a class may show Dutch only, Dutch with supporting English, or Dutch with supporting Spanish;
+- English and Spanish are not shown together;
+- L1/L2 routine prompts may optionally use the subject language;
+- L3-L5 response text, the private teacher interface and official Smartschool/LVS or parent communication remain Dutch-first;
+- the six approved short formulations are stored in Dutch, English and Spanish under one stable semantic rule set.
 
 ## Important conclusions
 
@@ -78,7 +90,6 @@ Approved on 22 July 2026:
 
 ## Next review decisions for project owner
 
-- pupil-facing languages for expectations;
 - preferred direct classroom responses per behaviour category;
 - whether the first prototype should use a seat plan by default;
 - distinction between internal documented warning and official school warning;
