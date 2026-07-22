@@ -1,6 +1,6 @@
 # Teacher Authority Matrix v0.1
 
-**Status:** preliminary interpretation of the 2025-2026 school regulations  
+**Status:** preliminary interpretation of the 2025-2026 school regulations with approved Phase 1B-D5 terminology  
 **Important:** internal staff procedures can narrow or clarify these permissions. When uncertain, KlasKompas must choose the more restrictive route.
 
 ## 1. Authority statuses
@@ -27,15 +27,16 @@
 | Repeat entry/transition/clean-up routine | `classroom_management_autonomous` | Require the missed routine to be completed correctly | Use collective or humiliating punishment | None |
 | Phone into numbered pouch | `classroom_management_autonomous` | Ask the pupil to place the device in the classroom pouch | Keep the device beyond the authorised routine or invent a confiscation period | Clarify refusal and end-of-lesson return process |
 | Close laptop / switch to paper task | `classroom_management_autonomous` | Stop unauthorised device use and provide an equivalent task | Remove access needed for approved accommodations | Confirm Chromebook/laptop brochure |
-| Documented classroom warning | `factual_recording_autonomous` | Record observable behaviour, expectation and announced classroom consequence | Call it an official school order measure unless confirmed | Clarify relation to agenda/Smartschool warning |
+| L3 internal classroom record with announced response | `factual_recording_autonomous` | Record observable behaviour, expectation and announced L4 classroom response as a teacher-private working record | Call it an official warning, agenda note, Smartschool/LVS record or school order measure | Boundary locked by 1B-D5; official workflow and destination remain open |
+| L4 direct classroom response | `classroom_management_autonomous` + `factual_recording_autonomous` | Apply and record the approved response linked to the L3 source record | Convert completion or refusal automatically into a formal measure | None for internal route; refusal handling continues through L5 |
 | Short conversation after lesson | `classroom_management_autonomous` + `factual_recording_autonomous` | Discuss behaviour, hear the pupil and record a short factual outcome | Store sensitive support/medical details | None for basic conversation |
 | Simple restorative action | `classroom_management_autonomous` or `school_consultation_required` depending on scope | Agree a proportionate action such as restoring material, apologising voluntarily or completing missed clean-up | Force mediation, require public apology or conduct formal HERGO/No Blame alone | Clarify which restorative methods teachers may initiate |
-| Note in school agenda / official Smartschool note | `school_consultation_required` until clarified | Prepare a preview or follow-up request | Publish automatically or without correct visibility/rights | Confirm school workflow and LVS fields |
+| Parent contact about ordinary learning/behaviour | `classroom_management_autonomous` for factual contact; formal notices may require consultation | Create a separate task, factual Dutch-first draft or contact log linked where relevant | Treat parent contact as automatic proof of an official warning or share data about other pupils | Confirm when class teacher/leadership must be included |
+| Official school warning / agenda note / Smartschool or LVS record | `school_consultation_required` until exact school workflow is confirmed | Prepare a separate linked preview or school-follow-up request | Promote an L3/L4 record automatically, publish without correct visibility/rights or overwrite the internal source record | Confirm school authority, destination, fields and visibility |
 | Punishment work | `school_consultation_required` | Propose and track only after confirmation | Automatically generate or impose repetitive/irrelevant writing | Clarify teacher autonomy in daily practice |
 | Detention / study detention | `school_consultation_required` | Request or record confirmed measure and parent-notification status | Schedule or notify autonomously unless procedure permits | Confirm planner, responsible role and notification channel |
 | Material service as formal order measure | `school_consultation_required` | Track confirmed restorative/service action | Assign unsafe, degrading or unrelated work | Confirm responsible role |
 | Temporary removal from lesson | `school_consultation_required`; urgent removal may be immediate with notification | Trigger one-tap route to behaviour coach/delegate; record departure and handover | Send a pupil into corridors without destination/confirmation | Confirm immediate decision authority and handover protocol |
-| Parent contact about ordinary learning/behaviour | `classroom_management_autonomous` for factual contact; formal notices may require consultation | Create a task, draft factual summary or log contact | Share data about other pupils or publish unconfirmed allegations | Confirm when class teacher/leadership must be included |
 | Behavioural contract | `school_consultation_required` | Track objectives and review dates after school approval | Create a binding school contract automatically | Confirm owner: behaviour coach, student support or director |
 | NAFT / formal support route | `official_school_process` | Display referral and status if authorised | Store full welfare dossier | Confirm integration and access |
 | Official lateness count | `official_school_process` | Display imported status or reminder to verify Oase registration | Create parallel count or sanctions | Smartschool/Oase data availability |
@@ -58,17 +59,19 @@ When an action could reasonably be understood as an official order measure rathe
 
 1. label it `school_consultation_required`;
 2. show the applicable school-policy note;
-3. create a follow-up request rather than execute it;
-4. store the confirmed decision separately from the teacher's initial proposal.
+3. create a separate follow-up request rather than execute or publish it;
+4. store the confirmed official decision separately from the teacher's internal source record;
+5. keep parent contact and external publication as separate states.
 
 ## 4. Required school confirmations
 
-1. Does every official agenda/Smartschool warning require consultation, or may a teacher issue it independently?
-2. May a teacher independently assign punishment work?
-3. Who schedules detention and study detention?
-4. May a teacher remove a pupil immediately and notify the behaviour coach afterwards, or is prior contact required?
-5. Who may initiate parent contact for repeated classroom behaviour?
-6. Which restorative practices may a subject teacher conduct independently?
-7. What is the exact phone refusal/confiscation process?
-8. What additional rules are in the Chromebook/laptop brochure?
-9. Which ordinary assessments may the subject teacher schedule for make-up without Oase involvement?
+1. May a subject teacher independently create an official agenda/Smartschool warning, and in which module/field?
+2. Which official record types are visible to pupil, parents, class teachers, student support and leadership?
+3. May a teacher independently assign punishment work?
+4. Who schedules detention and study detention?
+5. May a teacher remove a pupil immediately and notify the behaviour coach afterwards, or is prior contact required?
+6. Who may initiate parent contact for repeated classroom behaviour?
+7. Which restorative practices may a subject teacher conduct independently?
+8. What is the exact phone refusal/confiscation process?
+9. What additional rules are in the Chromebook/laptop brochure?
+10. Which ordinary assessments may the subject teacher schedule for make-up without Oase involvement?
