@@ -1,0 +1,1614 @@
+[
+  {
+    "facet": "Visuele klasmanagement-apps en -platformen (ClassDojo, Classcraft, LiveSchool, Class Charts, TeacherKit, Classroomscreen, GoNoodle, Gynzy e.a.)",
+    "summary": "De markt voor visueel klasmanagement wordt gedomineerd door puntensystemen met een speels laagje: leerlingen krijgen een eigen avatar of \"champ\" die groeit, en punten worden een zichtbare, tastbare identiteit in plaats van abstracte cijfers. Vier archetypes vallen op: (1) het puntgedreven behavioursysteem met avatars en badges (ClassDojo, LiveSchool, Class Charts), (2) het RPG-gamificatiemodel (Classcraft, nu opgeheven maar het sterkste ontwerp), (3) de widget-toolbox voor het digibord (Classroomscreen, Gynzy) met timers, geluidsmeter, stoplicht en naamkiezer, en (4) beweeg/energizer-tools (GoNoodle). Wat ze \"cool\" maakt: kleurrijke karakters, realtime feedback in enkele taps, een reward-store en zichtbare voortgang. Tegelijk levert deze categorie precies de risico's op die Klaskompas als harde grens stelt: publieke gedragspunten leiden tot \"shaming\", leaderboards en gedragsdatabases botsen met AVG en met het beginsel feitelijk gedrag boven interpretatie. De les voor Klaskompas: neem de visuele aantrekkingskracht (avatars, groei, animatie, one-tap-interactie, digibordwidgets) over, maar ontkoppel die van publieke ranking, negatieve punten en persoonsprofielen.",
+    "findings": [
+      {
+        "name": "ClassDojo",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.classdojo.com/",
+        "what": "Marktleider voor klasmanagement in het lager onderwijs. Elke leerling krijgt een kleurrijke monster-avatar (een 'Dojo'). Leerkrachten geven met een tap positieve (en negatieve) punten voor gedrag; de avatars kunnen op het digibord geprojecteerd worden. Met verzamelde punten unlocken leerlingen accessoires (hoedjes, brillen, achtergronden, huisdieren). Bevat ook oudercommunicatie en Class Story.",
+        "why": "Het bewijs dat een avatar punten een identiteit en payoff geeft die 'kale cijfers' nooit hebben - precies het gevoel dat de leerkracht van Instagram/TikTok kent. TEGELIJK het waarschuwingsvoorbeeld: publieke negatieve punten, leaderboards en gedragsdatabases veroorzaken shaming en AVG-kritiek. Klaskompas moet de avatar-groei overnemen maar de publieke ranking en negatieve punten weglaten.",
+        "visual": "Monster-avatar per leerling die zichtbaar 'groeit'/aankleedbaar wordt naarmate positieve mijlpalen worden bereikt; unlockbare cosmetische accessoires als beloning; one-tap feedback met korte animatie en geluidje. Voor Klaskompas: houd avatar-progressie prive (alleen leerling+leerkracht), koppel aan positieve gewoontes, nooit aan een klaswijde ranglijst."
+      },
+      {
+        "name": "Classcraft (opgeheven jul 2024)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://classmana.com/en/blog/20260304_classcraft_alternatives",
+        "what": "Het diepste RPG-gamificatiemodel: leerlingen kozen een klasse (Mage, Warrior, Healer), hadden Health Points/XP/levels, verdienden goud en kristallen om hun avatar op te waarderen, en gebruikten 'powers' in de les. Sterk teamgebaseerd (collaboratieve powers, quests, boss battles). Overgenomen door HMH en in juli 2024 stopgezet ondanks tienduizenden petitiehandtekeningen.",
+        "why": "Toont dat samenwerking en teamdynamiek motiverender kunnen zijn dan individuele punten - waardevol voor een teacher-first, herstel-boven-straf filosofie. De collaboratieve mechaniek (het team lijdt/wint samen) is pedagogisch interessanter dan solo-leaderboards. Het gemis na de shutdown bewijst hoe geliefd rijke visuele gamificatie is.",
+        "visual": "Team-/groepsgebaseerde voortgang i.p.v. individuele ranking; visuele 'quests' als meerstaps-doelen met een voortgangsbalk; positieve 'powers' die leerlingen kunnen inzetten (bv. extra tijd) als herstel/beloning. Voor Klaskompas: een klas- of groepsdoel-visual (samen een berg beklimmen / een reis afleggen) waar iedereen aan bijdraagt, zonder verliezers."
+      },
+      {
+        "name": "LiveSchool",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.whyliveschool.com/",
+        "what": "Behavioursysteem voor het secundair/K-12, sterk rond PBIS (schoolbrede positieve gedragsondersteuning). Realtime punten voor gedrag, een digitale Reward Store waar leerlingen punten inruilen (met inventaris, categorieen en een Fulfillment-app), en wekelijkse 'Recaps' per leerling. Rijke dashboards: puntengrafiek over tijd, top-gedragingen/leerlingen/beloningen, doorklikbaar naar een gefilterde timeline.",
+        "why": "Sterkste voorbeeld van een reward-store economie en van dashboards die inzoomen van school -> klas -> leerling. De 'Recap' (persoonlijke weeksamenvatting) is een privacyvriendelijker alternatief voor een publiek leaderboard: individuele terugkoppeling i.p.v. klaswijde vergelijking. Relevant voor het puntenboek/observatie-luik van Klascockpit.",
+        "visual": "Reward-store UI met categorieen en 'kopen' van beloningen met verdiende punten; persoonlijke wekelijkse Recap-kaart per leerling; dashboard met puntengrafiek over tijd die doorklikbaar is naar de onderliggende registraties. Voor Klaskompas: een prive weekterugblik per leerling en een doorklikbaar observatiedashboard, zonder klaswijde puntenrace."
+      },
+      {
+        "name": "Class Charts (Tes)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.classcharts.com/pages/home",
+        "what": "Ontworpen door een leerkracht met 16 jaar ervaring, sterk in het secundair. Kern is de visuele zetplan-editor (sleep leerlingen op een plattegrond) gecombineerd met gedrag in '2 klikken' registreren. Zetplannen kunnen leerlingen groeperen/scheiden op basis van invloeden. Custom gedragscategorieen die de schoolregels spiegelen; instant rapporten voor mentor, zorg en directie; deelbaar met ouders/leerlingen.",
+        "why": "Het visuele zetplan is een direct bruikbaar idee voor het VISUELE klasmanagement-luik van Klaskompas: een plattegrond van de klas als centrale, aanraakbare interface tijdens de les. Het '2 klikken'-principe past perfect bij het productprincipe 'maximaal enkele handelingen tijdens een les'. Custom gedragscategorieen sluiten aan bij 'configureerbare klaspreventie'.",
+        "visual": "Interactieve klasplattegrond waarop je leerlingen versleept en per zitplaats met 1-2 taps een feitelijke observatie noteert; kleurcodering per zitplaats; snelle registratie zonder van scherm te wisselen. Voor Klaskompas: de plattegrond als hoofdscherm tijdens de les, met feitelijke gedragsnotities (geen punten/scores) per plaats."
+      },
+      {
+        "name": "TeacherKit",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.teacherkit.net/",
+        "what": "Register-app (iOS/Android/Windows) voor aanwezigheid, punten en gedrag. Clean, minimalistische maar kleurrijke interface. Aanwezigheid neem je door op de 'badge' van een leerling te tappen tot de gewenste status verschijnt; genereert on-the-fly datavisualisaties per klas en per leerling. Rapporten geven een overzichtelijke visuele samenvatting van aanwezigheid, gedrag en punten. Veel maatwerk (eigen velden zoals 'toiletbezoek').",
+        "why": "Toont hoe een sobere, snelle admin-tool toch visueel aantrekkelijk kan zijn - relevant voor het KLASADMINISTRATIE-luik van Klaskompas. De tap-cyclische statusknop (tap tot juiste status) is een elegant one-tap patroon voor aanwezigheid. De 'on-the-fly' visualisaties bewijzen dat data meteen als beeld tonen motiverend werkt.",
+        "visual": "Aanwezigheid via een leerling-badge die bij elke tap cyclisch wisselt van status (aanwezig -> te laat -> afwezig) met kleur; automatische mini-grafiekjes per leerling/klas zodra je registreert; overzichtelijke visuele rapportkaarten. Voor Klaskompas: cyclische tap-statusknoppen voor aanwezigheid en directe kleurige samenvattingen in de leerlingfiche."
+      },
+      {
+        "name": "Classroomscreen",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://classroomscreen.com/widgets",
+        "what": "Nederlandse (!) gratis digibord-tool: een leeg scherm waar je widgets op plaatst - visuele timer, klok/agenda, geluidsmeter (via microfoon, meet enkel volume - GEEN opname/analyse), stoplicht, willekeurige naamkiezer, tekstvak, QR, werk-symbolen. Pro-versie laat schermen opslaan/delen. Zeer breed gebruikt in Vlaanderen/Nederland.",
+        "why": "Direct model voor het VISUELE klasmanagement-luik: eenvoudige, mooie, aanraakbare widgets die de klas structureren zonder enige leerlingdata te verwerken - dus AVG-proof by design. De geluidsmeter is bovendien een goed voorbeeld van een privacyveilige feature: hij meet enkel volume, herkent geen personen of emoties (respecteert de harde grens tegen emotiedetectie/aandachtsscores).",
+        "visual": "Widget-canvas: sleepbare timer, stoplicht (rood/oranje/groen voor verwachtingen), volume-meter die groen->rood kleurt als het te luid wordt, naamkiezer/rad, werksymbolen (stil/samen/fluister). Voor Klaskompas: een 'klasscherm'-modus met deze widgets als tweede pijler naast de administratie, expliciet zonder persoonsgegevens."
+      },
+      {
+        "name": "Gynzy",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.gynzy.com/nl-be",
+        "what": "Digibordsoftware voor het basisonderwijs (nl-be domein, actief in Vlaanderen). Combineert didactische inhoud met klasmanagement-tools: timer, stoplicht, draaischijf/spinner, naamkiezer, groepenmaker, klasplattegrond, rekenrek en andere manipulatieven. Alles direct op het digibord bedienbaar.",
+        "why": "Bewijs dat er in de Vlaamse/Nederlandse markt vraag is naar geintegreerde digibord-klasmanagement, en toont welke widgets hier standaard verwacht worden (timer, stoplicht, spinner, groepenmaker). Nuttig als lokale benchmark voor het uiterlijk en de toon die Vlaamse leerkrachten gewend zijn.",
+        "visual": "Groepenmaker die automatisch (visueel) teams vormt; draaischijf/rad voor willekeurige keuze; klasplattegrond-tool. Voor Klaskompas: een 'groepenmaker' en 'naamkiezer' als speelse, visuele hulpjes die naadloos aansluiten bij het aanwezigheids-/klaslijstluik."
+      },
+      {
+        "name": "GoNoodle",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.gonoodle.com/",
+        "what": "Gratis platform met korte (ca. 3 min) beweeg- en mindfulness-video's (brain breaks): dans, yoga, ademhaling, energizers. Kies een 'Champ' (mascotte-karakter) voor de klas; hoe meer de klas GoNoodle gebruikt, hoe groter/geevolueerder de Champ wordt. Advertentievrij en kindvriendelijk.",
+        "why": "De 'Champ die groeit met klasgebruik' is een sterk, positief collectief gamificatie-idee: de héle klas bouwt samen aan een gedeeld visueel doel, zonder individuele ranking of straf. Perfect verenigbaar met de harde grenzen. Brain breaks passen bij 'preventie en herstel naast consequenties'.",
+        "visual": "Een klas-mascotte/avatar die zichtbaar evolueert (groter/nieuwe vorm) naarmate de klas samen positieve activiteiten doet - een collectieve progressiemeter als beeld. Voor Klaskompas: een optionele 'klas-avatar' of groeimeter die vooruitgaat op basis van klasbrede positieve gewoontes (niet op basis van individuele gedragspunten)."
+      },
+      {
+        "name": "Kritiek & AVG-risico's van puntensystemen",
+        "category": "beleid",
+        "region": "internationaal",
+        "url": "https://codeactsineducation.wordpress.com/2018/05/01/comments-on-classdojo-controversy/",
+        "what": "Onderzoek en pers documenteren terugkerende problemen bij deze categorie: publieke gedragspunten en leaderboards leiden tot 'shaming' en pesten; opbouw van gedragsdatabases riskeert leerlingen te labelen ('probleemkind'); ClassDojo's privacybeleid van 12.000 woorden is voor ouders/leerkrachten nauwelijks te overzien; kritiek op surveillance-cultuur en op registratie zonder ouderlijke toestemming.",
+        "why": "Dit is de directe onderbouwing voor de harde grenzen van Klaskompas. Het levert een concreet DIFFERENTIATOR: Klaskompas kan de aantrekkelijke visuals overnemen maar zich positioneren als het privacy-by-design, niet-shamend alternatief - feitelijk gedrag, geen scores of profielen, geen publieke ranking, transparante en korte informatie voor ouders.",
+        "visual": "Ontwerpregel i.p.v. feature: alle gedragsinfo prive (leerling+leerkracht), positief geformuleerd, feitelijk (wat gebeurde er) i.p.v. beoordelend (wat voor kind is dit); geen klaswijde ranglijst op het digibord; expliciete, korte privacy-uitleg. Voor Klaskompas: maak 'geen publieke punten/ranking' een zichtbaar verkoopargument."
+      }
+    ],
+    "themes": [
+      "Avatar-als-identiteit: een groeiende/aankleedbare avatar maakt abstracte voortgang tastbaar en 'cool' (ClassDojo, Classcraft, GoNoodle-Champ)",
+      "One-tap-registratie: gedrag/aanwezigheid in 1-2 taps zonder van scherm te wisselen (Class Charts, TeacherKit) - sluit aan bij 'maximaal enkele handelingen tijdens een les'",
+      "Digibord-widgets als tweede pijler: timer, stoplicht, geluidsmeter, naamkiezer, groepenmaker structureren de klas zonder persoonsdata (Classroomscreen, Gynzy)",
+      "Collectieve i.p.v. individuele gamificatie: teamquests en klas-mascottes motiveren zonder verliezers of ranking (Classcraft-teams, GoNoodle-Champ)",
+      "Reward-store & persoonlijke Recap: verdiende punten inruilen en prive weekterugblikken i.p.v. publieke leaderboards (LiveSchool)",
+      "Dashboards die inzoomen: van klas naar leerling met doorklikbare, kleurige grafieken (LiveSchool, TeacherKit)",
+      "Het privacy-/shaming-risico is de rode draad: publieke punten, negatieve scores en gedragsdatabases zijn precies wat Klaskompas moet vermijden en als differentiator kan gebruiken"
+    ],
+    "topPicks": [
+      "Klas-avatar of groeimeter a la GoNoodle-Champ: een gedeeld, visueel klasdoel dat vooruitgaat op basis van klasbrede positieve gewoontes - alle 'coolness' van gamificatie, zonder individuele ranking of straf (respecteert alle harde grenzen)",
+      "Interactieve klasplattegrond als hoofdscherm tijdens de les (a la Class Charts): sleep leerlingen op een plattegrond en noteer per plaats een feitelijke observatie in 1-2 taps, zonder scherm te wisselen",
+      "Digibord-'klasscherm'-modus met privacyveilige widgets (a la Classroomscreen/Gynzy): visuele timer, stoplicht, volume-meter (enkel volume, geen personen/emoties), naamkiezer, groepenmaker - AVG-proof by design",
+      "Cyclische tap-statusknoppen voor aanwezigheid (a la TeacherKit) met directe, kleurige mini-visualisaties in de leerlingfiche",
+      "Prive wekelijkse Recap per leerling (a la LiveSchool) i.p.v. een publiek leaderboard - individuele, positieve terugkoppeling die AVG en het anti-shaming-principe respecteert",
+      "Positioneer 'geen publieke punten, geen scores, geen profielen' expliciet als zichtbaar verkoopargument tegenover ClassDojo-kritiek"
+    ]
+  },
+  {
+    "facet": "Visuele klasplattegronden / zitplan-generatoren",
+    "summary": "Er bestaat een rijk landschap van zitplan- en klasplattegrond-tools, van simpele naam-op-tafel generatoren tot slimme algoritmes die duizenden opstellingen doorrekenen. De sterkste, teacher-first patronen zijn: sleep-en-neerzet van tafels en leerlingen op een canvas dat het echte lokaal nabootst, regel-gebaseerd plaatsen via factuele \"pins\" (samen houden, uit elkaar, vooraan wegens zicht/gehoor), willekeurig schudden met een leuke animatie, en meerdere opgeslagen plannen per klas die je per activiteit (frontaal, groepswerk, toets) omschakelt. Enkele tools (Mega Seating Plan) tonen expliciet dat hun algoritme \"geen oordeel velt over leerlingen en niet getraind is op leerlinggegevens\" — een sterk privacy-by-design verkoopargument. De belangrijkste valkuil voor Klaskompas: verschillende tools kleuren zitkaartjes op basis van cijfers, SEN- of gedragsdata en laten \"smart layout by ability/behaviour\" toe; dat botst met onze harde grenzen. We nemen wel de factuele, door-de-leerkracht-ingestelde plaatsingsregels over, maar geen automatische risico- of niveauscores op het plan. Nederlandstalige/Vlaamse tools (Gynzy, Prowise, KlasCement-groepenmakers, Shibutz) bevestigen dat sleep-UX en willekeurige indeling verwacht worden.",
+    "findings": [
+      {
+        "name": "Mega Seating Plan (seatingplan.com)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.seatingplan.com/",
+        "what": "Gratis, veelgebruikte zitplan-generator (110.000+ leerkrachten). Een 'intelligent' algoritme genereert tot 10.000 mogelijke opstellingen op basis van jouw eisen en kiest in ~2 seconden de beste. Je geeft prioriteiten op (bepaalde leerlingen scheiden, op niveau zetten, rekening houden met noden) en kan leerlingvoorkeuren via QR-code laten invullen. Data komt uit het schoolsysteem of via CSV.",
+        "why": "Toont hoe regel-gebaseerd plaatsen krachtig kan zijn zonder handmatig gepuzzel. Cruciaal voorbeeld voor onze grenzen: de tool communiceert expliciet dat het algoritme 'geen oordeel velt over leerlingen en niet getraind is op leerlinggegevens' — precies het soort privacy-by-design boodschap dat wij kunnen overnemen. Let op: hun optie om cijfers/SEN/gedrag als kleurcode op zitkaartjes te tonen en 'smart layout by ability/behaviour' botst met onze harde grenzen; overnemen we NIET als automatische score, wel als factuele door-leerkracht-ingestelde pins.",
+        "visual": "Constraint-first flow: leerkracht plaatst factuele 'pins' (uit elkaar / samen / vooraan wegens zicht of gehoor) en drukt op 'genereer'. Toon een korte animatie waarin het systeem varianten aftikt en de gekozen opstelling 'inklikt', met een klein badge-icoontje op elke betrokken tafel dat de reden van plaatsing toont bij hover."
+      },
+      {
+        "name": "Sekigae Sensei",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://sekigaesensei.com/en",
+        "what": "Automatische zitplan-app die de toewijzing presenteert via een leuke, geanimeerde draaiende roulette in plaats van het antwoord meteen te tonen. Bevat 'Front Row Lock' (leerling vastzetten vooraan voor zicht/gehoor), 'Incompatible Pairs' (bepaalde leerlingen uit elkaar), 'Absolute Lock' (één leerling op zijn plaats houden terwijl de rest schudt), gelijkmatige verdeling en foto-OCR om de klaslijst in te lezen.",
+        "why": "Dit is precies de 'coole/visuele' factor van Instagram/TikTok toegepast op een pedagogisch neutrale handeling. De animatie maakt willekeurige herschikking transparant en speels voor de klas, zonder één van onze grenzen te raken. De drie lock-types zijn een elegant, factueel constraint-model dat wij kunnen kopiëren.",
+        "visual": "Animatie-modus bij 'schud de klas': namen/tafels flikkeren kort als een rad/gokrol en landen dan op hun plek — projecteerbaar op het smartboard als klasmoment. Plus drie eenvoudige slotjes-iconen op een leerlingkaart: 'vast vooraan', 'vast op plek', 'nooit naast X'."
+      },
+      {
+        "name": "Classroomscreen — Seating Chart Maker",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://classroomscreen.com/templates/seating-chart-maker",
+        "what": "Interactieve zitplan-maker binnen het populaire klasbord Classroomscreen. Werkt met sleep-en-neerzet stickers, naam-labels, een group maker en een randomizer om snel flexibele opstellingen te bouwen. Ontworpen om live tijdens de les op het digibord te tonen.",
+        "why": "Sterkste voorbeeld van 'tijdens-de-les' gebruik: het plan is niet alleen administratie maar een projecteerbaar klasinstrument. Sluit aan bij ons teacher-first principe van maximaal enkele handelingen per les. De sticker/label-benadering is licht en snel.",
+        "visual": "Zitplan als projecteerbaar bord: grote, leesbare naamkaarten die je live versleept; een 'randomize' knop en een 'maak groepjes' knop bovenaan; stickers/emoji om zones te markeren (bv. leeshoek, computertafel)."
+      },
+      {
+        "name": "Seating Chart Maker (seatingchartmaker.app)",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://seatingchartmaker.app/",
+        "what": "Webtool die met één druk randomiseert en handmatig bijstellen via drag & drop toelaat. Je wijst leerlingen aan groepen toe om ze samen te zetten, uit elkaar te houden of vooraan te plaatsen — de willekeurige plaatsing respecteert die groeperingen. Meerdere klassen, PDF-export, CSV-import.",
+        "why": "Duidelijk, factueel constraint-model (samen / apart / vooraan) dat willekeur combineert met regels — precies wat wij zoeken zonder afgeleide oordelen. Bevestigt de verwachting dat randomiseren én handmatig verslepen naast elkaar moeten bestaan.",
+        "visual": "Groep-tags met kleur die je aan leerlingen hangt; bij 'schud' blijven de regels gerespecteerd. Toon per tafel een subtiel gekleurd randje voor de groep, en laat handmatig verslepen altijd toe bovenop het gegenereerde plan."
+      },
+      {
+        "name": "Smart Seat / 'Seats: Smart Seating Charts'",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://apps.apple.com/us/app/seats-smart-seating-charts/id1139266448",
+        "what": "Zitplan-app op een grid waarin je aanwezigheid registreert, willekeurig een leerling kiest voor participatie, leerlingnotities en (optioneel) foto's bewaart. Bij groepen geef je het aantal groepen op en worden leerlingen automatisch en willekeurig toegewezen; tafels krijgen dan een groepskleur. PDF-export voor vervangers/administratie.",
+        "why": "Laat zien hoe het zitplan het centrale scherm wordt van waaruit je andere handelingen doet (aanwezigheid, willekeurige beurt) — een integratiepatroon dat perfect past bij onze Klascockpit (aanwezigheid, observaties op de leerlingfiche). PDF voor vervanger is een concrete, praktische feature.",
+        "visual": "Klik op een tafel om meteen aan/afwezig te zetten of een observatie te openen; kleurgecodeerde groepen op de tafels; een 'kies willekeurig een leerling' knop die een tafel oplicht (spotlight-effect)."
+      },
+      {
+        "name": "Additio App — Seating plan",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://additioapp.com/en/features/",
+        "what": "Zitplan geïntegreerd in een breder puntenboek/klasmanagement-pakket. Je plaatst leerlingen in de klas, tikt op een leerling om die geel op te lichten en versleept hem naar de gewenste plek. Een 'magic wand'-knop kiest willekeurig een leerling; PDF-export via het menu.",
+        "why": "Belangrijk referentiepunt omdat Additio, net als Klaskompas, zitplan koppelt aan puntenboek/evaluatie/aanwezigheid in één app. Bewijst dat het zitplan een onderdeel van het geheel hoort te zijn, niet een losse tool.",
+        "visual": "Tik-om-op-te-lichten (geel) plus versleep-interactie; een toverstaf-icoon voor 'willekeurige beurt'; het zitplan als tab naast puntenboek en aanwezigheid in dezelfde leerlingcontext."
+      },
+      {
+        "name": "TeacherKit",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.teacherkit.net/",
+        "what": "Klasmanagement-app met een 'helicopter view' zitplan waarin je virtueel plaatsen toewijst, leerlingnamen en foto's toont, en vanuit het plan aanwezigheid en (anekdotische) gedragsnotities bijhoudt.",
+        "why": "Bevestigt het 'overzicht van bovenaf' als mentaal model en de koppeling zitplan ↔ leerlingfiche. Hun anekdotische notities sluiten aan bij ons principe 'feitelijk gedrag boven interpretatie' — mits wij geen afgeleide scores toevoegen.",
+        "visual": "Overzicht-van-bovenaf met foto/naam-kaartjes; vanuit een tafel direct een korte feitelijke observatie noteren die naar de leerlingfiche stroomt."
+      },
+      {
+        "name": "Prowise — Plattegrond klaslokaal",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://my.prowise.com/nl-NL/item/plattegrond-klaslokaal/",
+        "what": "Nederlandstalige tool om een klasplattegrond te bouwen door kamerelementen, meubels en materiaal te verslepen en met een rotatie-icoon te draaien tot het echte lokaal klopt.",
+        "why": "Toont dat het canvas het fysieke lokaal moet kunnen nabootsen (deur, ramen, kasten, computerhoek), niet enkel een grid van tafels. Roteren van meubels is een concrete UX-verwachting bij ons doelpubliek. Nederlandstalig, dus taalkundig herkenbaar voor Vlaamse leerkrachten.",
+        "visual": "Meubel-/element-palet aan de zijkant dat je op een canvas sleept; rotatie-handvat op elk object; het lokaal krijgt zo een realistische vorm i.p.v. rechte rijen."
+      },
+      {
+        "name": "Gynzy — Klasindeling / klassenplattegrond",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.gynzy.com/nl-nl/kennisbank/klassenplattegrond-maken",
+        "what": "Gynzy biedt een 'Klasindeling'-tool om snel een klassenplattegrond te maken en op te slaan, plus een kennisbank-artikel met tips voor een 'slimme' klasindeling. Sterk aanwezig in Vlaanderen/Nederland.",
+        "why": "Directe concurrent/referentie in de Lage Landen; hun 'snel maken + opslaan + later aanpassen' verwoordt de basisverwachting. De begeleidende tips-content laat zien dat leerkrachten ook pedagogische duiding waarderen, niet enkel een leeg canvas.",
+        "visual": "Combinatie van generator + korte in-app tips ('zet leerlingen die extra hulp nodig hebben vooraan') als optionele, factuele suggesties — niet als automatisme."
+      },
+      {
+        "name": "Groepenmaker & Groepjesmaker (KlasCement / digitaletools.nl)",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.klascement.net/app-of-software/228663/groepenmaker-online-tool/",
+        "what": "Vlaams/Nederlandse online tools om leerlingen snel in groepjes te verdelen: willekeurig of op niveau, met heterogene, homogene of volledig willekeurige groepen; je stelt aantal groepen en voorwaarden in. Groepjesmaker maakt razendsnel willekeurige groepjes uit een namenlijst.",
+        "why": "Groepsindeling is de tweelingfunctie van zitplan: hetzelfde constraint-denken (heterogeen/homogeen/willekeurig). Via KlasCement is dit exact het kanaal en de taal van onze Vlaamse doelgroep. We kunnen zitplan én groepsvorming in één samenhangend model aanbieden.",
+        "visual": "Schakelaar 'willekeurig / heterogeen / homogeen' bij het maken van groepjes; gemaakte groepjes kan je meteen als zit-clusters op de plattegrond neerzetten."
+      },
+      {
+        "name": "Shibutz",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://www.klascement.net/lesmateriaal/?q=klasplattegrond",
+        "what": "Online tool waarmee je leerlingnamen invoert, aantal rijen en kolommen kiest, en automatisch een nieuwe zitopstelling genereert. Je past de indeling direct aan door leerlingen te verslepen en downloadt of print de plattegrond.",
+        "why": "Minimalistisch, snel model: genereer op rijen/kolommen, versleep bij, print. Goede benchmark voor de 'lichtste' variant van onze feature — de instapdrempel moet zo laag zijn.",
+        "visual": "Snelinstelling 'X rijen × Y kolommen' → automatisch gevuld grid → direct verslepen → print/PDF. Ideale 'quick start' naast de rijkere canvas-modus."
+      },
+      {
+        "name": "ClassCode Seating Chart",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://www.classcode.dev/seating-chart/",
+        "what": "Gratis zitplan-generator met drag & drop interface om tafels te schikken; klassen importeren uit Google Classroom of handmatig aanmaken.",
+        "why": "Toont het belang van import (klaslijsten niet handmatig hoeven overtypen). Voor Vlaanderen: koppeling met Smartschool/CSV is het equivalent. Vermindert setup-frictie, cruciaal voor teacher-first adoptie.",
+        "visual": "Eenmalige import van de klaslijst (CSV/Smartschool) waarna leerlingkaartjes klaarstaan om op het plan te slepen; geen handmatig overtypen."
+      },
+      {
+        "name": "Stoeltjesdans",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.onderwijsvanmorgen.nl/7-x-groepjes-maken/",
+        "what": "Nederlandse tool waarin je vooraf eisen aanvinkt voor de indeling, zoals leerlingen scheiden, mengen van jongens en meisjes, of een positieve sfeer bevorderen; de tool genereert dan een passende opstelling.",
+        "why": "GRENSGEVAL — bewust opgenomen als waarschuwing. Sommige van hun vinkjes ('lastige kinderen scheiden', ondersteuning van gepeste kinderen) leunen tegen interpretatie/afgeleide labels aan. Voor Klaskompas herformuleren we dit strikt factueel (bv. 'X en Y niet naast elkaar' i.p.v. 'lastig kind') en zonder categoriseren van leerlingen. Nuttig om te tonen hoe het NIET moet.",
+        "visual": "Neem het idee van 'vink je eisen aan' over, maar houd de eisen puur ruimtelijk/factueel (uit elkaar, vooraan, samen) — nooit een dropdown met karakter- of gedragslabels."
+      },
+      {
+        "name": "Mega Seating Plan — Safety/privacy-positionering",
+        "category": "bron",
+        "region": "internationaal",
+        "url": "https://www.seatingplan.com/safety",
+        "what": "Aparte 'safety'-pagina waarop de aanbieder communiceert dat het algoritme geen oordeel velt over leerlingen en niet op leerlinggegevens getraind is, met aandacht voor gegevensbescherming en veilige verwerking.",
+        "why": "Blauwdruk voor onze eigen privacy-by-design communicatie: een expliciete, leesbare 'wat we NIET doen met leerlingdata'-pagina wekt vertrouwen bij scholen en past bij onze AVG/GDPR-ambitie en harde grenzen (geen scores, geen profilering).",
+        "visual": "Een korte, in-app zichtbare 'zo gaan we met data om'-badge/pagina naast de zitplan-tool: 'geen profielen, geen risicoscores, data blijft bij de leerkracht/school'."
+      }
+    ],
+    "themes": [
+      "Sleep-en-neerzet op een canvas dat het echte lokaal nabootst (inclusief meubels roteren) is de basisverwachting, met daarnaast een snelle 'X rijen × Y kolommen' instapmodus",
+      "Willekeurig plaatsen en regel-gebaseerd plaatsen zijn geen tegenpolen: de sterke tools laten je factuele pins zetten (samen / uit elkaar / vooraan wegens zicht of gehoor / vastzetten) die de shuffle respecteert",
+      "De 'coole' factor zit in geanimeerd schudden (roulette/rad) dat live op het digibord projecteerbaar is — spektakel zonder pedagogische grens te raken",
+      "Het zitplan is geen losse administratie maar het centrale klasscherm: van daaruit aanwezigheid, willekeurige beurt en feitelijke observaties — sluit direct aan bij de Klascockpit-modules",
+      "Meerdere opgeslagen plannen per klas, omschakelbaar per activiteit (frontaal, groepswerk, toets), is een kernverwachting",
+      "Groepsvorming (heterogeen/homogeen/willekeurig) is de tweelingfunctie van zitplan en hoort in hetzelfde model",
+      "GRENS: meerdere tools kleuren zitkaartjes op cijfers/SEN/gedrag en doen 'smart layout by ability/behaviour' — dit nemen we NIET over als automatisme; wel factuele, door de leerkracht ingestelde ruimtelijke regels",
+      "Privacy-by-design als expliciet verkoopargument ('geen oordeel, niet getraind op leerlingdata') is onderscheidend en overneembaar",
+      "Lage instapfrictie via klaslijst-import (CSV/Smartschool) i.p.v. handmatig overtypen"
+    ],
+    "topPicks": [
+      "Geanimeerd schudden op het digibord (à la Sekigae Sensei): willekeurige herschikking als leuk klasmoment, transparant en zonder enige grensoverschrijding",
+      "Factueel constraint-model met slotjes/pins: 'samen houden', 'uit elkaar', 'vooraan wegens zicht/gehoor', 'vastzetten terwijl de rest schudt' — willekeur die regels respecteert, zonder karakter- of risicolabels",
+      "Canvas dat het echte lokaal nabootst: meubels/zones slepen en roteren (Prowise-stijl) naast een snelle rijen×kolommen quick-start (Shibutz-stijl)",
+      "Zitplan als centraal klasscherm: klik op een tafel voor aanwezigheid of een feitelijke observatie, met een spotlight-knop voor een willekeurige beurt — geïntegreerd met de bestaande Klascockpit-modules",
+      "Meerdere opgeslagen plannen per klas, in één tik omschakelbaar per lesvorm (frontaal / groepswerk / toets)",
+      "Expliciete, in-app privacy-badge 'geen profielen, geen risicoscores, data blijft bij leerkracht/school' als vertrouwens- en differentiatie-element",
+      "Geïntegreerde groepjesmaker (heterogeen/homogeen/willekeurig) waarvan de groepen meteen als zit-clusters op de plattegrond belanden"
+    ]
+  },
+  {
+    "facet": "Losse visuele les-tools: beurten-randomizers, timers, geluidsmeters, groepsverdelers en attention/quiet signals",
+    "summary": "Rond dit facet bestaat een volwassen, populair ecosysteem van gratis of goedkope \"digibord widgets\" die precies mikken op de \"coole, visuele\" beleving die op TikTok/Instagram viraal gaat. Classroomscreen en Gynzy bundelen alles (timer, namenkiezer, stemvolume/geluidsmeter, verkeerslicht, groepsmaker, scorebord) op een projecteerbaar bord; losse tools zoals Wheel of Names, Bouncy Balls en Too Noisy zijn sterk in een enkele functie met een uitgesproken animatie. De rode draad: de leerkracht doet 1 handeling (klik/spin/start) en de rest is een visueel signaal dat de klas zelf laat zelfreguleren - de leerling ziet direct feedback zonder dat de leerkracht moet praten. Belangrijk voor Klaskompas: de geluidsmeters werken met de microfoon maar meten enkel volume (dB-niveau), geen spraakinhoud of identiteit - mits lokaal verwerkt en niets opgeslagen wordt is dit AVG-conform en respecteert het de harde grenzen. De grootste valkuil om te vermijden is de \"beloning/straf\"-laag die Too Noisy en ClassDojo toevoegen (sterren, gekraakt scherm, alarm) - dat neigt naar automatische consequenties en publieke afstraffing.",
+    "findings": [
+      {
+        "name": "Classroomscreen",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://classroomscreen.com/",
+        "what": "Gratis online whiteboard/digibord waarop je losse widgets sleept: timer & stopwatch, klok, willekeurige namenkiezer, stemniveau/geluidsmeter, verkeerslicht, tekstvak, tekengereedschap, QR-code, werkstroomsymbolen, poll en scorebord. Geen account nodig; betaald ~30 euro/jaar voor opslaan.",
+        "why": "Dit is de directe conceptuele referentie voor het visueel klasmanagement-deel van Klaskompas: een projecteerbaar overzicht waar de leerkracht met 1 klik een widget toont. Toont hoe je meerdere mini-tools combineert zonder rommelig te worden.",
+        "visual": "Widget-bar onderaan/zijkant: klik = widget verschijnt als vrij verplaatsbaar kaartje op een rustige achtergrond. Overweeg voor Klaskompas een 'les-modus' full-screen bord waar admin wegvalt en enkel grote, van achteraan leesbare widgets tonen. Alles op 1 canvas, sleepbaar, met grote knoppen."
+      },
+      {
+        "name": "Wheel of Names",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://wheelofnames.com/",
+        "what": "Draaiend rad met namen in gekleurde segmenten. Je typt/importeert namen (Excel/CSV/Google Sheets), klikt om te spinnen, het rad vertraagt met geluid en wijst een winnaar aan. Instelbare spinduur, geluid dempen, kleuren, afbeeldingen, en optie om gekozen naam te verwijderen.",
+        "why": "De meest virale beurten-tool op sociale media. Het spin-moment creeert spanning/betrokkenheid. Voor Klaskompas: fairere beurtverdeling zonder bias, klas kijkt mee.",
+        "visual": "Animatie van vertragend rad + tik-geluid + confetti/uitvergroting op de winnaar. Cruciaal detail om over te nemen: schakelaar 'reeds gekozen leerlingen uitschakelen' zodat iedereen aan de beurt komt. Klaskompas kan dit koppelen aan de klaslijst zonder namen extern op te slaan."
+      },
+      {
+        "name": "Random Name Picker / Group Generator (ClassTools.net)",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://www.classtools.net/random-name-picker/",
+        "what": "Gratis, advertentie-arme namenkiezer en aparte groepsgenerator die een namenlijst in willekeurige teams van 2-5 splitst. Meerdere visuele stijlen (fruitmachine/gokkast-animatie, ballonnen).",
+        "why": "Toont dat 1 namenlijst meerdere functies kan voeden (beurt kiezen EN groepen maken) - past bij 'universele kern' principe: leerlingen 1x invoeren, overal gebruiken.",
+        "visual": "'Fruitmachine'-animatie die door namen rolt en stopt. Voor groepen: kaartjes die zich schudden en hergroeperen in kolommen. Idee: laat leerkracht groepsgrootte of aantal groepen kiezen met 1 slider, dan animatie die de klaslijst verdeelt."
+      },
+      {
+        "name": "Bouncy Balls",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://bouncyballs.org/",
+        "what": "Geluidsmeter waarbij een scherm vol balletjes hoger stuitert naarmate het klaslokaal luider wordt (via microfoon, real-time). Gevoeligheid 0-200 instelbaar; 5 thema's: Plastic, Emoji, Numbers, Bubbles, Eyeballs.",
+        "why": "Schoolvoorbeeld van visuele zelfregulatie: leerlingen zien direct het effect van hun eigen volume en corrigeren zichzelf, zonder dat de leerkracht 'sst' moet zeggen. Speels en niet-oordelend.",
+        "visual": "Fysica-animatie: deeltjes/balletjes die reageren op amplitude van de mic. Voor Klaskompas: verwerk enkel volume-amplitude, NIETS opnemen of opslaan - puur een live-visualisatie. Dit is een privacyvriendelijk alternatief voor alles wat naar 'gedrag registreren' neigt."
+      },
+      {
+        "name": "Too Noisy",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://toonoisyapp.com/",
+        "what": "Geluidsmeter met een meter-naald en achtergrondscene (o.a. dieren, sneeuwpop) die verandert met het geluidsniveau. Bevat een beloningssysteem (gouden sterren bij stilte) en bij te veel lawaai kraakt het scherm met alarmgeluid.",
+        "why": "Interessant als voorbeeld van sterke visuele metafoor, MAAR de beloning/alarm-laag botst met de harde grenzen (neigt naar automatische consequentie en publieke afstraffing). Neem de visuele meter over, laat de sanctie-/scorelaag weg.",
+        "visual": "Neem over: dynamisch veranderende scene/kleur als volume-metafoor (bv. rustig weer -> storm). Vermijd: het 'gekraakte scherm'-alarm en het punten/sterren-systeem. Klaskompas-alternatief: een neutrale drempelindicator (groen/oranje) zonder score of straf."
+      },
+      {
+        "name": "ClassDojo Toolkit (Noise Meter + Group Maker)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.classdojo.com/nl-nl/toolkit/noisemeter/",
+        "what": "Gratis losse tools binnen ClassDojo: een geluidsmeter en een Group Maker die de klas in groepen van elke grootte verdeelt, plus timer. Ook in het Nederlands beschikbaar.",
+        "why": "Toont een compleet toolkit-model. Let op: ClassDojo's kern-beloningssysteem (punten voor/tegen gedrag) is precies wat Klaskompas NIET mag doen; de losse toolkit-widgets zijn wel bruikbaar als inspiratie.",
+        "visual": "Group Maker: leerkracht kiest aantal groepen, tool schudt avatar-kaartjes in groepjes. Neem de eenvoud over (1 keuze -> animatie), laat het gedrag-scoresysteem volledig weg."
+      },
+      {
+        "name": "Visual Timer / Time Timer",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://visualtimer.com/",
+        "what": "Aftel-timers met sterke visuele metafoor: krimpende gekleurde cirkel/schijf, zandloper, vloeistof met golven, regenboog-timer of 3D-animatiefiguurtje. Vaak met kleurverloop groen->geel->rood naarmate de tijd afloopt.",
+        "why": "Visuele (niet-numerieke) tijd is toegankelijker, ook voor jongere leerlingen en leerlingen met concentratienood. Maakt transities en zelfstandig werk zichtbaar zonder woorden. Onderzoek claimt kortere transitietijden.",
+        "visual": "Krimpende taart/schijf van kleur i.p.v. enkel cijfers; kleur schuift van groen naar rood in laatste kwart. Alternatieve skins (zandloper/vloeistof) voor variatie. Voor Klaskompas: 1 grote start-knop, presets (5/10/15 min), full-screen projecteerbaar."
+      },
+      {
+        "name": "Flippity",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://flippity.net/",
+        "what": "Google Sheets-gebaseerde set: Random Name Picker die ook groepen, teams en willekeurige zitplannen genereert uit 1 namenlijst. Ook memory/quiz-achtige templates.",
+        "why": "Versterkt het idee 'een klaslijst voedt meerdere visuele functies': beurten, groepen en zitplan uit dezelfde bron. Past bij universele-kern-principe.",
+        "visual": "Kaartjes die omdraaien/schudden. Idee voor Klaskompas: 1 klaslijst -> knoppen 'kies beurt', 'maak groepen', 'nieuw zitplan', elk met eigen korte animatie."
+      },
+      {
+        "name": "Gynzy digibord tools",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.gynzy.com/nl-nl/digitaal-lesgeven/digibord-tools",
+        "what": "Nederlandstalig digibord-platform met tools als Timer, Verkeerslicht (Stoplicht), Namenkiezer, Stemvolume, groepsmaker, dobbelsteen en scorebord. 'Actieve groepen': leerlingen 1x toevoegen, overal herbruikbaar.",
+        "why": "Directe Nederlandstalige/onderwijscontext-referentie voor Klaskompas met exact dezelfde widget-set. Het 'actieve groepen'-model (1x invoeren, overal gebruiken) is precies het integratievoordeel dat losse tools niet hebben.",
+        "visual": "Verkeerslicht/Stoplicht: 3 kleuren tonen welke (werk)regels nu gelden - simpele, universeel begrepen visuele taal. Stemvolume: leerkracht stelt verwacht geluidsniveau per activiteit in. Neem het integratievoordeel over: widgets die de bestaande klaslijst van Klaskompas hergebruiken."
+      },
+      {
+        "name": "Stemvolume / Verkeerslicht (voice-level indicator)",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.gynzy.com/nl-nl/bibliotheek/extras/klassenmanagement",
+        "what": "Niet-microfoon-methode: de leerkracht stelt vooraf een verwacht geluidsniveau in (0 = stil, 1 = fluisteren met buur, 2 = groepsoverleg, 3 = presenteren). Groot visueel label op het bord maakt de norm expliciet.",
+        "why": "Privacyvriendelijk alternatief voor een microfoon-geluidsmeter: het meet niets, het TOONT enkel de verwachting. Volledig binnen de harde grenzen. Kan de proactieve/preventieve tegenhanger zijn van een reactieve meter.",
+        "visual": "Grote genummerde niveau-kaart (0-3) met icoon per niveau (gesloten mond, buren-fluister, groepje, microfoon). Leerkracht tikt niveau aan bij start van een activiteit - 1 handeling. Combineer eventueel met verkeerslicht-kleuren."
+      },
+      {
+        "name": "Attention/quiet signals (chime, doorbell, call-and-response)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://lauracandler.com/quiet-signals/",
+        "what": "Aandachtssignalen om de klas stil te krijgen: geluidssignalen (deurbel, klankschaal, windgong), call-and-response ('Give me five', klap-patronen) en non-verbale signalen (hand omhoog). Digitale varianten spelen een chime of tonen een signaal op het bord.",
+        "why": "Kernonderdeel van visueel klasmanagement dat vaak vergeten wordt naast timer/namenkiezer. Een digitaal aandachtssignaal is 1 knop voor de leerkracht en werkt preventief i.p.v. bestraffend.",
+        "visual": "1 grote knop = zachte chime + korte full-screen animatie/icoon (bv. 'ogen op mij'). Non-verbaal en vriendelijk, geen alarm. Idee: instelbaar geluid (klankschaal/deurbel) + optioneel visueel aftel-icoon '5-4-3-2-1 aandacht'."
+      },
+      {
+        "name": "Namenkiezer / digibord-tools (onderwijs.tools, KlasCement)",
+        "category": "bron",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.tools/archieven/180",
+        "what": "Overzichten van Nederlandstalige digibord-tools voor schoolstart: Namenkiezer, Dagindeling (digitale tijdbalk bovenaan het bord), Geluidsmeter. KlasCement (Vlaams leermiddelenplatform) verzamelt en beoordeelt deze tools.",
+        "why": "Bevestigt welke tools Vlaamse/Nederlandse leerkrachten daadwerkelijk kennen en verwachten, en geeft de juiste Nederlandse terminologie (namenkiezer, stemvolume, dagindeling, lawaaimeter) voor Klaskompas' UI.",
+        "visual": "Dagindeling als horizontale tijdbalk bovenaan het bord die de lesdag visueel opdeelt - een rustig, altijd-zichtbaar ankerpunt. Gebruik de vertrouwde Nederlandse labels in Klaskompas zodat het herkenbaar aanvoelt."
+      }
+    ],
+    "themes": [
+      "1 handeling voor de leerkracht, visuele feedback voor de klas: de tool praat, niet de leerkracht (zelfregulatie i.p.v. commando's).",
+      "Bundelen vs. los: het onderscheidende voordeel van een geintegreerd platform (Classroomscreen/Gynzy/Klaskompas) is 1 klaslijst die alle widgets voedt - losse virale tools missen dat.",
+      "Visuele metafoor boven cijfers: krimpende cirkel/taart voor tijd, stuiterende balletjes of veranderende scene voor volume, draaiend rad voor beurten - dit is precies de 'coole' TikTok/Insta-esthetiek.",
+      "Billijkheid als ingebouwde feature: 'reeds gekozen uitschakelen' bij de namenkiezer zorgt dat iedereen aan de beurt komt en vermindert bias.",
+      "Privacygrens bij geluidsmeters: microfoon mag enkel live volume-amplitude visualiseren, nooit opnemen/opslaan/identificeren - dan AVG-conform en binnen de harde grenzen.",
+      "Vermijd de beloning/straf-laag: sterren, punten, gekraakt scherm en alarm (Too Noisy, ClassDojo) zijn automatische publieke consequenties die Klaskompas expliciet niet mag toevoegen.",
+      "Preventief alternatief: een ingesteld 'verwacht stemvolume'-label meet niets en toont enkel de norm - de veiligste, meest teacher-first variant."
+    ],
+    "topPicks": [
+      "Projecteerbare 'les-modus' met sleepbare widgets (timer, namenkiezer, stemvolume-label, verkeerslicht, aandachtssignaal) die allemaal de bestaande Klaskompas-klaslijst hergebruiken - het integratievoordeel dat losse tools missen.",
+      "Beurten-rad/namenkiezer met spin-animatie en verplichte optie 'reeds gekozen uitschakelen' voor billijke beurtverdeling, gevoed door de klaslijst zonder externe opslag.",
+      "Visuele timer als krimpende gekleurde schijf (groen->oranje->rood) met presets (5/10/15 min) en 1 grote startknop, full-screen leesbaar van achteraan.",
+      "Groepsmaker: 1 slider (groepsgrootte of aantal groepen) -> schud-animatie die de klaslijst verdeelt; optioneel gekoppeld aan zitplan.",
+      "Privacyvriendelijke geluidsindicatie: een ingesteld 'verwacht stemvolume'-niveau (0-3, preventief, meet niets) als hoofdvariant, eventueel met een live volume-visualisatie die niets opneemt - bewust ZONDER punten/alarm/sanctie.",
+      "Vriendelijk digitaal aandachtssignaal: 1 knop = zachte chime + korte 'ogen op mij'-animatie, geen alarm of afstraffing."
+    ]
+  },
+  {
+    "facet": "Systemen voor gedrag en positieve bekrachtiging: PBIS/PBS, token economy, beloningssystemen, herstelgericht werken en de kritiek op green/amber/red-kaarten — en hoe je dit visueel maakt zonder publieke afstraffing of risicoscores.",
+    "summary": "Het veld splitst zich duidelijk in twee kampen. Aan de ene kant staan puntgebaseerde beloningssystemen (PBIS Rewards, LiveSchool, ClassDojo, Classcraft) die gedrag zichtbaar en \"gamified\" maken, maar die stevig bekritiseerd worden om publieke afstraffing, privacy-inbreuk en het uithollen van intrinsieke motivatie. Klassieke visuele systemen zoals clip charts en het stoplicht (green/amber/red) worden in recent onderzoek en vakpers expliciet afgeraden: ze werken via schaamte, treffen neurodivergente leerlingen onevenredig en escaleren gedrag in plaats van het te herstellen. Aan de andere kant staan pedagogisch verantwoorde, privacyvriendelijke alternatieven: PBIS/PBS als kader (positief geformuleerde gedragsverwachtingen in een matrix, alleen belonen), whole-class token economies (marble jar, warm fuzzies) die niet individueel afstraffen, en herstelgericht werken (affectieve boodschappen, herstelcirkels, No Blame). De kern voor Klaskompas: maak positief gedrag zichtbaar en collectief, houd individuele registraties privaat en feitelijk (enkel leerkracht), en bied herstel- in plaats van straf-flows. Zelf-gerapporteerde mood check-ins (leerling kiest zelf een emoji) zijn AVG-vriendelijk en vallen NIET onder de verboden emotiedetectie, mits privaat en niet gescoord.",
+    "themes": [
+      "Publiek versus privaat: de sterkste kritiek op bestaande systemen is dat ze gedrag KLASSIKAAL zichtbaar maken (namen op rood, clips die zakken). Klaskompas moet individuele registraties standaard privaat (enkel leerkracht) houden.",
+      "Belonen mag zichtbaar en collectief, straffen niet: whole-class trackers (marble jar) die alleen groeien werken motiverend zonder iemand aan te wijzen. De 'gouden regel' is: nooit iets wegnemen.",
+      "Van straf naar herstel: herstelgericht werken (affectieve boodschappen, cirkels, No Blame) vervangt de sanctie-logica door herstel van de relatie en de schade — past bij het productprincipe 'preventie en herstel naast consequenties'.",
+      "Intrinsieke motivatie bewaken: token economies verhogen gedrag op korte termijn maar riskeren afhankelijkheid van beloning; onderzoek adviseert 'uitfaseren' (dagelijks naar wekelijks naar maandelijks).",
+      "Feitelijk gedrag boven interpretatie: goede systemen registreren waarneembaar gedrag/gedragsverwachtingen, geen scores over de persoon — sluit direct aan bij de harde grenzen (geen risicoscores, geen karaktereigenschappen).",
+      "Zelf-rapportage is geen detectie: emoji-mood-check-ins waarbij de leerling zelf kiest, zijn privacyvriendelijk en toegelaten, in tegenstelling tot geautomatiseerde emotieherkenning die verboden is."
+    ],
+    "topPicks": [
+      "Whole-class 'marble jar'/groeidoel-tracker als visueel klasmanagement-element: een animatie die alleen vult bij positief klasgedrag, met een gezamenlijke beloning bij vol. Nooit legen als straf. Anoniem-collectief, dus geen individuele afstraffing.",
+      "PBIS-stijl gedragsverwachtingen-matrix als configureerbare kern: positief geformuleerde verwachtingen per ruimte/moment ('Zo doen we het hier'), die de leerkracht als visuele kaarten kan tonen — universele kern, configureerbare klaspreventie.",
+      "Herstelgerichte flow bij de leerlingfiche/observatie: in plaats van een sanctieknop een 'herstelgesprek'-sjabloon met affectieve I-boodschappen en herstelvragen ('Wat is er gebeurd? Wie is geraakt? Hoe herstellen we het?'). Auditbaar en feitelijk.",
+      "Privaat, positief-eerst registreren: individuele positieve momenten enkel zichtbaar voor de leerkracht (en eventueel de leerling zelf/ouder), nooit klassikaal geprojecteerd — vermijdt de kernkritiek op ClassDojo en stoplichten.",
+      "Discrete self-report mood check-in (leerling kiest emoji): privacyvriendelijk, geen scoring, geen emotiedetectie — geeft de leerkracht signaal zonder oordeel over de leerling."
+    ],
+    "findings": [
+      {
+        "name": "PBIS / SWPBS (School-Wide Positive Behavior Interventions and Supports)",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.pbis.org/classroom-pbis",
+        "what": "Evidence-based, gelaagd kader (tier 1-3) dat schoolwaarden vertaalt naar concrete, positief geformuleerde gedragsverwachtingen in een matrix per ruimte/moment, die actief worden aangeleerd en systematisch gewaardeerd. In Nederland/Vlaanderen bekend als PBS.",
+        "why": "Levert een pedagogisch verantwoorde, positief-geformuleerde kern voor het klasmanagement-deel: verwachtingen i.p.v. verboden, belonen i.p.v. straffen. Sluit aan bij 'universele kern, configureerbare klaspreventie' en 'feitelijk gedrag'. Geen risicoscores nodig.",
+        "visual": "Toon de gedragsverwachtingen-matrix als een raster van visuele kaarten ('In de gang', 'Tijdens groepswerk') met een korte positieve gedragszin en icoon. Leerkracht kan per les 1 verwachting 'in de spotlight' zetten als klasbanner."
+      },
+      {
+        "name": "PBS / Positive Behavior Support (NL/Vlaanderen-variant)",
+        "category": "framework",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://wij-leren.nl/school-wide-positive-behavior-support.php",
+        "what": "Nederlandstalige toepassing van PBIS: schoolwaarden (respect, veiligheid, verantwoordelijkheid) worden omgezet in een 'matrix van gedragsverwachtingen' voor schoolruimtes en klas, met aanleren en waarderen van gewenst gedrag.",
+        "why": "Direct bruikbare, in het Nederlandstalige onderwijs ingeburgerde terminologie en structuur. Geeft Klaskompas een herkenbaar, verantwoord frame dat leerkrachten al kennen.",
+        "visual": "Configureerbare 'waarden-tegels' (max 3-4 kernwaarden) met daaronder uitklapbare concrete gedragsvoorbeelden; leerkracht vinkt af welke ruimtes/momenten relevant zijn voor de klas."
+      },
+      {
+        "name": "PBIS Rewards / LiveSchool / PBIS+",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.pbisrewards.com/",
+        "what": "Schoolbrede point-tracking platforms die leerlingen erkennen wanneer ze aan gedragsverwachtingen voldoen; multi-device, punten in te wisselen in een 'store'. FERPA-afgestemd.",
+        "why": "Referentie voor hoe positieve erkenning digitaal geschaald wordt. Les voor Klaskompas: de meerwaarde zit in erkenning-op-het-moment, maar hun zwakte is externe motivatie en dataverzameling — bewust positief-only en privaat houden.",
+        "visual": "Snelle 'erken'-actie (1 tik) die een positief moment vastlegt zonder klassikale projectie; een persoonlijke (private) 'groeimuur' per leerling i.p.v. een publieke ranglijst."
+      },
+      {
+        "name": "ClassDojo",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.classdojo.com/nl-nl/",
+        "what": "Populair digitaal beloningssysteem: leerkracht kent punten toe (of neemt ze af) voor zelf-gedefinieerd gedrag; posities kunnen op het scherm aan de hele klas geprojecteerd worden.",
+        "why": "Belangrijkste NEGATIEVE referentie/trend: exact wat Klaskompas NIET mag doen. Kritiek: publieke projectie = afstraffing, verzamelt meer leerlinggegevens dan nodig, weinig ruimte voor zelfrepresentatie. Toont waarom private, positief-eerst registratie het onderscheid maakt.",
+        "visual": "Anti-patroon: geen klassikale scoreprojectie, geen puntenaftrek-animatie voor de klas. Overneembaar deel: de laagdrempelige oudercommunicatie en het portfolio-idee, maar dan privacy-by-design."
+      },
+      {
+        "name": "Classcraft (gamification)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.techlearning.com/how-to/what-is-classcraft-and-how-can-it-be-used-to-teach-tips-and-tricks",
+        "what": "RPG-gamificatie: leerlingen kiezen een avatar/rol (Warrior/Mage/Healer), werken in teams aan quests rond gedrag en samenwerking, verdienen XP/gold en verliezen HP bij negatief gedrag.",
+        "why": "Sterk voor motivatie en samenwerking (teamdoelen), maar de HP-loss/damage-mechaniek is publieke afstraffing en dus buiten de grenzen. Neem de collectieve/coöperatieve laag over, niet de strafmechaniek.",
+        "visual": "Team-avatars en een gezamenlijke 'quest-balk' die vooruitgang toont bij positief klasgedrag; laat het straf-element (HP-verlies) volledig weg — enkel groeiende voortgang."
+      },
+      {
+        "name": "Clip chart / behavior chart",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.ascd.org/el/articles/tear-down-your-behavior-chart",
+        "what": "Klassiek visueel systeem waarbij leerlingnamen/knijpers omhoog of omlaag bewegen langs kleuren afhankelijk van gedrag; publiek zichtbaar in de klas.",
+        "why": "Sterk bekritiseerd anti-patroon: publieke schaamte, veroorzaakt toxische stress, benadeelt neurodivergente leerlingen, benadrukt externe beloning boven begrip. Documenteer expliciet als 'niet doen' in de designkeuzes.",
+        "visual": "Anti-patroon om te vermijden: geen publieke naam-op-kleur weergave. Alternatief: individuele voortgang privaat en groei-georiënteerd tonen, nooit klassikaal afdalend."
+      },
+      {
+        "name": "Green/amber/red stoplicht-systeem",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.tes.com/magazine/teaching-learning/general/behaviour-why-traffic-light-system-doesnt-work",
+        "what": "Kleurcode (groen/oranje/rood) waarbij een leerling naam publiek naar oranje/rood wordt verplaatst bij ongewenst gedrag.",
+        "why": "Directe match met de facet-vraag. Kritiek: het systeem WERKT via de druk en schaamte van publieke berisping, escaleert gedrag, en maakt gedrag van neurodivergente leerlingen extra zichtbaar bij klasgenoten en ouders. Toont waarom kleurcodes privaat en feitelijk moeten blijven.",
+        "visual": "Als je kleuren gebruikt: houd ze privaat (enkel leerkrachtzicht) en koppel ze aan een concrete gebeurtenis en herstelactie, niet aan een publieke positie van de leerling. Overweeg kleuren weg te laten voor de persoon en enkel voor situaties/klasmomenten te gebruiken."
+      },
+      {
+        "name": "Token economy (marble jar / whole-class)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://pedagogue.app/marble-jar-reward-system-for-the-classroom-how-to-keep-things-positive/",
+        "what": "Klas verdient collectief tokens (knikkers in een pot) bij positief klasgedrag; bij volle pot volgt een gezamenlijke beloning. Gouden regel: nooit tokens weghalen — enkel belonen.",
+        "why": "Ideaal privacyvriendelijk en niet-afstraffend visueel element: collectief, anoniem, alleen groeiend. Geen individuele aanwijzing, geen schaamte. Perfect voor het 'visueel klasmanagement'-deel. Onderzoek: faseer beloning uit (dagelijks -> wekelijks -> maandelijks) om intrinsieke motivatie te beschermen.",
+        "visual": "Digitale 'knikkerpot' of voortgangsthermometer die zichtbaar vult bij klasdoelen; confetti-animatie bij vol; leerkracht kiest samen met de klas de beloning. Nooit een 'legen'-knop als straf."
+      },
+      {
+        "name": "Warm fuzzies (collectieve waarderingspot)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.teacherspayteachers.com/browse/free?search=marble+jar+reward+system",
+        "what": "Variant op de marble jar waarbij 'warme' tokens worden toegevoegd bij vriendelijk/behulpzaam gedrag naar elkaar, gericht op klasklimaat en verbondenheid.",
+        "why": "Verschuift de focus van gehoorzaamheid naar prosociaal gedrag en verbondenheid — sluit aan bij herstelgericht en teacher-first. Volledig positief en collectief.",
+        "visual": "Een groeiende 'hart-/pluimenpot'; leerlingen (of leerkracht) benoemen kort welk vriendelijk gedrag een pluim opleverde, zonder rangschikking."
+      },
+      {
+        "name": "Herstelgericht werken / Restorative Practices",
+        "category": "framework",
+        "region": "Vlaanderen/Nederland",
+        "url": "http://www.herstelgerichtwerkenopschool.be/",
+        "what": "Geïntegreerde benadering (proactie, preventie, herstel) met verbindende taal via proactieve en herstelcirkels, affectieve boodschappen en herstelgesprekken; in Vlaanderen o.a. HERGO, No Blame, peer mediation, Eigen Kracht-conferenties.",
+        "why": "Kernalternatief voor sanctie-logica: herstelt relatie en schade i.p.v. straffen. Vlaams platform bestaat, dus lokaal verankerd. Sluit direct aan bij productprincipe 'preventie en herstel naast consequenties' en 'geen automatische sancties'.",
+        "visual": "Bij een incident-registratie: geen sanctieknop maar een 'herstel'-flow met stappen (benoemen wat gebeurde, wie geraakt is, herstelafspraak), auditbaar opgeslagen bij de observatie/actie."
+      },
+      {
+        "name": "Affectieve boodschappen & herstelvragen (IIRP-continuum)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.iirp.edu/images/pdf/Restorative_Practices_Continuum.pdf",
+        "what": "Laagdrempelige herstelinstrumenten: affectieve I-boodschappen ('Ik voel me... wanneer...') en herstelvragen ('Wat gebeurde er? Wie is geraakt? Wat is er nodig om het recht te zetten?'), op een continuüm van informeel naar formeel.",
+        "why": "Zeer concreet en direct in te bouwen als tekstsjablonen. Houdt communicatie feitelijk en herstelgericht, zonder oordeel over de persoon. Ondersteunt de leerkracht met 'maximaal enkele handelingen tijdens een les'.",
+        "visual": "Een set voorgeschreven zin-templates/kaartjes die de leerkracht met 1 tik in een gesprek of ouderbericht kan invoegen; kleurloos, feitelijk, herstelgericht."
+      },
+      {
+        "name": "No Blame-methode",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.icoba.be/nieuws/uitgelezen-samen-wijs-herstelgericht-werken-op-school-ligand",
+        "what": "In Vlaanderen ingeburgerde, niet-bestraffende aanpak (vooral bij pesten) die schuldvraag vermijdt en een steungroep rond de betrokkenen inzet om samen tot herstel te komen.",
+        "why": "Toont een expliciet niet-straffend, niet-scorend model dat past binnen de harde grenzen (geen sancties, geen risicoscores). Verantwoorde inspiratie voor conflict-/pest-flows.",
+        "visual": "Een 'steungroep'-flow: leerkracht noteert betrokkenen en afspraken, met opvolgmoment; presenteer als samenwerking, niet als dossier tegen een leerling."
+      },
+      {
+        "name": "Proactieve & herstelcirkels",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.novakeducation.com/blog/what-are-restorative-practices",
+        "what": "Klasgesprekken in cirkelvorm om verbondenheid en een veilig klimaat op te bouwen (proactief) of om na een incident samen te herstellen (reactief); de cirkel symboliseert gemeenschap en gelijkwaardigheid.",
+        "why": "Preventieve, klimaatversterkende praktijk die goed te ondersteunen is met lichte digitale hulp (spreekvolgorde, thema's) zonder leerlinggegevens te verwerken.",
+        "visual": "Een eenvoudige 'cirkel'-tool: willekeurige spreekvolgorde, een gespreksthema/vraag, een timer — puur faciliterend, geen registratie van wat leerlingen zeggen."
+      },
+      {
+        "name": "Reward System (rewardsystem.org)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.rewardsystem.org/",
+        "what": "Online gedrags- en beloningssysteem dat zich expliciet richt op positiviteit; gratis voor individuele leerkrachten.",
+        "why": "Voorbeeld van een positief-georiënteerd, leerkracht-first alternatief zonder de publieke-projectie-nadruk van ClassDojo. Nuttige benchmark voor toon en scope.",
+        "visual": "Positief-geframede erkenningsmomenten; overneembaar: een 'positief-only' standaardinstelling waarbij negatieve registratie bewust ontbreekt of privaat/feitelijk is."
+      },
+      {
+        "name": "PosiTrack: Student Tracker",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://apps.apple.com/us/app/positrack-student-tracker/id6740725009",
+        "what": "Eenvoudige puntgebaseerde tracker om positief gedrag/participatie te erkennen; volgens de storevermelding verzamelt de ontwikkelaar geen data uit de app.",
+        "why": "Voorbeeld van privacy-by-design in de praktijk (geen dataverzameling). Bevestigt dat een lichte, lokale/private aanpak haalbaar is — relevant voor AVG-positionering van Klaskompas.",
+        "visual": "Minimalistische, snelle erken-interactie; lokale/private opslag als privacy-argument in de UI ('gegevens blijven bij jou')."
+      },
+      {
+        "name": "Discrete self-report mood check-in (bv. Class Catalyst-stijl)",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://classcatalyst.com/social-emotional-learning/daily-sel-check-ins-with-class-catalyst/",
+        "what": "Leerling kiest zelf een emoji/gevoel bij binnenkomst via een korte, private/discrete check-in; de leerkracht krijgt een signaal, niet een oordeel. Ook mogelijk via een anonieme Google Form.",
+        "why": "Belangrijk onderscheid t.o.v. de harde grens: dit is ZELF-rapportage door de leerling, geen geautomatiseerde emotiedetectie/aandachtsscore. AVG-vriendelijk mits privaat en niet gescoord. Geeft de leerkracht welzijnssignaal zonder de leerling te classificeren.",
+        "visual": "Een discrete 'hoe voel ik me'-emojistrip waar de leerling zelf op tikt; enkel de leerkracht ziet de selectie, geen klasoverzicht met namen, geen trend-scoring van de persoon."
+      },
+      {
+        "name": "Kritiek op behavior charts (onderzoek/vakpers)",
+        "category": "bron",
+        "region": "internationaal",
+        "url": "http://parentingscience.com/whats-wrong-with-classroom-behavior-charts/",
+        "what": "Overzicht van onderzoek waarom publieke gedragskaarten averechts werken: schaamte veroorzaakt toxische stress, remt sociale ontwikkeling, maakt sommige kinderen agressiever en anderen hulpeloos; effectiever zijn warmte, relatie en constructieve coaching.",
+        "why": "Onderbouwing (bron) voor de designkeuze om NIET publiek af te straffen en om in te zetten op relatie/herstel. Bruikbaar om ontwerpbeslissingen te documenteren als open beslissing/ADR-onderbouwing.",
+        "visual": "n.v.t. — evidence-basis; gebruik als rationale in documentatie voor 'geen publieke afstraffing, wel private/feitelijke registratie en herstel'."
+      },
+      {
+        "name": "Alternatieve disciplinemodellen (Positive Discipline, Choice Theory, Love and Logic)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.edutopia.org/article/how-to-improve-classroom-behavior-without-public-shaming/",
+        "what": "Preventiegerichte klasmanagement-benaderingen die inzetten op relatie, keuze en verantwoordelijkheid i.p.v. publieke beloning/straf; gericht op het vóórkomen van gedragsproblemen.",
+        "why": "Bieden een pedagogische basis voor de 'preventie'-laag van het visuele klasmanagement, verenigbaar met de harde grenzen. Inspiratie voor keuze-/afspraak-flows i.p.v. scores.",
+        "visual": "Visuele klasafspraken die samen zijn opgesteld ('onze afspraken'), en keuze-momenten ('je kunt X of Y') als lichte interactie, zonder scoring van de persoon."
+      }
+    ]
+  },
+  {
+    "facet": "Wetenschappelijk onderbouwde klasmanagement-methodes en -theorie (Marzano, Kounin, CHAMPS, Bill Rogers, Teach Like a Champion, PBIS/SWPBS, Vlaamse/Nederlandse inzichten) en welke routines Klaskompas in software kan ondersteunen",
+    "summary": "De onderzochte methodes convergeren opvallend sterk: klasmanagement werkt vooral PREVENTIEF (structuur, routines, relatie, positief benoemen) in plaats van reactief. Marzano toont met meta-analyse dat heldere regels en routines gemiddeld 28% minder verstoringen geven (effectgrootte ~0,76) en tot 20% hogere leerprestaties. CHAMPS (Randy Sprick) maakt verwachtingen per activiteit expliciet via zes assen (Conversation/stemniveau 0-4, Help, Activity, Movement, Participation, Signal/Success). Kounin levert de meetbare leraargedragingen (withitness, momentum, overlapping, ripple effect). Bill Rogers geeft de concrete taal (positieve correctie, take-up time, primair vs. secundair gedrag negeren, keuzes aanbieden). Teach Like a Champion en PBIS/SWPBS voegen praktische micro-routines en de 4:1 a 5:1 aanmoedig-ratio toe. In Vlaanderen bundelen Katholiek Onderwijs Vlaanderen (9 bouwstenen), het actieplan 'Goed Gedragen' en herstelgericht werken dit tot een lokaal kader. Het rode draad-inzicht voor Klaskompas: bouw een 'klasmodus'/lescockpit die verwachtingen visueel maakt, routines ondersteunt en positief gedrag zichtbaar maakt, zonder scores of interpretaties over leerlingen af te leiden.",
+    "findings": [
+      {
+        "name": "CHAMPS (Randy Sprick)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.notion4teachers.com/blog/champs-classroom-management-guide",
+        "what": "Klasmanagementkader dat per activiteit de verwachtingen expliciet maakt langs zes assen: Conversation (stemniveau 0-4), Help (hoe hulp vragen), Activity (wat je doet), Movement (mag je rondlopen), Participation (hoe deelnemen) en Signal/Success. Proactief: zegt wat leerlingen WEL moeten doen.",
+        "why": "Perfect vertaalbaar naar een visueel 'verwachtingenpaneel' per lesactiviteit. Sluit aan bij teacher-first (1 handeling zet de hele context) en bevat geen enkele leerlinggerelateerde meting of interpretatie, dus volledig binnen de harde grenzen.",
+        "visual": "Een 'CHAMPS-kaart' die de leerkracht per lesfase (instructie, zelfstandig werk, groepswerk) met 1 tik instelt en op het digibord toont: grote iconen voor stemniveau (0-4 kleurbalk), hulp-signaal, beweging (zittend/rondlopend), participatie. Presets per lestype opslaan en snel wisselen."
+      },
+      {
+        "name": "Marzano - Classroom Management That Works",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://eric.ed.gov/?id=ED482825",
+        "what": "Meta-analyse van 35 jaar onderzoek. Drie pijlers: (1) regels & procedures, (2) positieve leraar-leerlingrelatie, (3) betrokkenheid/engagement. Regels en routines samen met leerlingen opstellen, expliciet aanleren en consequent herhalen. Effectgrootte regels/procedures ~0,76; ~28% minder verstoringen.",
+        "why": "Geeft de wetenschappelijke onderbouwing en de drie assen waarlangs Klaskompas modules kan structureren. Ondersteunt onze keuze voor expliciete statusmodellen en preventie boven consequenties.",
+        "visual": "Een 'klasafspraken'-module: samen met de klas opgestelde routines als kaartjes met icoon + korte formulering, herbruikbaar op het digibord bij het aanleren, met een 'oefen/herhaal'-teller (hoe vaak routine deze week gemodelleerd) zonder leerlingdata."
+      },
+      {
+        "name": "Kounin - withitness, momentum, overlapping, ripple effect",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.ebsco.com/research-starters/education/jacob-kounins-classroom-management-research",
+        "what": "Preventieve concepten: withitness (alles zien), momentum (les vlot laten lopen, vlotte overgangen), overlapping (twee dingen tegelijk aankunnen) en ripple effect (correctie bij een leerling beinvloedt de groep positief).",
+        "why": "Momentum en soepele overgangen zijn direct softwarematig te ondersteunen (timers, overgangssignalen). Het legitimeert een 'lescockpit' die de leerkracht helpt de flow te bewaren met minimale handelingen.",
+        "visual": "Zichtbare fase-/overgangstimer met zacht geluidssignaal, plus een 'volgende stap'-knop die de lesfase en bijhorende CHAMPS-verwachting in een keer omschakelt zodat overgangen sneller gaan (onderzoek: overgangen van ~4,5 naar ~2,1 min)."
+      },
+      {
+        "name": "Bill Rogers - positieve gedragstaal",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://teacherhead.com/2013/01/06/behaviour-management-a-bill-rogers-top-10/",
+        "what": "Non-confronterende, positieve correctietaal: verwachting positief formuleren ('Ik wil graag dat iedereen luistert' i.p.v. 'stop met praten'), take-up time geven, primair gedrag aanpakken en secundair gedrag (zuchten, ogen rollen) negeren, keuzes/consequenties aanbieden, herstel benadrukken.",
+        "why": "Levert kant-en-klare, pedagogisch verantwoorde formuleringen. Ideaal als optionele 'taalhulp' bij het noteren van een observatie of oudercommunicatie, zodat feitelijk gedrag i.p.v. interpretatie centraal staat.",
+        "visual": "Een niet-verplichte 'formuleerhulp': bij observaties/acties toont de app voorbeeldzinnen in positieve correctietaal (beschrijf gedrag -> geef gewenste richting). Herinnert subtiel aan 'feitelijk gedrag boven interpretatie' zonder iets af te dwingen of te scoren."
+      },
+      {
+        "name": "Teach Like a Champion 2.0 (Doug Lemov)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://teachlikeachampion.org/?books=teach-like-champion-2-0",
+        "what": "49 concrete lestechnieken uit observatie van sterke leerkrachten, met gedeelde vocabulaire. O.a. Do Now/Strong Start (starttaak), Cold Call, No Opt Out, Positive Framing, Threshold (begroeten aan de deur). Nadruk op consistente micro-routines.",
+        "why": "Elke techniek is een herhaalbare routine die als checklist of les-startsjabloon in software kan zitten. Sluit aan bij 'maximaal enkele handelingen tijdens een les'.",
+        "visual": "Les-startsjabloon met een vaste 'Do Now'-widget (starttaak + timer op het bord bij binnenkomst) en een optionele 'beurten'-modus (willekeurige naamtrekker uit data/examples/ fictieve namen) voor eerlijke participatie, met wisbare voorbeeldnamen."
+      },
+      {
+        "name": "PBIS / SWPBS + 4:1-5:1 aanmoedig-ratio",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.pbis.org/pbis/tier-1",
+        "what": "Getrapt, schoolbreed kader met 3-5 positief geformuleerde verwachtingen, per setting geconcretiseerd, plus systematische erkenning van gewenst gedrag. Bewezen: praise-to-reprimand ratio van 4:1 a 5:1 geeft tot ~50% minder off-task gedrag; specifieke (i.p.v. algemene) aanmoediging werkt.",
+        "why": "De aanmoedig-ratio is een privacyvriendelijke, geaggregeerde spiegel voor de LEERKRACHT (niet voor leerlingen): stimuleert positief benoemen zonder leerlingen te scoren of te rangschikken.",
+        "visual": "Een discrete 'positiviteitsteller' voor de leerkracht zelf: telt vandaag genoteerde aanmoedigingen vs. correcties en toont enkel een geanonimiseerde verhouding (bv. 4:1 als groen). Geen leerlingnamen in de ratio, geen risicoscore, puur zelfreflectie voor de leerkracht."
+      },
+      {
+        "name": "Katholiek Onderwijs Vlaanderen - 9 bouwstenen sterk klasmanagement",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://pro.katholiekonderwijs.vlaanderen/sterk-klasmanagement-in-het-basisonderwijs/bouwstenen-sterk-klasmanagement",
+        "what": "Negen bouwstenen: positieve leraar-leerlingrelatie, heldere regels & routines, sociaal-emotioneel leren, herstelgericht werken, reageren op ongewenst gedrag, sterke didactiek/vakkennis, klasinrichting/infrastructuur, cultuursensitief lesgeven, ouderbetrokkenheid. Kern: rust, routine, regelmaat, relatie; gedrag positief benoemen.",
+        "why": "Dit is het canonieke Vlaamse kader waaraan Klaskompas zich kan spiegelen; het legitimeert bestaande modules (oudercommunicatie, observaties, acties) en verankert de preventieve, teacher-first insteek in de lokale context.",
+        "visual": "Gebruik de 9 bouwstenen als navigatie-/onboardingkapstok: koppel elke Klaskompas-module expliciet aan een bouwsteen, zodat de leerkracht ziet hoe de tool het Vlaamse kader ondersteunt. NL-terminologie (rust-routine-regelmaat-relatie) in de UI."
+      },
+      {
+        "name": "Actieplan 'Goed Gedragen' + herstelgericht werken",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://docs.vlaamsparlement.be/files/pfile?id=2267709",
+        "what": "Vlaams actieplan dat preventief EN herstellend inzet op gewenst gedrag en tegen schooluitval. Herstelgericht werken (empathie, herstel van relatie i.p.v. straf) vermindert aantoonbaar het aantal tuchtmaatregelen.",
+        "why": "Bevestigt onze productlijn 'preventie en herstel naast consequenties' en de grens 'geen automatische sancties'. Geeft beleidsdekking voor herstelgerichte i.p.v. bestraffende workflows in de acties-module.",
+        "visual": "Herstelgerichte gespreks-ondersteuning in de acties-module: een optioneel herstelgesprek-sjabloon (wat gebeurde er, wie is geraakt, hoe herstellen we het) i.p.v. een straf-workflow. Statusmodel: signaal -> gesprek -> herstelafspraak -> opvolging, volledig auditbaar en herstelbaar."
+      },
+      {
+        "name": "Digitale klasmanagement-tools (ClassDojo, Classroomscreen, Gynzy)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://classroomscreen.com/product/give-instruction",
+        "what": "Digibord-tools met widgets: stemniveau-meter (0-4), timer, willekeurige naamtrekker, werksymbolen/instructie-iconen, aandacht-signalen, poll. Classroomscreen bundelt widgets tot een 'lesscherm'; ClassDojo heeft noise meter en timer voor zelfregulatie.",
+        "why": "Bewijst marktvraag naar visuele, digibord-klare klasmanagementwidgets en toont het interactie-idioom dat leerkrachten al kennen. Klaskompas kan zich onderscheiden met privacy-by-design (geen gedragspunten-ranking zoals ClassDojo, dat AVG-kritiek kreeg).",
+        "visual": "Een 'Klasbord/presentatiemodus' die Klaskompas-context (huidige lesfase, CHAMPS-verwachting, timer, evt. willekeurige beurt met fictieve namen) fullscreen op het digibord toont. Bewust GEEN publiek zichtbare gedragspunten of leaderboards per leerling; enkel groepsgerichte, positieve visuals."
+      },
+      {
+        "name": "Behavior-specific praise (specifieke aanmoediging)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.pbisrewards.com/blog/how-do-i-give-positive-reinforcement/",
+        "what": "Evidence-based praktijk: benoem precies WELK gedrag aan de verwachting voldeed ('je startte meteen met je taak') i.p.v. vaag 'goed zo'. Verhoogt betrokkenheid en on-task gedrag, vermindert verstoringen.",
+        "why": "Vertaalt naar concrete, feitelijke formuleringen in de observatie-/aanmoedigingsflow; ondersteunt 'feitelijk gedrag boven interpretatie' en levert de leerkracht bruikbare, niet-interpreterende taal.",
+        "visual": "Bij het noteren van een positieve observatie: snelle keuze uit gedrag-specifieke bouwstenen (koppel aan een verwachting/routine), zodat de notitie automatisch feitelijk en specifiek is i.p.v. een vaag oordeel of karaktertrek."
+      }
+    ],
+    "themes": [
+      "Preventie boven reactie: alle methodes leggen de nadruk op vooraf duidelijke structuur, routines en relatie i.p.v. straffen achteraf",
+      "Verwachtingen expliciet en visueel maken per lesactiviteit (CHAMPS-stemniveaus, werksymbolen) is de sterkst software-vertaalbare kern",
+      "Positief en feitelijk benoemen: gedrag-specifieke aanmoediging en de 4:1-5:1 ratio als leerkracht-zelfspiegel, nooit als leerlingscore",
+      "Soepele overgangen en momentum (Kounin) ondersteunen met timers en fase-omschakeling met 1 handeling",
+      "Herstel naast consequenties: herstelgerichte gespreksflows i.p.v. straf-workflows, gedekt door Vlaams beleid",
+      "Privacy-by-design als onderscheider t.o.v. bestaande tools (geen ClassDojo-achtige publieke gedragspunten/rangschikking)",
+      "Sterke convergentie internationaal (Marzano/Kounin/CHAMPS/PBIS) en Vlaams (9 bouwstenen, Goed Gedragen) legitimeert bestaande Klaskompas-modules"
+    ],
+    "topPicks": [
+      "CHAMPS-verwachtingenpaneel: per lesfase met 1 tik stemniveau (0-4 kleurbalk), hulp-signaal, beweging en participatie instellen en fullscreen op het digibord tonen; presets per lestype",
+      "Lescockpit/presentatiemodus met fase-timer + 'volgende stap'-knop die lesfase en verwachtingen tegelijk omschakelt (Kounin momentum, teacher-first: 1 handeling)",
+      "Discrete positiviteitsteller voor de leerkracht zelf (aanmoedigingen vs. correcties als geanonimiseerde 4:1-ratio) - zelfreflectie zonder leerlingscores, volledig binnen de harde grenzen",
+      "Herstelgericht gesprekssjabloon in de acties-module i.p.v. straf-workflow, met auditbaar statusmodel signaal -> gesprek -> herstelafspraak -> opvolging",
+      "Gedrag-specifieke, feitelijke formuleerhulp (Bill Rogers + behavior-specific praise) bij observaties en oudercommunicatie, gekoppeld aan klasafspraken/routines",
+      "9 bouwstenen (Kath. Onderwijs Vlaanderen) als NL onboarding-/navigatiekapstok die elke module aan het Vlaamse kader koppelt"
+    ]
+  },
+  {
+    "facet": "Visuele trends bij leerkrachten (Instagram/TikTok/Pinterest) vertaald naar UI-ideeen voor Klaskompas",
+    "summary": "De \"teachergram\"-esthetiek draait om rust, warmte en herkenbaarheid: zachte pastelpaletten, afgeronde vormen, consistente iconografie en een \"bullet-journal/planner\"-gevoel dat administratie minder klinisch maakt. Wat op sociale media viraal en deelbaar wordt, combineert twee dingen: (1) een verzorgde, kalme visuele identiteit (kleurcodering, stickers/stempels, mini-kalenders, legenda-iconen) en (2) speelse micro-momenten van voldoening (progressiemeters, streaks, confetti, badges, spin-wheels). Gamified klasmanagement-apps zoals ClassDojo en Classcraft laten zien hoe avatars, XP, levels en leaderboards engagement geven, maar zijn vaak op kinderen (5-11j) gericht en leunen op scores per leerling. Voor Klaskompas is de sleutel: neem de VISUELE taal en de micro-voldoening over, maar richt gamification op de leerkracht (planner, taken, klasritueel) en op neutrale, feitelijke klasdata, niet op gecombineerde gedrags-/karakterscores per kind. Actuele dashboard-UI-trends (bento-grid, afgeronde kaarten, zachte schaduwen, micro-interacties, adaptief donker thema) sluiten hier naadloos op aan en maken de app tegelijk \"cool\" en teacher-first.",
+    "findings": [
+      {
+        "name": "ClassDojo (avatar- en puntensysteem)",
+        "category": "app",
+        "region": "internationaal",
+        "what": "Wereldwijd gebruikte klasmanagement-app die leerlingen als schattige monster-avatars toont en met een klik feedbackpunten geeft voor vaardigheden (samenwerken, doorzetten). Sterk op oudercommunicatie en visuele herkenbaarheid.",
+        "why": "Toont waarom avatars werken: ze maken een klaslijst warm en speels in plaats van een saaie tabel. Let op de grens: ClassDojo deelt publieke gedragspunten per kind; Klaskompas mag de avatar-esthetiek overnemen maar moet weg blijven van zichtbare score-ranking en afgeleide karaktertrekken.",
+        "visual": "Optionele, door de leerkracht gekozen monster/dier-avatar per leerling (geen foto's), met zachte kleuren en afgeronde vorm, als visuele ankers in aanwezigheids- en observatieschermen. Avatars zijn puur herkenning, niet gekoppeld aan een publieke ranglijst.",
+        "url": "https://www.classroomhero.com/blog/best-classroom-management-apps-educators-2026"
+      },
+      {
+        "name": "Classcraft (RPG-gamification: XP, HP, levels, quests)",
+        "category": "app",
+        "region": "internationaal",
+        "what": "Verandert de klas in een role-playing game: leerlingen hebben videogame-achtige avatars met experience points (XP), gold, health points en powers; lessen worden 'quests' met levels die eindigen in een 'showdown' (herhaling).",
+        "why": "Perfecte inspiratie voor de VISUELE mechaniek van progressie en voldoening (levels, XP-balken, quest-mappen) - maar de HP-schade/straf-logica en gecombineerde scores per leerling botsen met de harde grenzen. Neem de vormtaal, niet de sanctie-mechaniek.",
+        "visual": "Een 'klas-quest' voortgangskaart voor de leerkracht: een horizontaal pad met mijlpalen (bv. thema/project afgerond) dat de HELE klas of een groepje samen invult - collectieve progressie i.p.v. individuele HP. Level-up-animatie bij het afronden van een lesreeks.",
+        "url": "https://aiineducation.io/tools/classcraft"
+      },
+      {
+        "name": "Duolingo streak- en micro-interactiesysteem",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Home-scherm met vlam-streak (dagenteller), kleurgecodeerde kalender, compacte progressiebalk en confetti-explosies bij voltooiing. Widget-visuals evolueren met de streak-status; animaties geven directe cause-and-effect-feedback.",
+        "why": "De gouden standaard voor 'habit-forming' UI zonder druk. Voor een teacher-first tool: gebruik streaks/confetti op de HANDELINGEN van de leerkracht (bv. 'dagelijkse aanwezigheid ingevuld'), niet op prestaties van kinderen. Zo krijg je de deelbare 'wow' zonder leerlingen te scoren.",
+        "visual": "Confetti-burst + zachte 'ping'-animatie wanneer de leerkracht aanwezigheid of een observatie afrondt. Een optionele, volledig privacyneutrale 'registratie-streak' voor de leerkracht zelf. Kleurgecodeerde mini-maandkalender voor eigen planning.",
+        "url": "https://www.orizon.co/blog/duolingos-gamification-secrets"
+      },
+      {
+        "name": "Teacher bullet-journal / planner-esthetiek",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Populair op Pinterest/Instagram: maandoverzicht -> weeklayout -> dagtaken, met symbool-legenda (bv. een swirl = nakijken), kleurgecodeerde mini-kalenders (vakanties, oudercontact, toetsen) en een verzorgde, rustige layout met 2-4 kleuren.",
+        "why": "Dit is precies de brug tussen 'klasadministratie' en 'cool'. Het maakt planning een mindfulness-achtige, prettige handeling. Direct vertaalbaar naar de acties/dashboard-modules zonder enige privacyrisico.",
+        "visual": "Een legenda/icoon-key voor taaktypes (nakijken, oudercontact, materiaal klaarzetten) die consistent door de hele app terugkomt. Kleurgecodeerde maandkalender-chips per categorie. 'Weekspread'-view voor de acties-module met dag-kolommen en subtiele wash-kleuren.",
+        "url": "https://www.archerandolive.com/blogs/news/10-must-have-bullet-journal-spreads-for-teachers"
+      },
+      {
+        "name": "Bento-grid dashboard (UI-trend 2025/2026)",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Modulaire kaartenlayout (zoals Apple/Google/Samsung) die verschillende contenttypes (grafieken, metrics, lijsten) mengt zonder visuele chaos. Taken worden ~23% sneller voltooid met modulaire layouts dan met lineaire.",
+        "why": "Ideaal voor het Klaskompas-dashboard: elke module (aanwezigheid, observaties, acties, oudercommunicatie) wordt een scanbare tegel van variabele grootte. Ziet er direct modern/'cool' uit en is functioneel teacher-first.",
+        "visual": "Dashboard als bento-grid: een grote 'vandaag'-tegel (les/rooster), kleinere metric-tegels (aanwezig vandaag, openstaande acties), een brede 'recente observaties'-strook. Afgeronde hoeken, zachte schaduw, 1 accentkleur per module-categorie.",
+        "url": "https://www.saasframe.io/blog/designing-bento-grids-that-actually-work-a-2026-practical-guide"
+      },
+      {
+        "name": "Zachte pastel-UI met afgeronde vormen",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Education-dashboards leunen op neutrale bases (#FBF4F2, #F0F0F7) met een paar heldere accenten (turquoise #34D1CC, citroen #FFEB66, blush #FFB3CE), 2-4 complementaire kleuren, afgeronde vormen en duidelijke hierarchie voor een kalme, moderne look.",
+        "why": "Geeft een administratie-tool meteen de warme, verzorgde 'teachergram'-uitstraling die deelbaar is, terwijl leesbaarheid en rust behouden blijven. Concreet startpunt voor het designsysteem/kleurtokens van Klaskompas.",
+        "visual": "Definieer een palet met 1 rustige neutrale achtergrond + 1 accent per module (aanwezigheid=mint, observaties=lavendel, acties=perzik). Afgeronde kaarten (12-16px radius), zachte schaduwen, ruime witruimte. Ondersteun een adaptief donker thema.",
+        "url": "https://color-analysis.app/blog/best-color-palettes-hex-codes-canvas-dashboards"
+      },
+      {
+        "name": "Random name picker / spin-wheel",
+        "category": "tool",
+        "region": "internationaal",
+        "what": "Spin-wheel (Wheel of Names, ClassPoint) of kaart-view die willekeurig een leerling kiest, met kleuren, geluiden en een game-show-spanning. ClassPoint biedt wiel- en kaartweergave (namen verborgen achter emoji-kaarten).",
+        "why": "Een klassiek 'viraal' klaslokaalmoment dat visueel en interactief is. Als klasritueel-widget in Klaskompas maakt het de app leuk tijdens de les - past bij 'maximaal enkele handelingen tijdens een les'. Volledig privacyveilig (alleen voornamen).",
+        "visual": "Ingebouwd draaiwiel/kaart-shuffle-widget met de klaslijst, in het app-kleurpalet, met een korte spin-animatie en confetti bij de keuze. Optie om reeds-gekozen leerlingen tijdelijk uit te sluiten (eerlijke beurtverdeling).",
+        "url": "https://www.classpoint.io/blog/8-best-random-name-picker-for-teachers"
+      },
+      {
+        "name": "Visuele checklist / stempel- en stickerbeloning",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "what": "Vlaamse/Nederlandse praktijk (o.a. via KlasCement/Baert): persoonlijke checklists waarop leerlingen samen met de leerkracht taken afvinken, met een vrolijke stempel of sticker als voldoeningsmoment; kalender-beloningssystemen maken voortgang zichtbaar.",
+        "why": "Lokaal herkenbaar en pedagogisch verantwoord: het beloont het proces en maakt voortgang visueel zonder scores of ranking. Directe inspiratie voor hoe voltooiing in de app 'voelt'.",
+        "visual": "Afvink-interactie met een bevredigende stempel/sticker-animatie (afgeronde 'stamp' die inzoomt) bij het afronden van een taak of registratie. Kleine, vriendelijke micro-illustraties i.p.v. koude vinkjes.",
+        "url": "https://www.baert.com/nl/blog/motivatie-en-belonen-in-de-klas-meer-dan-alleen-stickers-en-stempels/"
+      },
+      {
+        "name": "Progressiemeters & voortgangsringen",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Progressiebalken en high-contrast voortgangsringen zijn kernmechanieken in gamified education (Khan Academy Kids: kleurgecodeerde balken + 'Reading Journey'-map). Geanimeerde balken geven zichtbaar 'hoe ver je bent'.",
+        "why": "Universeel begrijpelijk visueel signaal. In Klaskompas te gebruiken op klas-/taakniveau (bv. '18/22 evaluaties ingevoerd', 'thema 60% afgerond') - feitelijke voortgang van de leerkrachttaak, niet een score per kind.",
+        "visual": "Voortgangsringen op moduletegels (bv. aanwezigheid vandaag ingevuld = ring vult zich). Geanimeerde balk die op-telt bij het afronden van een reeks. Een klas-'journey map' voor een lopend project/thema.",
+        "url": "https://www.quizcat.ai/blog/top-7-gamified-learning-apps-with-progress-tracking"
+      },
+      {
+        "name": "Open Badges 3.0 / skills-badges (privacy-by-design)",
+        "category": "framework",
+        "region": "internationaal",
+        "what": "Open Badges (1EdTech) is het leidende formaat voor verifieerbare, deelbare digitale badges met cryptografische signatuur; nieuwe specificatie legt nadruk op learner-controle, recht op verwijdering en consent - expliciet privacy-by-design.",
+        "why": "Toont hoe je badge-/beloningsvisuals kunt aanbieden op een AVG-conforme manier, met de leerling/ouder in controle over de data. Relevant als Klaskompas ooit zichtbare erkenningsbadges wil, zonder gecombineerde risicoscores.",
+        "visual": "Badge-galerij als optioneel, opt-in erkenningselement (bv. 'projectbadge' voor een afgerond groepswerk), met heldere criteria en zonder ranking. Badge-ontwerp: cirkelvormig, kleurrijk icoon, duidelijke titel - zoals een 'verzamelalbum'.",
+        "url": "https://www.imsglobal.org/spec/ob/v3p0"
+      },
+      {
+        "name": "Consistente, vriendelijke iconografie & emoji-cues",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "Teachergram- en Canva-esthetiek leunt op consistente educatieve icoonsets en emoji-achtige cues (ClassPoint verstopt namen achter emoji-kaarten). Iconen dragen betekenis sneller over dan tekstlabels.",
+        "why": "Iconografie maakt een dashboard scanbaar en 'zacht', en versterkt herkenning tijdens de les (snelle handelingen). Belangrijk voor teacher-first: minder lezen, sneller handelen.",
+        "visual": "Eén samenhangende, afgeronde icoonset door de hele app; elke module/handeling een vast icoon + kleur. Emoji/icoon-cues in de klaslijst (bv. status-chips voor aanwezig/afwezig/laattijdig) i.p.v. tekst.",
+        "url": "https://www.canva.com/graphics/s/education-icons/"
+      },
+      {
+        "name": "Micro-interacties & subtiele animaties",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "2025/2026 dashboard-trend: doelgerichte animaties en micro-interacties (hover-states, transities, celebratory feedback) verhogen retentie en 'delight'. Feedback verschijnt direct na de actie voor duidelijke cause-and-effect.",
+        "why": "Dit is wat een gewone administratie-app 'cool' en bevredigend maakt om te gebruiken - precies de kwaliteit die op TikTok/Instagram gedeeld wordt ('kijk hoe fijn dit werkt'). Kost weinig maar verhoogt de gebruikservaring sterk.",
+        "visual": "Zachte hover/tap-states op kaarten, vloeiende transities tussen modules, een korte celebratory-animatie bij afronden van een dagelijkse routine, geanimeerde tellers die op-tellen. Alles subtiel en toggle-baar (rust bewaren).",
+        "url": "https://muz.li/blog/best-dashboard-design-examples-inspirations-for-2026/"
+      }
+    ],
+    "themes": [
+      "Rust en warmte als esthetiek: pastel, afgeronde vormen, witruimte en consistente iconografie maken administratie prettig en deelbaar",
+      "Micro-voldoening zonder druk: streaks, confetti, stempels, progressieringen en level-up-momenten geven een goed gevoel bij elke handeling",
+      "Verschuif gamification van de leerling naar de leerkracht en de klas: beloon handelingen, planning en collectieve voortgang i.p.v. individuele gedragsscores",
+      "Bento-grid/modulaire dashboards: elke module een scanbare tegel met eigen accentkleur, snel te overzien tijdens de les",
+      "Planner/bullet-journal-denken: legenda-iconen, kleurgecodeerde kalenders en week-spreads maken klasadministratie visueel logisch",
+      "Privacy-by-design als onderscheider: opt-in badges (Open Badges 3.0), geen ranking, geen afgeleide karaktertrekken, alleen feitelijke data"
+    ],
+    "topPicks": [
+      "Bento-grid dashboard met afgeronde kaarten, zachte schaduwen en één accentkleur per module (aanwezigheid=mint, observaties=lavendel, acties=perzik) + adaptief donker thema",
+      "Confetti/stempel-micro-interactie bij het afronden van dagelijkse registraties, gekoppeld aan de handeling van de leerkracht (niet aan leerlingprestaties)",
+      "Optionele, door de leerkracht gekozen avatars/monster-iconen (geen foto's) als warme visuele ankers in klaslijst en aanwezigheid - puur herkenning, geen ranking",
+      "Klas-'quest'/journey-map voor collectieve projectvoortgang met level-up-animatie, i.p.v. individuele XP/HP per leerling",
+      "Ingebouwde spin-wheel/kaart-shuffle als klasritueel-widget in het app-palet, met eerlijke beurtverdeling",
+      "Consistente legenda-iconenset en kleurgecodeerde maandkalender in de acties-module, geïnspireerd op teacher bullet-journal-spreads"
+    ]
+  },
+  {
+    "facet": "Digitale puntenboeken/gradebooks en hun UX (Additio, TeacherKit, PowerSchool PowerTeacher Pro, Google Classroom, iDoceo, + Vlaamse context Skore/Smartschool). Focus: invoersnelheid, kleurcodering, gemiddelden/signalen, overzichtelijke tabellen op laptop en tablet.",
+    "summary": "De marktleiders in digitale puntenboeken convergeren naar dezelfde UX-kern: een spreadsheet-achtig raster (leerlingen in rijen, toetsen/opdrachten in kolommen) waarin je met minimale handelingen scores ingeeft. Snelheid komt van keyboard-navigatie op laptop (pijltjes, Tab/Enter, hotkeys, autosave) en van tikken/pickers op tablet. Kleurcodering gebeurt bijna altijd volgens de RAG-logica (rood/oranje/groen = conditional formatting op basis van drempels), plus optionele iconen. Gemiddelden en gewogen berekeningen (Excel-achtige formules) worden live meeberekend. iDoceo en Additio zijn het rijkst qua cel-inhoud (multilayer: cijfer + icoon + kleur + notitie/bijlage); PowerTeacher Pro en Skore excelleren in snelle bulkinvoer (hele klas in een keer, dan bijstellen). Belangrijk voor Klaskompas: veel dashboards flirten met predictieve at-risk-signalen en heatmaps, en dat botst met onze harde grenzen (geen gecombineerde risicoscores). De veilige variant is feitelijke, per-toets conditional formatting zonder afgeleide voorspellingen.",
+    "findings": [
+      {
+        "name": "iDoceo — multilayer cel & Color Selector",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/component/content/article/23-grade-book/inserting-data/31-idoceocolumntype",
+        "what": "iPad/Mac-puntenboek waar elke cel een multilayer container is: cijfer, icoon, kleur, tekst, bijlage (foto/video/bestand) en handgeschreven notitie tegelijk. 10 configureerbare quick editors met eigen naam/icoon; numerieke keypad, tekst-editor, grade-selector en Color Selector als aparte invoermodi per kolom.",
+        "why": "Toont hoe je binnen een compacte cel veel context kunt tonen zonder een detailscherm te openen — relevant voor onze observaties/leerlingfiche die feitelijk gedrag koppelen aan een moment. Kleur automatisch toekennen o.b.v. celwaarde geeft directe visuele scan.",
+        "visual": "Cel met klein cijfer + gekleurde achtergrond + hoekicoon (bv. potloodje = notitie aanwezig). Per kolom kies je een editor-type via een tab bovenaan: numeriek keypad, iconenrij, kleurenpalet of rubric. Long-press op cel = snelmenu."
+      },
+      {
+        "name": "Additio — conditional colors + Excel-achtige formules",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://additioapp.com/en/features/",
+        "what": "Puntenboek met conditional colors op cijfers (rood voor onvoldoendes, groen voor voldoendes), ingebouwde calculator die het resultaat automatisch in de cel zet, student-picker, gewogen gemiddelden en custom formules (percentages, tellers, condities, afrondingen), rubrics en meerdere schalen (punten/letters/geslaagd-niet geslaagd).",
+        "why": "Sterk model voor universele kern, configureerbare berekening: een puntenboek dat zowel simpele scores als gewogen semestercijfers aankan. Conditional colors = feitelijke, per-cel signalering zonder afgeleide risicoscore — past binnen onze grenzen.",
+        "visual": "Kolomheader toont live het klasgemiddelde; onvoldoendes kleuren automatisch amber/rood zodra je ze intikt. Rekenmachine-popover die na berekening de waarde direct plaatst i.p.v. handmatig overtypen."
+      },
+      {
+        "name": "PowerSchool PowerTeacher Pro — Score Inspector & Fill",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://ps.powerschool-docs.com/powerteacher-pro/24.7/enter-scores-and-comments",
+        "what": "Enterprise-gradebook met een Score Inspector-paneel en hotkeys. Fill-functie vult een score in alle lege cellen van een leerling of opdracht in een klik. Grade scales hebben per niveau een vaste kleur (consistente visuele voortgangsindicator over alle schalen heen).",
+        "why": "Beste voorbeeld van bulk-invoer: vul iedereen op X, corrigeer daarna de uitzonderingen. Dat is exact het teacher-first patroon maximaal enkele handelingen tijdens een les. De vaste kleur-per-niveau garandeert dat kleur consistent hetzelfde betekent — belangrijk voor vertrouwen.",
+        "visual": "Zij-paneel (Score Inspector) met snelknoppen voor scoreniveaus + Fill-pijltjesicoon. Cellen krijgen de vaste schaalkleur. Pijltjestoetsen springen cel-naar-cel zonder muis."
+      },
+      {
+        "name": "TeacherKit — one-tap in-class flow",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.teacherkit.net/how-to-manage-your-classroom-through-teacherkit/",
+        "what": "Mobile-first klasbeheer: aanwezigheid met een tik op de leerling-tegel cyclet de status (aanwezig/afwezig/ziek/uitstap); cijfers ingeven met enkele taps terwijl je door de klas loopt. Clean, kleurrijk, tegel-gebaseerd i.p.v. dichte tabel.",
+        "why": "Model voor het VISUELE klasmanagement-deel: tegels met foto/initiaal die je al lopend bedient. Cyclen-door-tikken is sneller dan een dropdown en werkt met een hand op tablet.",
+        "visual": "Grid van leerling-tegels (initiaal/avatar-placeholder, geen echte foto's nodig i.v.m. privacy); tik cyclet kleur/status. Statuskleuren als directe feedback (groen/grijs/oranje)."
+      },
+      {
+        "name": "Google Classroom gradebook — keyboard-first grading",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://alicekeeler.com/2022/04/09/start-grading-faster-in-google-classroom/",
+        "what": "In de grades-tabel navigeer je met pijl omhoog/omlaag door leerlingen zonder te klikken; Tab loopt door velden. Total points of weighted-by-category als grondslag; overzichtscijfer live berekend.",
+        "why": "Bevestigt de laptop-best-practice: handen op het toetsenbord, geen muis. Seconden per handeling tellen op — direct toepasbaar op onze desktop-puntinvoer.",
+        "visual": "Focus-cel met duidelijke rand; pijltjes verplaatsen focus binnen kolom, waarde tikken + Enter bevestigt en zakt naar de leerling eronder. Kolomtotaal/gemiddelde bovenaan zichtbaar."
+      },
+      {
+        "name": "Smartschool Skore — hele klas in een, dan bijstellen",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.smartschool.be/2013/05/skore-puntenboek-op-ipad/",
+        "what": "Vlaams puntenboek (deel van Smartschool). Op iPad/smartphone/web. Klik op de donkergrijze balk bovenaan om de hele klas hetzelfde cijfer te geven, corrigeer daarna individueel. Geen opslaan-knop: autosave. Import van resultaten uit BookWidgets/Scoodle via + → resultaten importeren.",
+        "why": "Directe Vlaamse referentie die leerkrachten al kennen — herkenbaarheid verlaagt drempel. Het hele-klas-ineens-patroon + autosave is precies onze snelheids- en herstelbaarheids-eis. Import vermijdt dubbel intikken.",
+        "visual": "Donkere kop-balk = zet waarde voor iedereen; cellen eronder erven de waarde en zijn los overschrijfbaar. Autosave-indicatie i.p.v. save-knop. Onder de kolom live gemiddelde."
+      },
+      {
+        "name": "RAG / traffic-light conditional formatting",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.eleapsoftware.com/glossary/complete-guide-to-gradebook-software-2025/",
+        "what": "Red-Amber-Green methodiek: onvoldoendes automatisch rood, grensgevallen amber/geel, voldoendes groen, via conditional formatting op basis van vaste drempels (bv. slaaggrens). Puur feitelijk per cijfer, geen voorspelling.",
+        "why": "Veiligste kleurmodel voor Klaskompas: het signaleert een feit (dit cijfer ligt onder de slaaggrens) zonder een afgeleide risicoscore of interpretatie. Kleur = snelle scan over de hele tabel.",
+        "visual": "Instelbare drempel (bv. <10/20 = rood) die de celachtergrond kleurt; kolomkop toont hoeveel leerlingen onder de grens zitten als simpele teller (niet als risico-label)."
+      },
+      {
+        "name": "Spreadsheet-grid keyboard-navigatie (AG Grid / WCAG-patroon)",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.ag-grid.com/javascript-data-grid/keyboard-navigation/",
+        "what": "Standaard grid-interactie: pijltjes = cel-naar-cel, Tab = volgende cel in rij (wrapt naar volgende rij), Enter = cel eronder, F2/Enter = edit-mode, Esc = annuleren. Zichtbare focus-indicator vereist (WCAG).",
+        "why": "Concrete implementatie-blauwdruk voor onze desktop-puntinvoer. Volgt toegankelijkheidsnormen en is wat leerkrachten uit Excel al kennen — nul leercurve.",
+        "visual": "Duidelijk gemarkeerde focus-cel; Enter bevestigt-en-zakt, Tab bevestigt-en-schuift-rechts, Esc herstelt oude waarde (herstelbaarheid). Sticky eerste kolom (leerlingnaam) + sticky header bij scrollen."
+      },
+      {
+        "name": "Heatmap per leerdoel/topic (met grens-waarschuwing)",
+        "category": "trend",
+        "region": "internationaal",
+        "url": "https://www.eleapsoftware.com/glossary/complete-guide-to-gradebook-software-2025/",
+        "what": "Heatmaps kleuren per (leerling x leerdoel) zodat je in een blik ziet welk onderwerp klasbreed tegenviel. Veel producten koppelen dit aan predictieve at-risk-flags en gecombineerde risicoscores.",
+        "why": "De heatmap-VISUALISATIE is bruikbaar en cool, MAAR de predictieve at-risk-flag en gecombineerde risicoscore vallen onder onze harde grens en moeten weg. Neem alleen de feitelijke topic-heatmap over.",
+        "visual": "Matrix leerdoel x leerling met RAG-kleur per behaalde score; klik op een kolom = leerlingen die dit doel nog niet haalden — als feitelijke lijst voor herhaling, NIET als risicolabel of automatische actie."
+      },
+      {
+        "name": "Multilayer cel: cijfer + notitie/bewijs zonder detailscherm",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/instructions/instructions/idoceofeatures",
+        "what": "iDoceo/Additio-aanpak waarbij een cel naast het cijfer ook een notitie, icoon of bijlage draagt, zichtbaar als klein hoekmarkeringetje, uitklapbaar op tik.",
+        "why": "Laat toe om feitelijk bewijs (bv. herkansing, te laat ingeleverd) bij een cijfer te bewaren — auditbaar en herstelbaar — zonder de tabel te verlaten. Sluit aan bij onze eis bewaar mutaties auditbaar.",
+        "visual": "Cel met cijfer + klein driehoekje/stipje rechtsboven = er zit een notitie/bijlage achter; tik opent een lichte popover i.p.v. volledige pagina."
+      }
+    ],
+    "themes": [
+      "Spreadsheet-raster is de universele mentale model: leerlingen in rijen, toetsen in kolommen, sticky namen + header, live gemiddelde per kolom.",
+      "Snelheid is context-afhankelijk: laptop draait op keyboard (pijltjes/Tab/Enter/hotkeys, autosave, geen save-knop), tablet op tikken/cyclen/pickers met een hand.",
+      "Bulk-eerst, uitzondering-daarna: geef hele klas X, corrigeer individueel (Skore, PowerTeacher Fill) is de snelste real-world flow.",
+      "Kleur is feitelijke conditional formatting (RAG) op vaste drempels, consistent per niveau — nooit een afgeleide of voorspellende score.",
+      "Rijke cel zonder detailscherm: cijfer + icoon + kleur + notitie/bijlage in een multilayer cel houdt de leerkracht in de tabel.",
+      "Grens tussen cool visueel en verboden: heatmaps/dashboards zijn bruikbaar, maar predictieve at-risk-flags en gecombineerde risicoscores moeten eruit."
+    ],
+    "topPicks": [
+      "Desktop-puntinvoer met volledige Excel-achtige keyboard-navigatie (pijltjes, Tab=rechts, Enter=bevestig-en-zak, Esc=herstel, F2=edit), sticky leerlingnaam-kolom en sticky header — nul leercurve want leerkrachten kennen Excel/Skore.",
+      "Hele-klas-in-een-balk bovenaan de kolom (Skore-patroon): zet default-cijfer voor iedereen, elke cel los overschrijfbaar; gecombineerd met autosave i.p.v. save-knop.",
+      "RAG conditional formatting op een instelbare, expliciete slaaggrens — puur feitelijk, geen risicoscore — met een simpele teller in de kolomkop (aantal onder grens) i.p.v. een risicolabel.",
+      "Live kolom-gemiddelde en gewogen berekening (configureerbaar per toets/categorie) zichtbaar in de header terwijl je invoert, zoals Additio/Classroom.",
+      "Multilayer cel met hoekmarkering voor notitie/bewijs (iDoceo-stijl), uitklapbaar op tik, zodat feitelijke context auditbaar bij het cijfer blijft zonder detailscherm.",
+      "Tablet-tegelmodus voor snelle in-les-invoer (TeacherKit-stijl): tik cyclet status/score, een hand, avatar-placeholders i.p.v. echte foto's (privacy by design)."
+    ]
+  },
+  {
+    "facet": "Het Vlaamse/Nederlandse ecosysteem (Smartschool, Bingel, Questi, Gimme, Klasse.be, Magister, Simon/Informat, iVZW-tools): wat ze doen, welke administratie ze dekken en waar de hiaten zitten",
+    "summary": "Het Vlaamse schoolsoftware-landschap is verdeeld over gespecialiseerde spelers: Informat/Wisa (leerlingenadministratie + Discimus-uitwisseling met AGODI), Smartschool (30+ modules: LVS, digitale agenda, aanwezigheid, berichten, Skore-evaluatie), VAN IN's Bingel (adaptief oefenplatform lager onderwijs), Questi (breed observeren/evalueren en kind-/leerlingvolgsysteem, sterk in kleuter en lager), Gimme (meertalige AVG-conforme oudercommunicatie) en Klasse.be (redactionele inspiratie, geen software). In Nederland vervult Magister een vergelijkbare rol als Smartschool. Deze systemen dekken de zware administratie (inschrijvingen, Discimus, cijfers, afwezigheden, rapporten) grondig, maar zijn secretariaats- en directiegericht en worden door leerkrachten als tijdrovend en werkdrukverhogend ervaren (dubbele invoer). De grote hiaten die een leerkracht-eigen tool kan opvullen: (1) lichtvoetige, teacher-first registratie van feitelijk gedrag/observaties tijdens de les; (2) visueel klasmanagement (plattegrond, routines, timers, groepjes) dat nu versnipperd zit in losse gratis tools; (3) een geintegreerd, prive dashboard dat de leerkracht overzicht geeft zonder afhankelijk te zijn van het logge schoolplatform. Cruciaal voordeel: koppelbaarheid bestaat al via OneRoster 1.1, OAuth2 en CSV/TXT-export, zodat Klaskompas klaslijsten kan importeren zonder handmatig werk.",
+    "findings": [
+      {
+        "name": "Smartschool",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.smartschool.be/overzicht-van-alle-tools/",
+        "what": "Dominant Vlaams schoolplatform met 30+ modules: leerlingvolgsysteem (LVS met afwezigheden, rapporten, persoonsgegevens, foto's, leerlingfiche), digitale schoolagenda gekoppeld aan jaarplannen/leerplandoelen, aanwezigheidsregistratie, berichten, taken & toetsen, en Skore voor evaluatie/rapportering. Discimus-koppeling voor elektronische communicatie met de overheid.",
+        "why": "Dit is de facto standaard waar bijna elke Vlaamse secundaire school op draait; Klaskompas moet ernaast bestaan (aanvullend, niet vervangend) en er idealiter uit kunnen importeren. De leerlingfiche/LVS-structuur is het referentiepunt voor wat leerkrachten al kennen.",
+        "visual": "De leerlingfiche als centraal knooppunt overnemen, maar dan visueel-first i.p.v. formuliergedreven: een compacte kaart per leerling met tijdlijn van feitelijke observaties i.p.v. dropdown-formulieren."
+      },
+      {
+        "name": "Smartschool werkdruk-kritiek",
+        "category": "trend",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://newsmonkey.be/smartschool-zorgt-voor-extra-werkdruk-bij-vlaamse-leerkrachten/",
+        "what": "Bevraging bij 2.346 leerkrachten (in opdracht van de Vlaamse minister van Onderwijs) toont dat digitale tools zoals Smartschool werkdruk en frustratie verhogen, mede door dubbele data-invoer (dezelfde gegevens meermaals ingeven) en inefficiente systemen. In het secundair is opvolgen van individuele begeleidingstrajecten het moeilijkst.",
+        "why": "Dit is de kern-legitimatie voor Klaskompas: het gat is niet 'meer administratie' maar 'minder klikken, feitelijk gedrag, maximaal enkele handelingen per les'. Sluit exact aan bij het teacher-first productprincipe.",
+        "visual": "Ontwerp elke registratie zo dat ze in 1-2 taps klaar is (bv. tik op leerling -> tik op gedragslabel). Toon expliciet 'geen dubbele invoer' door import van klaslijsten i.p.v. handmatig hertypen."
+      },
+      {
+        "name": "Informat",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.informat.be/",
+        "what": "Complete leerlingenadministratie voor basis-, secundair, hoger en volwassenenonderwijs; het 'kloppend hart' van de administratie. Registreert en beheert leerlingpersoonsgegevens en stuurt deze accuraat (met automatische foutcontrole) naar Discimus/AGODI. Realtime tweewegkoppeling met Smartschool (leerlingen + afwezigheden).",
+        "why": "Toont de administratieve backbone die Klaskompas NIET moet nabouwen (Discimus/inschrijvingen zijn secretariaatswerk). Bevestigt dat de brondata van leerlingen elders zit en importeerbaar is; Klaskompas positioneert zich als leerkracht-laag erbovenop.",
+        "visual": "Niets nabouwen van de administratie; wel de scheiding tonen: 'officiele gegevens komen uit Informat/Smartschool, jouw klasnotities blijven van jou' (privacy-by-design boodschap in de UI)."
+      },
+      {
+        "name": "Discimus / AGODI",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.vlaanderen.be/nl/directies-administraties-en-besturen/tools-voor-scholen-en-centra/discimus/discimus-wat-hoe-en-waarvoor",
+        "what": "Overheidssysteem waarmee scholen leerlingengegevens continu en snel uitwisselen met AGODI; zodra data in het schooladministratiepakket wijzigt, wordt die meteen doorgestuurd. Verplichte, gereguleerde datastroom.",
+        "why": "Belangrijk om de grens te kennen: officiele leerlingdata en afwezigheidsmeldingen zijn gereglementeerd en horen in het administratiepakket. Klaskompas moet daar buiten blijven (geen sancties, geen officiele registratie), wat de harde grenzen ondersteunt.",
+        "visual": "Duidelijk in de UI markeren welke velden 'informatief/prive' zijn versus 'officieel elders'; nooit doen alsof Klaskompas een officiele afwezigheid of sanctie registreert."
+      },
+      {
+        "name": "Questi",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.questi.com/benl/breed-rapporteren/",
+        "what": "Digitaal kind-/leerlingvolgsysteem gericht op 'breed evalueren en breed rapporteren' voor kleuter en lager onderwijs. Bevat gestandaardiseerde tests en observatie-instrumenten; screenings op leerling- en klasniveau; rapporten direct gekoppeld aan het LVS; en geeft tips/suggesties om op bevindingen te handelen. Sterke focus op welbevinden.",
+        "why": "Dichtste concurrent qua filosofie (observatie + welbevinden + handelingsgericht), maar gericht op basisonderwijs en test-gedreven. Toont dat 'breed observeren' een erkende pedagogische methode is; Klaskompas kan dit lichter en visueler doen voor secundair, met feitelijk gedrag i.p.v. gestandaardiseerde tests.",
+        "visual": "De 'van observatie naar actie'-brug overnemen: elke geregistreerde observatie kan met 1 tap een preventie/herstel-actie triggeren (past bij de bestaande module 'acties'), maar zonder afgeleide karaktereigenschappen of scores."
+      },
+      {
+        "name": "Bingel (VAN IN)",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.vanin.be/lager-onderwijs/bingel/",
+        "what": "Adaptief online oefenplatform voor basisonderwijs (>80% van Vlaamse basisscholen). Leerlingen oefenen op eigen niveau, krijgen directe feedback en verdienen 'pingping'-beloningen. Bestaat 15 jaar; sterk op gamification en zelfsturend leren.",
+        "why": "Relevant als bewijs dat gamified, visuele beloning breed geaccepteerd is in Vlaanderen (Instagram/TikTok-esthetiek werkt), maar het is leerling-gericht oefenmateriaal, geen klasmanagement. Waarschuwing: beloningsmechaniek moet bij Klaskompas op klasgedrag/routines slaan zonder in ranking of risicoscores te vervallen.",
+        "visual": "Gamification-esthetiek (badges, voortgangsvisuals, positieve microfeedback) lenen voor het klasmanagement-luik, maar collectief/klasniveau i.p.v. leerlingen tegen elkaar ranken."
+      },
+      {
+        "name": "Gimme",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://welcome.gimme.eu/oudercommunicatie-voor-basisscholen",
+        "what": "Meertalige, AVG-conforme oudercommunicatie-app (basisscholen). Berichten, toestemmingen en oudercontacten automatisch vertaald in 130+ talen; tijdlijn/prikbord met foto's, video's, brieven die vooraf ingepland kunnen worden; koppelt rechtstreeks aan de leerlingadministratie. Gratis voor ouders en voor het schoolteam (Gimme Studio); vanaf 2 euro/leerling/jaar.",
+        "why": "Toont de best-practice voor het oudercommunicatie-luik van Klaskompas: meertaligheid als toegankelijkheidstroef, AVG-conform als verkoopargument, en vooraf inplannen van berichten. Bewijst dat 'privacy by design + meertalig' commercieel onderscheidend is.",
+        "visual": "Tijdlijn/prikbord-metafoor voor oudercommunicatie; berichten vooraf klaarzetten en automatisch publiceren; automatische vertaalindicator per bericht. Neem de 'gratis voor team, laagdrempelig'-toon over in de UX."
+      },
+      {
+        "name": "Klasse.be",
+        "category": "bron",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.klasse.be/thema/klasmanagement/",
+        "what": "Redactioneel platform (Vlaams Ministerie van Onderwijs) met artikels, tipreeksen en praktijkvoorbeelden over klasmanagement (o.a. Tom Bennett over regels & routines, non-verbaal reageren op storend gedrag, kracht van de klasgroep). Geen software, wel autoriteit qua pedagogie.",
+        "why": "Geen concurrent maar de pedagogische canon-bron voor het visueel-klasmanagementluik. De nadruk op preventie via routines, non-verbale interventies en groepsdynamiek levert de inhoudelijke onderbouwing voor Klaskompas' features (past bij principe 'preventie en herstel naast consequenties').",
+        "visual": "Vertaal 'goede routines = minder brandjes blussen' naar een routine-/verwachtingenbord in de klasmanagement-UI; non-verbale interventies als snelle, discrete visuele signalen i.p.v. sancties."
+      },
+      {
+        "name": "Magister",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://magister.nl/",
+        "what": "Nederlands leerlingadministratie- en volgsysteem voor voortgezet onderwijs (het Smartschool-equivalent). Geeft docenten, leerlingen en ouders inzicht in cijfers, huiswerk, rooster en aanwezigheid; oudercontacten/driehoeksgesprekken en toestemmingsmodule voor leerlingen/ouders inbegrepen.",
+        "why": "Relevant als Nederlandse benchmark en potentieel verbredingsmarkt. Ook hier is de tool administratie/cijfer-gericht en top-down (school -> docent), wat hetzelfde hiaat laat voor een leichte, docent-eigen klasmanagementlaag.",
+        "visual": "De 'toestemmingsmodule' (expliciete opt-in van ouders/leerlingen) is een goed AVG-patroon om over te nemen voor foto's/gegevens in Klaskompas."
+      },
+      {
+        "name": "OneRoster 1.1 + OAuth2 (Smartschool)",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.smartschool.be/oneroster/",
+        "what": "Smartschool ondersteunt de internationale OneRoster 1.1 REST-standaard voor uitwisseling van leerling-, klas- en leerkrachtdata (gratis voor school en externe partij), plus OAuth2-login met Smartschool-account en een 'Resultaten Service' API om toets-/oefenresultaten terug te sturen.",
+        "why": "Dit is de technische sleutel: Klaskompas kan klaslijsten importeren via OneRoster of OAuth i.p.v. handmatig, wat het 'geen dubbele invoer'-belofte waarmaakt. Grote kans om het versnipperingsprobleem te verkleinen zonder de administratie over te nemen.",
+        "visual": "Onboarding-flow: 'Log in met Smartschool -> kies je klassen -> klaslijst staat klaar', gevisualiseerd als een 3-stappen import-wizard i.p.v. Excel-plakken."
+      },
+      {
+        "name": "CSV/TXT-export & koppelingen (Informat, time-tech)",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://time-tech.be/handleiding/export-smartschool/",
+        "what": "Het ecosysteem werkt sterk met bestandsexports: TXT-export naar Smartschool-agenda, CSV-import/export van leerlingen, en TBVS die data uit Informat/Wisa/Broekx/DKO3 synct naar Microsoft 365, Google Workspace en Smartschool.",
+        "why": "Bevestigt dat CSV-import de laagdrempelige fallback is als API-koppeling niet lukt. Klaskompas moet minimaal een robuuste CSV-klaslijstimport hebben; dat is realistisch haalbaar zonder officiele integratiepartner te worden.",
+        "visual": "Bied naast API-import altijd een simpele 'plak of upload je klaslijst (CSV/Excel)'-optie met live preview van herkende kolommen (naam, klas), zodat elke leerkracht binnen 1 minuut start."
+      },
+      {
+        "name": "TBVS (Toolbox voor scholen)",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.tbvs.be/",
+        "what": "Sinds 2008 gegroeide iVZW/toolbox (>400 scholen) die administratieve data uit Informat/Wisa/Broekx/DKO3 synchroniseert met Microsoft 365, Google Workspace, Smartschool e.a. Gericht op ICT-coordinatoren en accountbeheer, niet op de leerkracht in de klas.",
+        "why": "Illustreert het 'iVZW-tools'-segment: nuttige koppel-/beheertools, maar volledig backoffice. Bevestigt opnieuw dat het leerkracht-in-de-les-niveau (visueel klasmanagement) onbezet is in het Vlaamse landschap.",
+        "visual": "Niets van overnemen qua UI (het is beheerderstooling); wel het inzicht dat Klaskompas bewust NIET het ICT-coordinator-niveau bedient maar puur de leerkracht."
+      },
+      {
+        "name": "Gratis losse klastools (Basisonderwijs.online: timer, groepjesmaker)",
+        "category": "tool",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://basisonderwijs.online/timer",
+        "what": "Losse, gratis whiteboardtools zonder account: digitale timer, groepjesmaker (klas in groepen/duo's verdelen, met import/export), en ander klasbord-materiaal. Populair maar versnipperd over aparte sites.",
+        "why": "Dit is precies het versnipperde visueel-klasmanagement dat Klaskompas kan bundelen. Leerkrachten wisselen nu tussen losse tabbladen; een geintegreerd klasmanagement-luik met timer, groepjesmaker en beurtverdeler bovenop de eigen klaslijst is een duidelijk, onbezet gat.",
+        "visual": "Integreer timer, groepjesmaker en willekeurige-beurt/naamkiezer als ingebouwde, visuele klastools die de al geimporteerde klaslijst hergebruiken (geen namen opnieuw ingeven) - grote, projecteerbare whiteboard-modus."
+      }
+    ],
+    "themes": [
+      "Rolverdeling in het ecosysteem: administratie (Informat/Wisa + Discimus) is backoffice/secretariaat, leerplatform (Smartschool/Magister) is school-breed en top-down, oefenplatform (Bingel) is leerling-gericht - het leerkracht-in-de-les-niveau (visueel klasmanagement + lichte observatie) is structureel onbezet.",
+      "Werkdruk door dubbele invoer en logge, formuliergedreven interfaces is de erkende pijn (ministeriele bevraging); teacher-first, maximaal enkele taps per les is het echte differentiatiepunt.",
+      "Koppelbaarheid bestaat al en is grotendeels gratis (OneRoster 1.1, OAuth2, CSV/TXT-export via o.a. TBVS), waardoor Klaskompas klaslijsten kan importeren en het 'geen dubbele invoer'-principe technisch kan waarmaken.",
+      "Duidelijke scheiding tussen 'officiele, gereguleerde data' (Discimus: inschrijvingen, officiele afwezigheden, sancties) en 'prive leerkrachtnotities' - Klaskompas hoort in de tweede laag en moet de eerste nooit nabootsen.",
+      "Privacy-by-design en meertaligheid zijn commercieel onderscheidend (Gimme bewijst dit voor oudercommunicatie); AVG-conformiteit is in Vlaanderen een verkoopargument, geen bijzaak.",
+      "Visueel klasmanagement is nu versnipperd over losse gratis tools (timers, groepjesmakers); bundeling bovenop de eigen klaslijst is een concrete, haalbare meerwaarde.",
+      "Breed/handelingsgericht observeren (Questi) en preventieve routines (Klasse.be/Tom Bennett) leveren de pedagogische legitimatie voor het feitelijk-gedrag- en preventie-boven-sanctie-model."
+    ],
+    "topPicks": [
+      "Onboarding met OneRoster/OAuth-login op Smartschool + CSV/Excel-fallback, gevisualiseerd als een 3-stappen import-wizard, zodat een leerkracht binnen 1 minuut met de echte klaslijst start en nooit namen hertypt (waarmaken van 'geen dubbele invoer').",
+      "Bundel het versnipperde visueel klasmanagement (projecteerbare timer, groepjesmaker, willekeurige-beurt/naamkiezer, routine-/verwachtingenbord) bovenop diezelfde klaslijst als whiteboard-modus - het duidelijkst onbezette gat in het Vlaamse landschap.",
+      "Neem Questi's 'van observatie naar actie'-brug over maar lichter: elke feitelijke gedragsregistratie kan met 1 tap een preventie- of herstelactie starten, zonder scores of afgeleide karaktereigenschappen (respecteert de harde grenzen).",
+      "Kopieer Gimme's oudercommunicatie-best-practices: prikbord/tijdlijn, berichten vooraf inplannen, automatische meertalige vertaling en zichtbare AVG-conformiteit als kernwaarde in de UI.",
+      "Maak de datascheiding expliciet zichtbaar: markeer in de UI wat 'officieel elders' (Smartschool/Informat/Discimus) staat versus wat 'jouw prive klasnotitie' is - dit is tegelijk een privacy-by-design-boodschap en een vertrouwensargument richting scholen."
+    ]
+  },
+  {
+    "facet": "Leerlingvolgsystemen (LVS) en observatie-instrumenten: feitelijk observeren, leerlingfiches en zorg-/opvolgstructuren",
+    "summary": "In Vlaanderen/Nederland draait leerlingopvolging rond twee pijlers: het zorgcontinuum (brede basiszorg → verhoogde zorg → uitbreiding van zorg → individueel aangepast curriculum) en Handelingsgericht Werken (HGW) met de cyclus waarnemen → begrijpen → plannen → realiseren. Bestaande LVS-software (Questi, Smartschool LVS, Broekx, en NL-instrumenten als ZIEN!/Kindbegrip, KIJK!, Looqin, IEP) bundelt observaties, toetsen en gesprekken tot een leerlingfiche en ondersteunt de zorgleerkracht. De kern van kwaliteit is het strikte onderscheid tussen feitelijke observatie (concreet, waarneembaar, meetbaar gedrag) en interpretatie (conclusie, hypothese) — precies het punt waar Klaskompas visueel en teacher-first kan uitblinken. Concreet inspirerend: het scheiden van \"wat ik zag\" en \"mijn hypothese\" in aparte velden, ABC-observatie (Antecedent-Behavior-Consequence), tijdsteekproef-registratie, one-page profiles als visuele leerlingfiche, en onderwijsbehoeften via helper-zinnen. Alle sterke ideeen respecteren de harde grenzen: geen automatische detectie of scores, wel gestructureerde, feitelijke, door de leerkracht ingevoerde notities.",
+    "findings": [
+      {
+        "name": "Handelingsgericht Werken (HGW) — cyclus & 7 uitgangspunten",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://wij-leren.nl/hgw-handelingsgericht-werken.php",
+        "what": "HGW is de dominante zorgmethodiek: 7 uitgangspunten (o.a. onderwijsbehoeften centraal, leerkracht doet ertoe, positieve aspecten, doelgericht, systematisch/transparant) en een cyclus van 4 fases: waarnemen/signaleren → begrijpen/analyseren → plannen → realiseren/uitvoeren.",
+        "why": "Dit is de ruggengraat van elke serieuze opvolging in Vlaanderen; observaties zijn de 'waarnemen'-fase die naar begrijpen en plannen leidt. Klaskompas kan de leerlingfiche expliciet rond deze cyclus structureren zodat observaties niet losstaand blijven maar doorstromen naar acties.",
+        "visual": "Toon de HGW-cyclus als een visuele loop (4 kwadranten/pijlen) op het dashboard of leerlingfiche; een observatie 'klikt' in de waarnemen-fase en kan met 1 klik doorgezet worden naar begrijpen → plannen (actie). Statusbolletjes tonen waar een leerling in de cyclus zit."
+      },
+      {
+        "name": "Zorgcontinuum (brede basiszorg → verhoogde zorg → uitbreiding → IAC)",
+        "category": "framework",
+        "region": "Vlaanderen",
+        "url": "https://prodiagnostiek.be/het-zorgcontinuum/brede-basiszorg/",
+        "what": "Het Vlaamse zorgcontinuum kent 4 fases van oplopende ondersteuning: brede basiszorg (voor alle leerlingen), verhoogde zorg (extra maatregelen: remedieren, differentieren, compenseren, dispenseren), uitbreiding van zorg (CLB actief), en individueel aangepast curriculum. Prodia/Prodiagnostiek beschrijft dit officieel.",
+        "why": "Een leerlingfiche zonder zorgfase mist context. Dit is officiele Vlaamse structuur (respecteert 'geen eigen workflow zonder goedkeuring'). Het geeft een genuanceerd, niet-stigmatiserend fasemodel i.p.v. risicoscores.",
+        "visual": "Visuele fasebalk/badge op de leerlingfiche (bv. gekleurde stappenbalk 0-1-2-3) die toont in welke zorgfase een leerling zit, met de genomen maatregelen (RIDDER: remedieren/differentieren/compenseren/dispenseren) als aanvinkbare chips. Nadrukkelijk handmatig, geen automatische escalatie."
+      },
+      {
+        "name": "Observatie vs. interpretatie — feitelijk noteren",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://wij-leren.nl/observeren.php",
+        "what": "Kernprincipe: een observatie is concreet, waarneembaar en meetbaar gedrag ('Sam staat 3x op tijdens de instructie'); zodra je betekenis geeft ('Sam is ongemotiveerd') interpreteer je. Richtlijnen: beschrijf concreet gedrag, vermijd woorden als 'vaak/erg/soms/lui', tel/meet, geef niet te snel een verklaring en zoek alternatieve verklaringen. Let op halo-effect en vooringenomenheid.",
+        "why": "Dit is exact het teacher-first + pedagogisch-verantwoorde hart van Klaskompas: 'feitelijk gedrag boven interpretatie' staat letterlijk in de productprincipes. Het is ook privacy/AVG-vriendelijk want er worden geen karaktereigenschappen afgeleid.",
+        "visual": "Splits het notitieveld in twee gelabelde delen: 'Wat ik zag/hoorde' (feit, verplicht) en optioneel 'Mijn hypothese' (duidelijk anders gekleurd/kantelijn). Een lichte woord-signalering onderstreept interpretatieve/vage woorden ('vaak', 'agressief', 'lui') en stelt voor: 'Kan je dit concreter/telbaar maken?' — als zachte nudge, niet blokkerend."
+      },
+      {
+        "name": "ABC-observatie (Antecedent – Behavior – Consequence)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://abcdata.education/",
+        "what": "Het meest gebruikte kader om gedragsobservatie om te zetten in bruikbare data: Antecedent (wat vlak ervoor gebeurde) → Behavior (specifiek, waarneembaar gedrag) → Consequence (wat erop volgde). Apps zoals ABC Data en OpenEduCat's behavior tracker gebruiken dit met tijdstempels.",
+        "why": "Geeft structuur die interpretatie tegengaat en context vastlegt zonder oordeel — sluit naadloos aan bij 'preventie en herstel naast consequenties'. Toont patronen (bv. steeds vlak voor de speeltijd) zonder ze te scoren of te automatiseren.",
+        "visual": "Observatie-invoer als 3 gekoppelde velden op één rij (Voor → Gedrag → Gevolg), elk met snelle chip-suggesties. Op de fiche kun je later filteren op 'wat gaat er meestal aan vooraf?' als eenvoudige patroonweergave (frequentietelling), nadrukkelijk zonder risicoscore."
+      },
+      {
+        "name": "Onderwijsbehoeften & groepsoverzicht (stimulerende/belemmerende factoren)",
+        "category": "methode",
+        "region": "Nederland/Vlaanderen",
+        "url": "https://hgw-noelle-pameijer.nl/wp-content/uploads/2018/01/B.6.6.-Voorbeelden-overzicht-en-plan-1.pdf",
+        "what": "In HGW noteer je per leerling stimulerende en belemmerende factoren (leerling/onderwijs/opvoeding), en formuleer je een onderwijsbehoefte in twee delen: (1) welk doel, (2) wat de leerling nodig heeft om dat doel te halen. Helper-zin: 'Deze leerling heeft ... nodig om ...'. Onderscheid: factoren beschrijven, behoeften formuleren wat nodig is.",
+        "why": "Verschuift de blik van 'wat is er mis met de leerling' naar 'wat heeft de leerling nodig' — positief en handelingsgericht, geen deficit-denken of karakterlabels. Perfecte brug tussen observatie en actie in de fiche.",
+        "visual": "Een 'onderwijsbehoefte'-widget met een invul-zin-sjabloon (mad-libs-stijl): [Doel] + 'heeft nodig' + [instructie/materiaal/omgeving/feedback]. Twee kolommen 'stimulerend' (groen) vs 'belemmerend' (grijs) met sleepbare chips, opgebouwd uit de feitelijke observaties."
+      },
+      {
+        "name": "One-page profile (visuele leerlingfiche)",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://www.structural-learning.com/post/one-page-profile-template-guide",
+        "what": "Persoonsgerichte samenvatting op één pagina met 3 vaste secties: 'wat mensen waarderen aan mij', 'wat belangrijk is voor mij', en 'hoe je mij het best ondersteunt'. Veel gebruikt in SEND/zorg, ook door de leerling zelf mee ingevuld.",
+        "why": "Ideaal 'coole, visuele' formaat voor de leerlingfiche dat toch pedagogisch verantwoord is: strengths-based, leerling-stem, en in één oogopslag bruikbaar door de leerkracht — teacher-first bij overdracht naar een nieuwe leerkracht.",
+        "visual": "Leerlingfiche als visuele one-pager met foto/avatar en 3 kaartjes (waarderen / belangrijk / ondersteuning), naast de feitelijke observatietijdlijn. Print-/deelbaar bij klaswissel. De leerling kan zelf tekst/emoji aanleveren (leerling-stem, geen afgeleide data)."
+      },
+      {
+        "name": "Tijdsteekproef-app (ZIEN in de Klas)",
+        "category": "app",
+        "region": "Nederland",
+        "url": "https://zienindeklas.nl/tijdsteekproef-app",
+        "what": "App die taakgerichtheid meet via tijdsteekproef: over 20 minuten verschijnt elke 20 seconden een keuze uit 5 categorieen (Taakgericht / Kijkt rond / Loopt / Storend gedrag / Anders). Levert een objectief percentage taakgericht gedrag.",
+        "why": "Toont hoe je feitelijk, gestructureerd en snel gedrag registreert zonder interpretatie of biometrie — de leerkracht observeert zelf en tikt. Concreet, teacher-controlled, en het resultaat is een neutraal percentage i.p.v. een oordeel.",
+        "visual": "Een optionele 'observatie-timer' modus: kies een leerling/groep, de app pingt op intervallen en je tikt 1 van enkele feitelijke gedragscategorieen. Resultaat als eenvoudige staafgrafiek 'aandeel taakgericht' over de sessie — meetbaar bewijs i.p.v. buikgevoel."
+      },
+      {
+        "name": "Questi — zorgplatform & leerlingvolgsysteem",
+        "category": "app",
+        "region": "Vlaanderen",
+        "url": "https://www.questi.com/benl/zorgplatform/",
+        "what": "Vlaams pakket met 3 geintegreerde delen (leerkrachten/ouders/leerlingen). Het zorgplatform bundelt alle info over de ontwikkeling van een leerling zodat de zorgleerkracht overzicht houdt en samenwerkt i.p.v. plant; het LVS ondersteunt screenings, toetsen en observaties met overzichten op leerling- en klasniveau en automatische normering.",
+        "why": "Directe Vlaamse concurrent/referentie voor Klaskompas. Toont het teacher-first uitgangspunt ('overzicht i.p.v. planlast') en de verwachte modules. Nuttig om te zien wat de standaard is en waar Klaskompas visueel kan differentieren.",
+        "visual": "Neem het idee 'alle info over één leerling op één plek, samenwerking-gericht' over: een fiche waar observaties, toetsen en gesprekken samenkomen met een klasoverzicht dat in één blik toont wie aandacht nodig heeft — zonder ranking of risicoscore."
+      },
+      {
+        "name": "Smartschool LVS & Broekx LVS",
+        "category": "app",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/tag/leerlingvolgsysteem/",
+        "what": "Smartschool (marktleider Vlaams secundair/basis) heeft een LVS-module, ook in de app, en kondigt vernieuwing van LVS + evaluatie (Skore) aan voor 2025-2026. Broekx biedt een apart LVS met handleiding voor basisonderwijs.",
+        "why": "Dit zijn de systemen die Vlaamse leerkrachten al kennen; Klaskompas moet ergonomisch aanvoelen als een lichtere, visuelere aanvulling. De aangekondigde Smartschool-vernieuwing wijst op marktbeweging richting betere LVS-UX.",
+        "visual": "Zorg voor mobiel-eerst snelinvoer (zoals de Smartschool-app): observatie noteren vanaf de telefoon tijdens de les met minimale taps, zodat het naast/ i.p.v. de logge bestaande systemen past."
+      },
+      {
+        "name": "ZIEN! / Kindbegrip, KIJK!, Looqin — observatie sociaal-emotioneel",
+        "category": "tool",
+        "region": "Nederland/Vlaanderen",
+        "url": "https://medium.com/looqin/looqin-een-volgsysteem-voor-de-competenties-voor-de-21e-eeuw-bfc429f45a5",
+        "what": "Erkende observatie-instrumenten. ZIEN! (opvolger Kindbegrip) brengt sociaal-emotioneel functioneren systematisch in beeld, gekoppeld aan HGW. Looqin kijkt altijd eerst naar welbevinden en betrokkenheid (Leuvense schalen van Ferre Laevers) en optioneel emotionele/sociale ontwikkeling, zelfregulatie. KIJK! geeft een breed ontwikkelingsbeeld.",
+        "why": "Laten zien hoe je 'zachte' domeinen registreert zonder emotiedetectie: de leerkracht scoort zelf een welbevinden-/betrokkenheidsschaal op basis van observatie. Belangrijk: dit is door-de-leerkracht-beoordeeld, niet automatisch afgeleid — respecteert de harde grens.",
+        "visual": "Optionele welbevinden-/betrokkenheidsmeter (schaal 1-5, door de leerkracht ingesteld) met een sparkline-historiek per leerling. Duidelijk gelabeld als 'leerkracht-inschatting', niet als gemeten feit — een reflectie-instrument, geen score met gevolgen."
+      },
+      {
+        "name": "Kijkwijzer sociaal-emotionele ontwikkeling (Katholiek Onderwijs Vlaanderen)",
+        "category": "bron",
+        "region": "Vlaanderen",
+        "url": "https://pro.katholiekonderwijs.vlaanderen/evaluatiebox-basisonderwijs/evaluatie-instrumenten/kijkwijzer-bij-de-observatie-van-sociaalemotionele-ontwikkeling",
+        "what": "Officieel Vlaams observatie-instrument ('kijkwijzer') met concrete observeerbare indicatoren voor sociaal-emotionele ontwikkeling, uit de Evaluatiebox basisonderwijs.",
+        "why": "Canon-nabije, Vlaamse bron met kant-en-klare feitelijke observatie-items — bruikbaar als bibliotheek van voorgeformuleerde, niet-interpretatieve observatiezinnen in Klaskompas.",
+        "visual": "Bied bij het noteren een keuzebibliotheek van feitelijke, voorgeformuleerde observatie-items (kijkwijzer-stijl) die de leerkracht kan aantikken en aanvullen — versnelt invoer én borgt feitelijke formulering."
+      },
+      {
+        "name": "Prodia / Algemeen Diagnostisch Protocol — 'Observeren'",
+        "category": "bron",
+        "region": "Vlaanderen",
+        "url": "https://prodiagnostiek.be/",
+        "what": "Prodiagnostiek (Prodia) is het Vlaamse referentiekader voor handelingsgerichte diagnostiek; het bevat een bijlage 'Observeren' met soorten observatie (participerend/gestructureerd), registratievormen en het onderscheid observatie/interpretatie.",
+        "why": "Gezaghebbende Vlaamse bron die de theorie achter feitelijk observeren onderbouwt; goede referentie om Klaskompas-keuzes te verantwoorden en terminologie correct te houden.",
+        "visual": "Gebruik de Prodia-terminologie (waarnemen, gestructureerd/ongestructureerd, participerend) als tooltips/hulpteksten in de UI, zodat de app zelf de leerkracht coacht richting feitelijke registratie."
+      },
+      {
+        "name": "KlasCement — observatieformulieren & thema leerlingobservatie",
+        "category": "bron",
+        "region": "Vlaanderen",
+        "url": "https://www.klascement.net/thema/leerlingobservatie/",
+        "what": "KlasCement (Vlaams onderwijsplatform van de overheid) heeft een thema 'observatie van leerlingen' en downloadbare observatieformulieren gemaakt door leerkrachten.",
+        "why": "Toont welke velden Vlaamse leerkrachten in de praktijk zelf gebruiken — ideaal om de veldstructuur van de Klaskompas-observatiemodule te valideren tegen echt gebruik.",
+        "visual": "Analyseer enkele populaire KlasCement-observatieformulieren om de standaardvelden (datum, context/situatie, waarneming, betrokken leerling, vervolg) over te nemen als default-sjabloon dat leerkrachten herkennen."
+      }
+    ],
+    "themes": [
+      "Feit vs. interpretatie is de rode draad: elk sterk instrument dwingt of nudget richting concreet, waarneembaar, meetbaar gedrag en scheidt dit van hypotheses/oordelen.",
+      "Observaties mogen niet losstaan: ze horen in een cyclus (HGW: waarnemen → begrijpen → plannen → realiseren) en in een fasemodel (zorgcontinuum), zodat een notitie doorstroomt naar een onderwijsbehoefte en actie.",
+      "Van deficit naar behoefte: de beste kaders formuleren wat een leerling nodig heeft ('heeft ... nodig om ...') i.p.v. wat er mis is — strengths-based en niet-stigmatiserend.",
+      "Teacher-first snelinvoer: mobiel, minimale taps, chip-/sjabloonsuggesties en tijdsteekproef-modi maken feitelijk registreren tijdens de les haalbaar.",
+      "Privacy-by-design binnen de harde grenzen: 'zachte' domeinen (welbevinden, betrokkenheid, taakgerichtheid) worden door de leerkracht zelf ingeschat/geregistreerd, nooit automatisch gedetecteerd of tot risicoscore gecombineerd.",
+      "Overdraagbaarheid: one-page profiles en gebundelde leerlingfiches zorgen dat kennis over een leerling in één oogopslag overdraagbaar is bij klaswissel."
+    ],
+    "topPicks": [
+      "Gesplitst observatieveld: verplicht 'Wat ik zag/hoorde' (feitelijk) + optioneel, visueel afgescheiden 'Mijn hypothese', met een zachte woord-nudge die vage/interpretatieve woorden ('vaak', 'lui', 'agressief') markeert en vraagt te concretiseren.",
+      "Leerlingfiche als visuele one-page profile (waarderen / belangrijk voor mij / hoe mij ondersteunen) naast een feitelijke observatietijdlijn — strengths-based, deelbaar bij overdracht.",
+      "HGW-cyclus + zorgcontinuum visueel op de fiche: een observatie klikt in 'waarnemen', kan met 1 klik doorgezet worden naar 'onderwijsbehoefte' en 'actie'; een gekleurde fasebalk (brede basiszorg → verhoogde zorg → …) toont de zorgcontext zonder risicoscore.",
+      "Onderwijsbehoefte via mad-libs helper-zin: '[doel] — deze leerling heeft [instructie/materiaal/omgeving/feedback] nodig', gevoed door de feitelijke observaties.",
+      "Optionele observatie-timer (tijdsteekproef à la ZIEN in de Klas): pingt op intervallen, leerkracht tikt 1 feitelijke gedragscategorie, resultaat als neutrale staafgrafiek 'aandeel taakgericht' — feitelijk bewijs, teacher-controlled, geen automatische detectie.",
+      "Bibliotheek van voorgeformuleerde, feitelijke observatie-items (kijkwijzer-stijl van Katholiek Onderwijs Vlaanderen) om aan te tikken — versnelt invoer én borgt niet-interpretatieve formulering."
+    ]
+  },
+  {
+    "facet": "Aanwezigheids- en afwezigheidsregistratie: snelle klas-UX + correcte Vlaamse afwezigheidscodes/regelgeving",
+    "summary": "Aanwezigheid nemen moet in enkele seconden lukken (teacher-first: 1 handeling per leerling of 1 handeling voor de hele klas), maar tegelijk 100% correct aansluiten op de Vlaamse regelgeving. Sinds 1/9/2019 werkt Discimus met nog maar 7 aan-/afwezigheidscodes (actieplan 'Samen tegen Schooluitval'); daaronder zit het cruciale onderscheid van rechtswege gewettigd / mits akkoord directeur gewettigd / problematisch (B-code). De B-code (ongewettigd, 'B' van begeleiding) is het scharnierpunt: vanaf 5 halve dagen problematische afwezigheid per schooljaar moet de school het CLB inschakelen en een begeleidingsdossier openen; in het SO leidt >30 halve dagen tot melding aan het departement. Vlaamse pakketten (Smartschool, Informat/iHelp, Schoolware) doen registratie via klasoverzicht op pc/tablet/smartphone met een tijdvenster (10 min voor tot 7 dagen na de les). Internationale apps (TeacherKit, OneTap, Acadly) en klasideeën (Classroomscreen, Zones-incheck, inloopbordjes) leveren de 'coole visuele' laag: tap-om-te-cyclen, kleurcodes, seating-chart-view, sleep-je-naam-inchecken en één-knop-hele-klas-aanwezig. De sterkste synthese voor Klaskompas: een visueel klasrooster/plattegrond waar je per leerling door statussen tikt, met slimme defaults (iedereen aanwezig) en een aparte, correcte laag voor de wettelijke code + attestopvolging.",
+    "themes": [
+      "Twee lagen scheiden: (1) supersnelle 'wie is er?'-registratie voor de leerkracht en (2) de juridisch correcte afwezigheidscode/attestafhandeling — koppel ze, maar dwing de leerkracht niet tot codekeuze tijdens de les",
+      "Slimme default 'iedereen aanwezig' + alleen uitzonderingen aanduiden = minste handelingen; markeer enkel de afwezigen/laatkomers",
+      "Tap-to-cycle en kleurcodering als kern-interactie (aanwezig=groen, te laat=oranje, afwezig=rood, gewettigd=blauw) i.p.v. dropdowns",
+      "Visuele klasplattegrond/seating chart als herkenbare, snelle context i.p.v. een kale namenlijst",
+      "Correctheid by design: de 7 Discimus-codes en het onderscheid gewettigd/problematisch inbouwen, met attest-status en het tijdvenster (10 min voor tot 7 dagen na)",
+      "Preventie/opvolging zichtbaar maar niet-stigmatiserend: teller richting de 5-halve-dagen-drempel als feitelijke signalering, geen risicoscore of interpretatie",
+      "Zelf-inchecken door leerlingen (sleep je naam / inloopbord) als engagement, maar de leerkracht behoudt eindcontrole en de wettelijke registratie",
+      "Combineer aanwezigheid met een lichte, zelf-gerapporteerde check-in (Zones/gevoel) — nooit als detectie of afgeleide, altijd expliciet door de leerling zelf gekozen"
+    ],
+    "topPicks": [
+      "Visuele klasplattegrond (seating chart) waarin je per leerlingtegel tikt om door statussen te cyclen (aanwezig → te laat → afwezig), met kleurcodes en een live teller boven (X aanwezig / Y afwezig / Z te laat) — à la TeacherKit + OneTap",
+      "Slimme default 'iedereen aanwezig' met één knop, waarna de leerkracht enkel de uitzonderingen aantikt: realistisch <10 seconden per klas",
+      "Twee gescheiden lagen: tijdens de les enkel aanwezig/afwezig/te laat kiezen; de juiste Vlaamse code (Z/D/B/P/R…), attest en gewettigd/problematisch komt daarna in een rustige nabewerkingsview met wizard",
+      "Feitelijke, niet-stigmatiserende opvolgteller voor problematische (B-)afwezigheid richting de wettelijke 5-halve-dagen-drempel — signaal 'CLB-melding nodig', zonder score of interpretatie",
+      "Sleep-je-naam inloopbord / zelf-incheck voor jongere leerlingen (Classroomscreen 'Choose your lunch'-stijl), gekoppeld aan aanwezigheid + optionele gevoels-incheck, met de leerkracht als eindcontrole",
+      "Swipe-interactie op mobiel (rechts = aanwezig, links = afwezig) voor wie liever door de klas veegt dan tikt"
+    ],
+    "findings": [
+      {
+        "name": "7 Discimus aan-/afwezigheidscodes (sinds 1/9/2019)",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.vlaanderen.be/nl/afwezigheidscodes-in-discimus",
+        "what": "Sinds september 2019 zijn de 23 oude codes teruggebracht tot 7 codes voor de gegevensuitwisseling met AGODI/Discimus, als onderdeel van het actieplan 'Samen tegen Schooluitval'. De administratiepakketten mappen hun interne codes naar deze 7.",
+        "why": "Klaskompas moet exact op deze 7 codes aansluiten om correct te zijn; het is de canonieke bron. De vereenvoudiging pleit ook voor een simpele UI met weinig keuzes.",
+        "visual": "Toon in de nabewerkingsview maximaal 7 grote, kleurgecodeerde codeknoppen i.p.v. een lange dropdown; groepeer visueel per categorie (gewettigd / problematisch)."
+      },
+      {
+        "name": "Drie categorieën: van rechtswege gewettigd / mits akkoord directeur / problematisch",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.vlaanderen.be/nl/leerplicht-aan-en-afwezigheden",
+        "what": "Afwezigheden vallen in drie juridische groepen: automatisch gewettigd 'van rechtswege' (ziekte met attest/verklaring, begrafenis/huwelijk bloedverwant, dagvaarding, religieuze feestdagen, jeugdhulpmaatregel…), gewettigd mits akkoord van de directeur (persoonlijke omstandigheden, code P), en problematisch/ongewettigd (B-code).",
+        "why": "Dit onderscheid — niet de losse letter — bepaalt de opvolgplicht. De app moet dit modelleren als expliciete status, niet als vrije tekst.",
+        "visual": "Kleur/segment-indeling: blauwe zone = gewettigd, oranje = 'akkoord directeur nodig', rood = problematisch. Chips met tooltip die de juridische reden toont."
+      },
+      {
+        "name": "B-code = problematische afwezigheid + 5-halve-dagen-drempel",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.vlaanderen.be/nl/afwezigheden-van-leerlingen-in-het-basisonderwijs",
+        "what": "Een B-code ('B' van begeleiding) is een afwezigheid van minstens een halve dag zonder (aanvaardbare) rechtvaardiging. Vanaf 5 halve dagen problematische afwezigheid per schooljaar moet de school het CLB inschakelen en een begeleidingsdossier openen. In het SO leidt >30 halve dagen (20 in deeltijds) tot melding aan het departement.",
+        "why": "Dit is dé feitelijke drempel die Klaskompas mag signaleren (teacher-first, preventie) — zonder risicoscore of interpretatie, conform de harde grenzen.",
+        "visual": "Discrete voortgangsteller per leerling: '3/5 halve dagen (B)' met een neutrale progressiebalk die op 5 een feitelijke melding 'CLB verwittigen' toont. Geen kleur-alarm dat stigmatiseert."
+      },
+      {
+        "name": "Interne registratiecodes leerkracht (Z, D, R, P …)",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://helpdesk.informat.be/hc/nl/articles/360010368339-Overzicht-afwezigheidscodes-SO",
+        "what": "In de administratiepakketten ziet de leerkracht fijnere codes die naar de 7 Discimus-codes mappen: o.a. Z = ziekte ≤3 opeenvolgende dagen met verklaring ouders (max 4x/jaar), D = ziekte met medisch attest (doktersattest), P = door school gewettigd/persoonlijk, R = van rechtswege gewettigd / of tuchtmaatregel afhankelijk van pakket, A = aanwezig, B = problematisch. Let op: exacte letterbetekenis verschilt per pakket (Informat, Schoolware, WISA) — synchroniseer met de officiële AGODI-tabel.",
+        "why": "De leerkracht denkt in deze codes; de app moet ze tonen maar de mapping naar Discimus zelf afhandelen. De letterambiguïteit is een open beslissing om te documenteren, niet hard te coderen.",
+        "visual": "Codeknop toont de leerkrachtcode + een subtiel label van de Discimus-uitkomst ('D → gewettigd'), zodat correctheid zichtbaar maar niet belastend is."
+      },
+      {
+        "name": "Registratietijdvenster: 10 min voor tot 7 dagen na de les",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://onderwijs.vlaanderen.be/nl/afwezigheidscodes-in-discimus",
+        "what": "Aan-/afwezigheden kunnen geregistreerd worden vanaf 10 minuten voor de les tot standaard 7 dagen na de start ervan; de school kan die naperiode zelf verkorten of verlengen.",
+        "why": "Bepaalt UX-regels: attesten komen vaak dagen later binnen, dus de app moet een 'later corrigeren/attesteren' flow hebben en registraties auditbaar bijhouden (past bij CLAUDE.md: statusovergangen auditbaar).",
+        "visual": "Een 'openstaande registraties'-inbox met dag-badges ('nog 3 dagen om te attesteren') en een correctie-tijdlijn die de mutatiegeschiedenis toont."
+      },
+      {
+        "name": "Smartschool aanwezigheden",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.smartschool.be/apps/app/",
+        "what": "Marktleider in Vlaanderen; vernieuwde aanwezigheidsmodule waarmee de leerkracht klasaanwezigheid beheert via pc, smartphone of tablet. Leerlingen hebben een digitale leerlingenkaart met QR-code die personeel kan scannen om afwezigheid te registreren.",
+        "why": "Directe concurrent/context: leerkrachten kennen dit patroon al. Klaskompas moet minstens even snel en visueler aanvoelen om meerwaarde te bieden.",
+        "visual": "QR-scan als optionele snelle modus overwegen; primair mikken op een visueler klasoverzicht dan de vrij lijst-gedreven Smartschool-UI."
+      },
+      {
+        "name": "Informat / iHelp 'Afwezigheden volgens klas'",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "http://ihelp.informatsoftware.be/ibasis/Aanw%20volgens%20klas.htm",
+        "what": "Vlaams schooladministratiepakket met registratie 'volgens klas' (hele klas in één rooster) en 'volgens leerling' (detail per kind), inclusief de officiële afwezigheidscodes en Discimus-verzending.",
+        "why": "Toont de twee nuttige assen — klasgewijs (snel) versus leerlinggewijs (opvolging). Klaskompas kan beide views expliciet aanbieden.",
+        "visual": "Toggle tussen 'klasrooster' (snelle invoer) en 'leerlingfiche' (historiek/attesten), met dezelfde kleurcodes in beide views."
+      },
+      {
+        "name": "Schoolware afwezigheden",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://insights.schoolware.be/ondersteuning/afwezigheden/",
+        "what": "Vlaams pakket (vooral SO) met afwezigheidsregistratie per lesuur, mapping naar Discimus-codes en attestopvolging.",
+        "why": "Referentie voor lesuur-gebaseerde (halve dag / per uur) registratie in het secundair, wat de datamodellering van Klaskompas beïnvloedt.",
+        "visual": "Rooster per lesuur met halve-dag-aggregatie; toon per leerling een strip van de dag (8 lesuren als 8 vakjes)."
+      },
+      {
+        "name": "TeacherKit — seating chart + tap-attendance",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://intercom.help/teacherkit/en/articles/99441-how-to-use-seating-chart-view",
+        "what": "Klasmanagement-app met een 'Seating Chart'-view: helikopterzicht op de klasopstelling waar je leerlingen op hun echte plaats zet. Aanwezigheid via één tik per leerling; standaard aanwezig/afwezig, uitbreidbaar met 'te laat <10 min' en '>10 min'.",
+        "why": "Bewijst dat een visuele plattegrond + tap-to-mark snel én herkenbaar is — precies de 'coole visuele' laag die de leerkracht wil, teacher-first.",
+        "visual": "Neem de seating-chart als hoofdview over: tegels op de echte klasindeling, één tik cyclet de status, badge met kleur per tegel."
+      },
+      {
+        "name": "OneTap — één-tik aanwezigheid + hele-klas-knop",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.onetapcheckin.com/class-attendance-app",
+        "what": "Snelle aanwezigheidsapp: one-tap statuscyclus per leerling, één knop om iedereen op dezelfde status te zetten, en live tellers van aanwezig/afwezig/te laat/custom statussen.",
+        "why": "Levert twee kern-UX-patronen recht voor Klaskompas: slimme default 'allen aanwezig' + enkel uitzonderingen aantikken, en live tellers voor onmiddellijke feedback.",
+        "visual": "Grote 'Iedereen aanwezig'-knop bovenaan; daarna tik je enkel de afwijkingen. Sticky teller-balk: 24 aanwezig · 1 te laat · 0 afwezig."
+      },
+      {
+        "name": "Acadly — one-tap / automatische aanwezigheid",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://blog.acadly.com/introducing-one-tap-automatic-attendance-8a6437cc1d8b",
+        "what": "Aanwezigheids-app met one-tap opname en optionele automatische check-in (bv. via een korte inchecktijd), gericht op minimale handelingen voor de docent.",
+        "why": "Illustreert 'aanwezigheid als bijna-nul-handeling'. De automatische varianten moeten voor Klaskompas privacy-vriendelijk blijven (geen locatie-/biometrie-tracking).",
+        "visual": "Optionele 'open incheck' (leerlingen bevestigen zelf binnen 2 min), waarna de leerkracht enkel de niet-ingecheckten nakijkt."
+      },
+      {
+        "name": "Classroomscreen — 'Choose your lunch' / aanwezigheid door naam te slepen",
+        "category": "tool",
+        "region": "internationaal",
+        "url": "https://classroomscreen.com/templates/choose-your-lunch",
+        "what": "Digitaal klasbord waarop leerlingen bij binnenkomst hun naam-icoon naar een keuze (bv. lunchoptie of 'aanwezig') slepen; totalen verschijnen live via een scorebord-widget.",
+        "why": "Vertaalt de fysieke inloopbordjes naar digitaal en betrekt leerlingen — engagement zonder de leerkracht te belasten. Combineert aanwezigheid met een lichte routine.",
+        "visual": "Sleep-je-naam inloopscherm op een klaslaptop/bord: wie zijn naam niet verplaatste = afwezig; leerkracht bevestigt met één blik. Live totaalteller."
+      },
+      {
+        "name": "Minga — kiosk/self check-in",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://minga.io/school-check-in/",
+        "what": "Beveiligde kiosk-modus waarmee leerlingen zichzelf inchecken (voor lessen, flex-momenten, te laat) op een gedeeld toestel in de klas of gang, in realtime geregistreerd.",
+        "why": "Model voor leerling-zelfregistratie met leerkracht-eindcontrole; nuttig voor laatkomers-flow. Let op privacy: geen ID-scanning-afhankelijkheid opdringen.",
+        "visual": "Aparte 'te laat'-incheck aan de deur: leerling tikt naam, tijd wordt automatisch gelogd, leerkracht ziet een 'te laat'-badge verschijnen."
+      },
+      {
+        "name": "Swipe-gesture patroon (present rechts / absent links)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://github.com/bhagyaspatel/Attendance_taking_app",
+        "what": "Wijdverbreid mobiel patroon: door de namenlijst vegen — rechts = aanwezig, links = afwezig — om zeer snel door een klas te gaan.",
+        "why": "Alternatief invoergebaar voor wie liever veegt dan tikt; snel op smartphone, één hand.",
+        "visual": "Op mobiel: kaartstapel of lijst waar je per leerling veegt; kleur/animatie bevestigt de status. Combineerbaar met de tegel-view op tablet."
+      },
+      {
+        "name": "Bubble/grid-redesign met kleurgecodeerde statussen",
+        "category": "framework",
+        "region": "internationaal",
+        "url": "https://blog.prototypr.io/attendance-app-case-study-7ab7bb7f97f5",
+        "what": "UX-case study's tonen een 'Today'-view met naam-bubbels/tegels die van kleur veranderen bij aantikken, en een tweekoloms grid met ronde, kleurgecodeerde knoppen per afwezigheidstype.",
+        "why": "Concreet ontwerppatroon voor de statuskeuze: kleur = onmiddellijke betekenis, ronde knoppen = grote tikdoelen (belangrijk in een drukke klas).",
+        "visual": "Kleurenlegende vast bovenaan; tik-doelen minimaal 44px; kleurverandering + micro-animatie als bevestiging i.p.v. tekstlabel."
+      },
+      {
+        "name": "Zones of Regulation / gevoels-incheck (zelf-rapportage)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://zonesofregulation.com/blog/part-3-of-3-building-strong-bonds-with-a-morning-ritual-using-a-zones-of-regulation-check-in/",
+        "what": "Ochtendritueel waarbij leerlingen zélf een zone/emoji kiezen (blauw=laag, groen=rustig, geel=verhoogd, rood=hoog) door een knijper/sticky te verplaatsen; leerkracht krijgt zicht op de sfeer.",
+        "why": "Een 'coole visuele' laag die bij aanwezigheid past — MAAR strikt zelf-gerapporteerd en optioneel. Respecteert de harde grens: geen emotiedetectie/afgeleide; de leerling kiest expliciet zelf.",
+        "visual": "Optionele gevoels-incheck naast de aanwezigheidstik: 4 grote kleurzones die de leerling zelf aanraakt. Nooit automatisch afgeleid, nooit als score bewaard voor beoordeling."
+      },
+      {
+        "name": "Fysieke inloopbordjes: klik-op-naam / nestje / ten-frame",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://teachspectacularscience.com/6-innovative-ideas-for-taking-attendance-making-it-fun-and-engaging/",
+        "what": "Klassieke Pinterest-ideeën: elke leerling verplaatst 's ochtends een knijper/magneet/kaartje van 'thuis' naar 'school' (of vult een ten-frame). Wie niet verplaatste = afwezig, in één oogopslag.",
+        "why": "Bron van de visuele metafoor voor het digitale inloopbord; leerling-eigenaarschap en beweging maken registratie tot routine i.p.v. controle.",
+        "visual": "Digitale variant: naam-magneten op een 'thuis → klas'-bord; de resterende magneten op 'thuis' zijn automatisch de afwezigen. Speels maar functioneel."
+      },
+      {
+        "name": "Vraag-van-de-dag aanwezigheid (would-you-rather / poll)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://teachspectacularscience.com/6-innovative-ideas-for-taking-attendance-making-it-fun-and-engaging/",
+        "what": "In plaats van een saaie afroeping beantwoordt elke leerling bij binnenkomst een korte vraag/poll; de antwoorden vormen meteen de aanwezigheidslijst.",
+        "why": "Verhoogt betrokkenheid zonder extra leerkrachthandelingen; wie niet antwoordde is afwezig. Past bij een visuele, positieve toon.",
+        "visual": "Bij het inloopbord een dagelijkse 'would you rather'-tegel; het kiezen registreert stil de aanwezigheid. Antwoorden tonen als een leuke staafgrafiek."
+      }
+    ]
+  },
+  {
+    "facet": "Oudercommunicatie-tools en het auditbaar loggen ervan",
+    "summary": "De markt voor oudercommunicatie splitst zich in twee soorten tools: (1) berichtenkanalen zoals ClassDojo, ParentSquare, Bloomz, Gimme en Smartschool die communicatie mogelijk maken en die communicatie automatisch loggen, en (2) documentatie-tools zoals ShortHand die er juist op gericht zijn elk contact (ook telefoon, gesprek, mail buiten de app) snel vast te leggen per leerling. De sterkste inzichten voor Klaskompas komen uit de tweede categorie: elk contact is getimestampt, gekoppeld aan een leerling, doorzoekbaar en omzetbaar in een oudergericht bericht. Voor een auditbaar log gelden vaste velden (datum/tijd, kanaal, reden, samenvatting, uitkomst, follow-up), onwisbaarheid/soft-delete en exporteerbaarheid. Smartschool (in Vlaanderen dominant) heeft een onwisbaar berichtensysteem en een nieuwe Contactmomenten-module voor het plannen van ouder- en leerlingcontacten. Belangrijk aandachtspunt: het facet gaat over LOGGEN van contact, niet over profilering — dat past goed binnen de harde grenzen als we ons beperken tot feitelijke registratie en handmatige samenvattingen.",
+    "findings": [
+      {
+        "name": "ClassDojo Messaging + Download Message History",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://help.classdojo.com/hc/en-us/articles/4410705304845-Download-and-Print-Message-History",
+        "what": "Berichtenplatform tussen leerkracht en ouders. Kernidee voor logging: berichten kunnen NIET permanent gewist worden en de volledige berichtgeschiedenis met elke ouder blijft downloadbaar/printbaar, ook als de ouder een bericht 'verwijdert' of het account weg is. Read-statuses tonen of een ouder een bericht las; urgente berichten kunnen apart gemarkeerd worden.",
+        "why": "Toont een concreet auditbaarheidsmodel: onwisbaarheid + exporteerbaarheid + leesbevestiging. Ook de zwakte is leerzaam: ClassDojo heeft GEEN per-leerling contactlog voor contact buiten de app (telefoon/gesprek/CLB), wat precies het gat is dat Klaskompas kan vullen.",
+        "visual": "Leesstatus-indicator (verstuurd / gelezen op tijdstip) per bericht, en een 'markeer als urgent'-badge. Voor het log: een duidelijke 'Exporteer/print gesprek'-knop per ouder-thread die een nette PDF-tijdlijn genereert."
+      },
+      {
+        "name": "ShortHand (documentatie-first oudercommunicatie)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://getshorthandapp.com/blog/best-parent-communication-apps-for-documentation-2026",
+        "what": "PWA (browser, gratis voor leerkrachten) die contact NIET zelf verstuurt maar juist snel documenteert: je logt een telefoontje, vat het gesprek in twee zinnen samen en bewaart het. Elk contact is getimestampt, gekoppeld aan een specifieke leerling en direct doorzoekbaar; je haalt de complete contactgeschiedenis van een gezin in seconden op. Een bestaande notitie kan omgezet worden in een ouder-klaar concept.",
+        "why": "Dit is het dichtst bij wat Klaskompas' oudercommunicatie-log moet zijn: teacher-first, snel tijdens/na de les, feitelijk (samenvatting i.p.v. interpretatie), en het dekt ALLE kanalen (telefoon/gesprek/mail), niet alleen in-app chat. Bewijst dat 'log-first' een eigenstandig product-nis is.",
+        "visual": "Snelle log-flow van maximaal 2 handelingen: kies leerling → kies kanaal (telefoon/gesprek/mail/CLB) → 2-zinnen samenvatting → opslaan met auto-timestamp. Per leerling een doorzoekbare contactgeschiedenis-tijdlijn. Optionele 'zet om in oudermail'-knop (concept, geen automatische verzending)."
+      },
+      {
+        "name": "ParentSquare (2-way + audit logging + vertaling)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.parentsquare.com/designed-for-k12/2-way-translation/",
+        "what": "Unified school-to-home platform met echte tweewegcommunicatie (ouder antwoordt via SMS, e-mail of app in dezelfde thread). Automatische tweewegvertaling in 190+ talen — ouders sms'en terug in hun eigen taal en alle vertalingen worden mee gelogd in de app. Rolgebaseerde permissies en audit logging van district tot klas; elke interactie kan gelogd, gecategoriseerd en getranscribeerd worden zonder persoonlijke telefoonnummers te delen.",
+        "why": "Twee sterke ideeën: (1) vertaling die ook in het log bewaard blijft (relevant voor anderstalige ouders in Vlaanderen), en (2) 'categoriseren' van interacties als loggveld. Het delen-zonder-nummer-principe past bij privacy-by-design.",
+        "visual": "Per log-item een 'categorie'-tag (bv. gedrag, afwezigheid, evaluatie, praktisch). Vertaal-toggle die zowel het origineel als de vertaling bewaart in het log-item, zichtbaar naast elkaar."
+      },
+      {
+        "name": "Bloomz (communicatie + gebeurtenissen in één, PBIS-log)",
+        "category": "app",
+        "region": "internationaal",
+        "url": "https://www.bloomz.com/",
+        "what": "Bundelt oudermessaging, klasupdates, kalender, oudercontact-inschrijving, toestemmingsformulieren en gedragsregistratie in één app, met communicatie als kern. In vergelijkingen genoemd als de meest complete ClassDojo-vervanger qua feature-breedte; ondersteunt 250+ talen.",
+        "why": "Illustreert de all-in-one benadering die Klascockpit al nastreeft (oudercommunicatie naast acties/observaties). Nuttig als referentie voor hoe conferentie-/oudercontact-inschrijving en communicatie in één omgeving samenkomen, zonder de losse gedrags-scores over te nemen die tegen onze grenzen ingaan.",
+        "visual": "Geïntegreerde oudercontact-inschrijvingsmodule die inschrijvingen automatisch als contactmoment in het log plaatst (koppeling planning ↔ log)."
+      },
+      {
+        "name": "Smartschool Berichtensysteem (onwisbaar, Vlaamse context)",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.smartschool.be/smartschool/smartschool-berichtensysteem/",
+        "what": "Dominant Vlaams schoolplatform. Berichtensysteem is een afgeschermde plek waar leerkrachten, leerlingen en ouders veilig communiceren; berichten kunnen via e-mail-notificatie binnenkomen. Smartschool heeft in 2025 ook ingezet op minder e-mails/meldingen en meer gestructureerde communicatie.",
+        "why": "Klaskompas moet naast/rond Smartschool functioneren, niet ertegen. Veel Vlaamse leerkrachten hebben de in-app-communicatie al in Smartschool; Klaskompas' meerwaarde is het KANAALOVERSTIJGENDE log (ook telefoon/gesprek/CLB) dat Smartschool-berichten niet centraliseert per leerlingfiche.",
+        "visual": "Log-item met kanaal 'Smartschool-bericht' als aparte optie; mogelijkheid om een korte samenvatting + verwijzing (geen kopie van privé-inhoud) vast te leggen zodat de leerlingfiche een compleet contactoverzicht toont over alle kanalen heen."
+      },
+      {
+        "name": "Smartschool Contactmomenten (ouder- en leerlingcontacten)",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://www.smartschool.be/2025/04/nieuw-smartschool-contactmomenten-oudercontacten-leerlingcontacten-en-meer/",
+        "what": "Nieuwe module (2025) die het oude 'Oudercontact' vervangt. Organiseert oudercontacten én leerlingcontacten: de organisator zet beschikbare tijdslots klaar, ouders/leerlingen kiezen zelf een slot via de app en zien een overzicht van alle kinderen en betrokken leerkrachten. Vervangt papieren strookjes en losse mails; ook bruikbaar voor bv. evaluatiegesprekken.",
+        "why": "Bevestigt dat 'leerlingcontact' (leerling ⇄ leerkracht/zorg) een eigen registreerbaar contacttype is naast oudercontact — relevant voor Klaskompas' contacttypes. Toont ook de trend: minder papier/losse mails, meer gestructureerde planning met overzicht.",
+        "visual": "Contacttype-onderscheid in het log: oudercontact vs. leerlingcontact vs. CLB/zorg. Gepland contactmoment dat na afloop met één klik een 'gespreksverslag'-log-item wordt (planning → verslag → follow-up in één keten)."
+      },
+      {
+        "name": "Gimme (Vlaamse oudercommunicatie, tijdlijn + vertaling)",
+        "category": "app",
+        "region": "Vlaanderen/Nederland",
+        "url": "https://schoolit.be/nieuws/platform/gimme-app-communiceren-met-alle-ouders-met-een-simpele-klik/",
+        "what": "Gratis/betaalde Vlaamse app die info per kind op één tijdlijn verzamelt; ouders volgen de klas/afdeling van hun kind. Brieven kunnen vooraf klaargezet en op het juiste moment automatisch gepubliceerd worden, met vertaalfunctie voor anderstalige ouders. Optionele chat. Koppelt met Google, Microsoft, Bingel, Smartschool, Broekx.",
+        "why": "Concrete Vlaamse referentie voor de tijdlijn-metafoor en voor geplande/uitgestelde publicatie. De vertaalfunctie sluit aan bij het diverse Vlaamse oudersbestand. Koppelbaarheid met Smartschool bevestigt dat interoperabiliteit verwacht wordt.",
+        "visual": "Tijdlijn per klas/leerling als centrale metafoor. 'Plan publicatie op tijdstip'-optie voor uitgaande communicatie, met de verzending automatisch als log-item vastgelegd."
+      },
+      {
+        "name": "Vaste velden voor een oudercontact-log (klassieke communicatielog)",
+        "category": "methode",
+        "region": "internationaal",
+        "url": "https://templatearchive.com/parent-communication-logs/",
+        "what": "Standaard parent communication log registreert per contact: datum, tijd, communicatiemethode (telefoon, briefje, e-mail, persoonlijk gesprek), reden van contact, en notities/uitkomst. Het bijhouden van zo'n log is de populairste methode om vergeten of miscommunicatie te voorkomen.",
+        "why": "Levert het canonieke veldenschema voor Klaskompas' log: datum/tijd, kanaal, reden, samenvatting/uitkomst, follow-up. Feitelijk en teacher-first; geen interpretatie of scores nodig.",
+        "visual": "Log-invoerformulier met exact deze velden, waarbij datum/tijd auto-ingevuld en kanaal + reden dropdowns zijn (snelle invoer). Een 'follow-up nodig'-checkbox die het contact op een actie-/opvolglijst plaatst."
+      },
+      {
+        "name": "FERPA/GDPR best-practices voor auditbaar loggen",
+        "category": "beleid",
+        "region": "internationaal",
+        "url": "https://www.accountablehq.com/post/best-practices-for-ferpa-compliance",
+        "what": "Voor auditbaarheid: leg per registratie datum, betrokkene en doel/reden vast; documenteer wijzigingen aan records mét reden (transparantie bij geschillen); bewaar toestemming waar vereist; voer periodieke audits van het log uit. Onderliggend principe: onwisbaarheid + traceerbare wijzigingen.",
+        "why": "Vertaalt naar concrete AVG/GDPR-by-design eisen voor Klaskompas: auditlog van mutaties, soft-delete i.p.v. hard-delete, reden-bij-wijziging, en dataminimalisatie (alleen feitelijk contact, geen afgeleide profielen — sluit aan bij onze harde grenzen).",
+        "visual": "Zichtbare mutatiegeschiedenis per log-item ('bewerkt op … door …, reden: …'). Soft-delete met herstelmogelijkheid en een 'gearchiveerd'-status i.p.v. definitief wissen. Exportknop voor inzage-/audittraject."
+      }
+    ],
+    "themes": [
+      "Twee tool-categorieën: berichten-kanalen (ClassDojo, ParentSquare, Bloomz, Gimme, Smartschool) versus documentatie-first logs (ShortHand) — Klaskompas' kans ligt in het kanaaloverstijgende log",
+      "Onwisbaarheid + exporteerbaarheid als auditkern: berichten/contacten mogen niet definitief verdwijnen (soft-delete), en moeten als nette tijdlijn/PDF exporteerbaar zijn",
+      "Per-leerling contactgeschiedenis: elk contact getimestampt, aan een leerling gekoppeld en doorzoekbaar — de centrale interactie",
+      "Vaste, feitelijke velden (datum/tijd, kanaal, reden, samenvatting, uitkomst, follow-up) i.p.v. interpretatie of scores — past binnen de harde grenzen",
+      "Meerdere contacttypes: oudercontact, leerlingcontact en zorg/CLB verdienen een eigen categorie in het log",
+      "Vlaamse realiteit: interoperabiliteit met Smartschool en vertaling voor anderstalige ouders zijn verwacht, geen extra"
+    ],
+    "topPicks": [
+      "Log-first ontwerp à la ShortHand: 2-handelingen-flow (leerling → kanaal → 2-zinnen samenvatting → opslaan met auto-timestamp), met per-leerling doorzoekbare contactgeschiedenis-tijdlijn op de leerlingfiche",
+      "Kanaaloverstijgend log: registreer contact via telefoon/gesprek/mail/CLB/Smartschool-bericht in één centrale tijdlijn, iets wat de losse kanalen zelf niet doen",
+      "Auditbaarheid by design: onwisbaarheid via soft-delete, zichtbare mutatiegeschiedenis met reden-bij-wijziging, en export naar nette PDF-tijdlijn per ouder/leerling",
+      "Vaste feitelijke velden + categorie-tags (gedrag/afwezigheid/evaluatie/praktisch) en een 'follow-up nodig'-checkbox die doorstroomt naar de acties-module",
+      "Planning ↔ log-koppeling: een gepland contactmoment (Smartschool-Contactmomenten-stijl) wordt na afloop met één klik een gespreksverslag-log-item",
+      "Leesstatus + vertaling die mee bewaard blijft in het log, voor transparantie en anderstalige ouders — zonder privételefoonnummers te delen"
+    ]
+  },
+  {
+    "facet": "AVG/GDPR en privacy-by-design voor leerlingdata (EU/Vlaanderen): dataminimalisatie, lokale opslag, bewaartermijnen, verwerkersafspraken, open-source/self-host en lokale-eerst benaderingen",
+    "summary": "Voor een teacher-first app als Klaskompas is privacy-by-design geen juridische bijzaak maar een ontwerpprincipe dat je zichtbaar en voelbaar kunt maken. De kern in Vlaanderen: verwerk enkel wat strikt nodig is (dataminimalisatie, art. 5 AVG), leg vast waarom en hoelang je data bewaart (bewaartermijnen), en respecteer dat de school de verwerkingsverantwoordelijke is terwijl een tool-leverancier verwerker is (verwerkersovereenkomst). Vlaamse scholen werken met een GEB/DPIA (art. 35) en de VTC/GEBIO-werkgroep beoordeelt EdTech-software; Google Workspace-risico's maakten dit een levend thema. Technisch sluit een lokale-eerst architectuur (PWA + IndexedDB/localStorage, offline, geen backend) perfect aan bij dataminimalisatie: gegevens blijven op het toestel van de leerkracht, versleuteld met Web Crypto, zonder transmissie naar een cloud. Open-source/self-host systemen (RosarioSIS, AlekSIS) tonen dat volledige data-eigenaarschap haalbaar is. Het sterkste verkoopargument richting leerkrachten en directie: privacy als voelbaar comfort, niet als afvinklijst.",
+    "findings": [
+      {
+        "name": "Lokale-eerst (local-first) PWA met IndexedDB/localStorage",
+        "category": "framework",
+        "region": "internationaal",
+        "what": "Architectuur waarbij de app volledig in de browser draait en data lokaal opslaat (IndexedDB/localStorage/Cache API), offline werkt en installeerbaar is als PWA. Geen verplichte backend of cloudopslag; de leerkracht is fysiek eigenaar van de data op eigen toestel.",
+        "why": "Sluit direct aan bij dataminimalisatie: leerlinggegevens verlaten het toestel niet, dus geen transmissie- of verwerkersrisico. Maakt Klaskompas bruikbaar in klaslokalen met zwakke wifi en verlaagt de juridische drempel (minder/geen verwerkersovereenkomst nodig bij zuiver lokale opslag).",
+        "visual": "Een zichtbare offline/online-badge in de topbar ('Alles blijft op dit toestel'), plus een 'Installeer als app'-knop. Een klein slotje-icoon dat groen kleurt zodra data lokaal en versleuteld staat.",
+        "url": "https://dev.to/crisiscoresystems/offline-first-without-a-backend-a-local-first-pwa-architecture-you-can-trust-3j15"
+      },
+      {
+        "name": "Web Crypto API - versleuteling van leerlingdata at-rest",
+        "category": "tool",
+        "region": "internationaal",
+        "what": "Browser-native cryptografie (AES-256 / XChaCha20 via libsodium of WebCrypto) om lokaal opgeslagen gegevens te versleutelen voordat ze in IndexedDB/localStorage belanden. Ontgrendeling met een leerkracht-wachtwoord of toestel-pincode.",
+        "why": "Beschermt gevoelige observaties/evaluaties zelfs bij verlies of diefstal van een laptop/tablet - een concrete invulling van 'passende technische maatregelen' (art. 32 AVG) en versterkt privacy-by-design zonder cloud.",
+        "visual": "Een eenmalig 'sleutel instellen'-scherm met een geruststellende visual (kluis/slot). Bij opstart een korte biometrie-loze pincode-unlock. Statusindicator 'versleuteld' naast elke leerlingfiche.",
+        "url": "https://kerkour.com/crdt-end-to-end-encryption-research-notes"
+      },
+      {
+        "name": "Dataminimalisatie als ontwerpprincipe (art. 5 AVG)",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "what": "Verzamel en bewaar enkel gegevens die echt noodzakelijk zijn voor het pedagogische doel. Elk veld moet een aantoonbaar doel hebben; 'nice to have'-velden horen niet in het systeem.",
+        "why": "Kernprincipe van de Vlaamse onderwijsprivacyrichtlijnen. Voor Klaskompas betekent dit: feitelijk gedrag registreren, geen afgeleide karaktereigenschappen of scores - exact de harde grenzen die de app moet respecteren.",
+        "visual": "Bij het toevoegen van een observatieveld een subtiele hint 'Waarom leg je dit vast?' Standaard sober formulier met alleen essentiele velden; extra velden zitten achter een bewust 'meer velden tonen'-actie in plaats van standaard zichtbaar.",
+        "url": "https://www.privacyinonderwijs.be/"
+      },
+      {
+        "name": "Bewaartermijnen met automatische opschoning",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "what": "Leerlinggegevens hebben wettelijke bewaartermijnen (richtlijn: circa 2 jaar na vertrek van de leerling; absentie- en in-/uitschrijvingsgegevens vaak 5 jaar). Data zou na afloop verwijderd of gearchiveerd moeten worden.",
+        "why": "Privacy-by-design betekent bewaartermijnen inbouwen in plaats van eindeloos bewaren. Een app die dit automatiseert ontlast de leerkracht en voorkomt AVG-inbreuken door dataveroudering.",
+        "visual": "Een 'opruim-cockpit' die aan het einde van het schooljaar toont welke gegevens vervallen: een tijdlijn met kleuren (nog te bewaren / bijna te verwijderen / verwijderbaar) en een herstelbare 'archiveer'-actie in plaats van harde delete.",
+        "url": "https://www.apsitdiensten.nl/privacy/avg-naleven/bewaartermijnen-in-het-onderwijs"
+      },
+      {
+        "name": "Verwerkersovereenkomst en rolverdeling (verwerkingsverantwoordelijke vs verwerker)",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "what": "De school is verwerkingsverantwoordelijke; een EdTech-leverancier is verwerker en moet via een verwerkersovereenkomst vastleggen welke gegevens verwerkt worden, waarvoor, en met welke beveiliging. Bij zuiver lokale opslag zonder datatransmissie is er vaak geen verwerking door de leverancier.",
+        "why": "Bepaalt of Klaskompas een verwerkersovereenkomst nodig heeft. Een lokale-eerst variant zonder serveropslag is juridisch veel eenvoudiger uit te rollen op scholen - een sterk adoptie-argument richting directie/ICT-coordinator.",
+        "visual": "Een transparante 'privacy-onderbouwing'-pagina in de app ('Welke data gaat waarheen? Antwoord: nergens - alles blijft lokaal') met een simpel dataflow-diagram (toestel -> toestel, geen cloud-icoon).",
+        "url": "https://www.steunpuntpassendonderwijs-povo.nl/document/verwerkersovereenkomsten/"
+      },
+      {
+        "name": "GEB/DPIA en de VTC/GEBIO-werkgroep (Vlaanderen)",
+        "category": "beleid",
+        "region": "Vlaanderen/Nederland",
+        "what": "Een Gegevensbeschermingseffectbeoordeling (GEB, art. 35 AVG) brengt privacyrisico's van een verwerking in kaart bij hoog risico. De Vlaamse Toezichtcommissie (VTC) en de expertenwerkgroep GEBIO coordineren generieke DPIA's op EdTech-software, mede door de Google Workspace-risico's.",
+        "why": "Klaskompas kan zich hierop voorbereiden door een kant-en-klare GEB-onderbouwing te leveren die scholen kunnen overnemen. Dat verlaagt de drempel enorm en positioneert de app als 'DPIA-vriendelijk'.",
+        "visual": "Een downloadbaar/inzichtelijk 'privacy-dossier' in de app met de standaard GEB-antwoorden voorgeschreven, zodat de school niet vanaf nul moet starten. Presenteren als geruststellend groen vinklijstje.",
+        "url": "https://www.privacyinonderwijs.be/GEBIO/index.html"
+      },
+      {
+        "name": "Pseudonimisering van leerlinggegevens",
+        "category": "methode",
+        "region": "Vlaanderen/Nederland",
+        "what": "Werken met leerlinggegevens zonder direct te weten om welke persoon het gaat; herleiding is enkel mogelijk met aanvullende, apart bewaarde sleutelgegevens (bv. leerling-ID losgekoppeld van naam).",
+        "why": "Beperkt impact bij een datalek en is een erkende AVG-maatregel. Voor exports, back-ups of eventuele latere sync kan Klaskompas pseudoniemen gebruiken in plaats van namen.",
+        "visual": "Een 'anonieme weergave'-schakelaar (oog-icoon) die namen tijdelijk vervangt door initialen/ID's - handig bij het projecteren op een klasscherm of het delen van een overzicht met collega's.",
+        "url": "https://declercq.com/blogs/pseudonimisering-leerlinggegevens"
+      },
+      {
+        "name": "RosarioSIS - open-source zelf-gehost leerlingvolgsysteem",
+        "category": "app",
+        "region": "internationaal",
+        "what": "Gratis, open-source en self-hosted Student Information System met puntenboek, aanwezigheden en leerlingdossiers. Volledige data-eigenaarschap op eigen server, geen vendor-cloud.",
+        "why": "Bewijs dat een volwaardig klasadministratiesysteem privacyvriendelijk en zelf-gehost kan draaien. Referentie voor Klaskompas' puntenboek/aanwezigheidsmodule en voor het argument 'data blijft van de school'.",
+        "visual": "Overnemen: het model van een puntenboek met wegingsinstellingen en per-vak grade ranges, maar dan in een moderne, visuele Klaskompas-schil.",
+        "url": "https://www.rosariosis.org/"
+      },
+      {
+        "name": "AlekSIS - privacygericht open-source campus-managementsysteem",
+        "category": "app",
+        "region": "internationaal",
+        "what": "Modern, open-source campus-managementsysteem uit Duitsland met expliciete focus op privacy en samenwerking voor scholen. Zelf-hostbaar, AVG-bewust ontworpen.",
+        "why": "Toont dat 'privacy als kernwaarde' een marktpositionering is en geen rem. Inspiratie voor hoe Klaskompas privacy expliciet in zijn merkverhaal kan zetten voor Europese scholen.",
+        "visual": "Overnemen: expliciete privacy-instellingenpagina per gebruiker waar de leerkracht ziet welke gegevens bestaan en die kan exporteren/verwijderen (recht op inzage/verwijdering ingebouwd in de UI).",
+        "url": "https://aleksis.org/"
+      },
+      {
+        "name": "Data-portabiliteit: lokale export/import (JSON/CSV) en back-up",
+        "category": "methode",
+        "region": "internationaal",
+        "what": "Omdat lokale-eerst data op een toestel staat, is een expliciete export-/importfunctie nodig voor back-up, toestelwissel en het recht op dataportabiliteit (art. 20 AVG).",
+        "why": "Voorkomt dataverlies bij een lokale-opslag-app en geeft de leerkracht controle. Ondersteunt tegelijk het recht op inzage (leerling/ouder kan een leesbaar export krijgen).",
+        "visual": "Een prominente 'Exporteer mijn klasgegevens'-knop met keuze versleuteld back-upbestand of leesbaar overzicht (PDF/CSV). Bij import een herstelbare 'preview vooraf'-stap zodat niets ongewild overschreven wordt.",
+        "url": "https://rxdb.info/articles/local-first-future.html"
+      },
+      {
+        "name": "Privacy-dashboard en just-in-time transparantie in de UI",
+        "category": "trend",
+        "region": "internationaal",
+        "what": "In plaats van een privacyverklaring in de kelder: contextuele, korte uitleg op het moment dat data wordt vastgelegd, plus een centraal dashboard waar de leerkracht ziet wat, waar en hoelang wordt bewaard.",
+        "why": "Maakt privacy-by-design voelbaar en teacher-first: vertrouwen ontstaat door transparantie, niet door juridische teksten. Sluit aan bij 'data protection by design and by default' (art. 25 AVG) dat toezichthouders van scholen eisen.",
+        "visual": "Een 'privacy-kompas'-tegel op het dashboard: cirkeldiagram of statusmeter met 'lokaal opgeslagen / versleuteld / X gegevens die binnenkort verlopen'. Kleine info-tooltips (i-icoontjes) bij gevoelige velden met een zin uitleg.",
+        "url": "https://www.edpb.europa.eu/news/national-news/2025/slovenian-sa-schools-must-adhere-principle-data-protection-design-and_nb"
+      }
+    ],
+    "themes": [
+      "Lokale-eerst als privacy-strategie: data die het toestel niet verlaat, minimaliseert juridisch en technisch risico tegelijk",
+      "Privacy-by-design maakt je voelbaar en visueel (badges, sloticoontjes, privacy-kompas), niet als afvinklijst weggestopt",
+      "Dataminimalisatie stuurt het ontwerp: feitelijk gedrag registreren, geen afgeleide scores of karaktereigenschappen - exact de harde grenzen",
+      "Bewaartermijnen en verwijdering horen in de app ingebouwd (automatische opschoning, archiveren i.p.v. hard deleten)",
+      "Vlaamse context is concreet: school = verwerkingsverantwoordelijke, GEB/DPIA en VTC/GEBIO-toetsing van EdTech; een kant-en-klaar privacy-dossier verlaagt adoptiedrempel",
+      "Rechten van betrokkenen (inzage, portabiliteit, verwijdering) worden UI-functies i.p.v. juridische procedures"
+    ],
+    "topPicks": [
+      "Bouw Klaskompas lokale-eerst (PWA + IndexedDB, offline, geen backend) en versleutel data met Web Crypto - dit is meteen het sterkste privacy- en adoptie-argument richting scholen",
+      "Voeg een 'privacy-kompas'-tegel toe op het dashboard: zichtbaar 'lokaal + versleuteld', met een tijdlijn van bewaartermijnen en een geruststellende offline/online-badge in de topbar",
+      "Automatiseer bewaartermijnen met een end-of-year opruim-cockpit die vervallen data toont en herstelbaar archiveert i.p.v. hard verwijdert",
+      "Lever een kant-en-klaar privacy-dossier / GEB-onderbouwing en een dataflow-diagram ('alles blijft lokaal') zodat directie/ICT-coordinator snel groen licht kan geven",
+      "Maak rechten van betrokkenen tot UI: 1-kliks export (versleutelde back-up of leesbaar PDF/CSV) en een 'anonieme weergave'-schakelaar met initialen voor projectie op klasschermen"
+    ]
+  }
+]
