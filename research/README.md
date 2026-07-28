@@ -35,6 +35,13 @@ beslissingen, niet als beslissing zelf (zie `CLAUDE.md`, canonvolgorde).
   achter de vergelijking (incl. must-haves en nice-to-haves).
 - **`prototype-inventaris.json`** — Feitelijke inventaris van het Klascockpit-prototype
   (modules, velden, datamodel, opslag/sync, UX, gaps), uitgelezen uit de code.
+- **`beloningssysteem-onderzoek.md`** — Ontwerpdossier voor het beloningssysteem bij de
+  collectieve geldkoker (ADR-0001): motivatiewetenschappelijke ontwerpprincipes, een
+  concreet beloningsmenu (voorrechten/autonomie, ervaringen/spel, talen-gekleurd, snoep,
+  klasmoment), de uitgeef-mechaniek (getrapt menu + klasstem + reset), uitfaseren, en de
+  inpassing binnen de harde grenzen. Uit een breed webonderzoek (8 deelaspecten).
+- **`beloningssysteem-bevindingen-ruw.md`** — De ruwe Markdown-bevindingen per deelaspect
+  achter het beloningsdossier.
 
 ## Methode & voorbehoud
 
