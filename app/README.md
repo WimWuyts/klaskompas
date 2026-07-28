@@ -19,6 +19,20 @@ python3 -m http.server 8000
 
 Eenmaal geladen werkt Klaskompas **offline** en is het als PWA te "installeren".
 
+### Eén-bestandsversie (dubbelklikken)
+
+Voor gebruik zonder server is er een gebundelde versie: **`dist/klaskompas.html`**.
+Bewaar dat ene bestand en open het rechtstreeks in de browser (Chrome/Edge aanbevolen).
+Alle gegevens blijven lokaal (IndexedDB, per bestandslocatie). Opnieuw bouwen na
+wijzigingen:
+
+```bash
+npm i -g esbuild        # of: npx esbuild
+node app/build-singlefile.mjs
+```
+
+De losse `app/` blijft de bron; `dist/klaskompas.html` is een build-artefact.
+
 ## Wat werkt nu
 
 - **Fundament** — IndexedDB-datalaag met schema/migraties, echte JSON-backup en
