@@ -3,6 +3,10 @@
 Werkende, verkennende prototypes. Dit is **geen canon** — het zijn startpunten en
 inspiratie om op voort te bouwen. Beslissingen horen in `docs/`.
 
+> **Opgevolgd door `app/`.** Sinds ADR-0002 is er een echte web-app (`app/`) met
+> IndexedDB, echte merge-import en een offline-schil. Dit prototype blijft hier als
+> historisch startpunt en ideeënbron, maar wordt niet verder ontwikkeld.
+
 ## klascockpit-v4.html
 
 Eerste, rudimentaire versie van het **klasadministratiesysteem** (single-file web-app,
