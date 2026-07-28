@@ -9,6 +9,7 @@ import * as klassen from './views/klassen.js';
 import * as schooljaar from './views/schooljaar.js';
 import * as rooster from './views/rooster.js';
 import * as aanwezigheid from './views/aanwezigheid.js';
+import * as afspraken from './views/afspraken.js';
 import * as beloningen from './views/beloningen.js';
 import * as instellingen from './views/instellingen.js';
 import * as klasscherm from './views/klasscherm.js';
@@ -19,6 +20,7 @@ const ROUTES = {
   schooljaar: { titel: 'Schooljaar & kalender', icoon: '📅', view: schooljaar, groep: 'admin' },
   rooster: { titel: 'Rooster', icoon: '🗓️', view: rooster, groep: 'admin' },
   aanwezigheid: { titel: 'Aanwezigheid', icoon: '✅', view: aanwezigheid, groep: 'admin' },
+  afspraken: { titel: 'Afspraken & instructie', icoon: '🤝', view: afspraken, groep: 'admin' },
   beloningen: { titel: 'Beloningen', icoon: '🎁', view: beloningen, groep: 'admin' },
   instellingen: { titel: 'Instellingen & backup', icoon: '⚙️', view: instellingen, groep: 'admin' },
   klasscherm: { titel: 'Klasscherm', icoon: '📺', view: klasscherm, groep: 'les' },

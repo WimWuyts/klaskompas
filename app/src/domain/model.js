@@ -37,6 +37,26 @@ export const KALENDER_TYPE = {
 
 export const DAGEN = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag'];
 
+// — Klasafspraken & routine (klasfiche ADR-0001 §2.3) —
+
+/** Vaste lesstart-drill (afvinkbaar op het Klasscherm). */
+export const DRILL_STAPPEN = [
+  'Binnenkomen — rustig en groeten',
+  'Rechtstaan aan de bank',
+  'Gaan zitten op teken',
+  'Boek + taak van de vorige dag klaar',
+  'Starten terwijl de leerkracht klaarzet',
+];
+
+/** De 5 kernafspraken voor de talenklas (samen aan te scherpen). */
+export const DEFAULT_AFSPRAKEN = [
+  'We tonen respect voor elkaars taal, mening en fouten.',
+  'We luisteren tot iemand is uitgesproken en geven elkaar spreektijd.',
+  'We proberen eerst in de doeltaal (met een steun-/ontsnappingsroute).',
+  'We zijn op tijd en lesklaar (materiaal + opdracht klaar).',
+  'We dragen bij aan het groepswerk — iedereen doet zijn deel.',
+];
+
 // — Beloningen (ADR-0003) —
 
 export const BELONING_NIVEAU = {

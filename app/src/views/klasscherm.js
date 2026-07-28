@@ -5,6 +5,8 @@
 import { get, getSetting, setSetting, potGeschiedenis } from '../db/repo.js';
 import { potStatus, verdien, verlies, reset } from '../domain/klaspot.js';
 import { menuVoorKlas, wisselIn } from '../domain/beloningen.js';
+import { DRILL_STAPPEN } from '../domain/model.js';
+import { projecteer as projecteerAfspraken } from './afspraken.js';
 import { el, leeg, euro, toast, dialoog, bevestig, datumTijd } from '../ui/components.js';
 
 // Actieve, op te ruimen bronnen (mic-stream, timers) tussen twee renders.
@@ -41,6 +43,7 @@ export async function render(root, ctx) {
     el('div', { class: 'podium__kop' },
       el('div', { class: 'podium__klas' }, klas?.naam || 'Klas'),
       el('div', { class: 'podium__acties' },
+        el('button', { class: 'knop knop--stil', onClick: () => projecteerAfspraken() }, '🤝 Afspraken'),
         el('a', { class: 'knop knop--stil', href: '#/dashboard' }, '‹ Administratie'),
       ),
     ),
@@ -217,14 +220,6 @@ function bouwDecibel(klasId, config, beweegFn, herteken) {
 }
 
 // ————————————————————————————————— lesdrill —————
-
-const DRILL_STAPPEN = [
-  'Binnenkomen — rustig en groeten',
-  'Rechtstaan aan de bank',
-  'Gaan zitten op teken',
-  'Boek + taak van de vorige dag klaar',
-  'Starten terwijl de leerkracht klaarzet',
-];
 
 async function bouwDrill(klasId) {
   const sleutel = 'drill:' + klasId;

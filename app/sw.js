@@ -22,6 +22,7 @@ const SHELL = [
   './src/views/schooljaar.js',
   './src/views/rooster.js',
   './src/views/aanwezigheid.js',
+  './src/views/afspraken.js',
   './src/views/beloningen.js',
   './src/views/instellingen.js',
   './src/views/klasscherm.js',

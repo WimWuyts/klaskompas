@@ -44,6 +44,8 @@ De losse `app/` blijft de bron; `dist/klaskompas.html` is een build-artefact.
 - **Lesmodus / Klasscherm** — geldkoker (klaskapitaal-economie), decibelmeter
   (enkel live amplitude, neemt niets op), vaste lesdrill, reminder-strip,
   beloningsmenu met uitgeef-mechaniek.
+- **Afspraken & instructie** — de 5 kernafspraken (bewerkbaar), de lesstart-routine
+  en uitleg over de klaspot; groot **projecteerbaar** op het bord (ook vanuit de Lesmodus).
 - **Beloningen** — het startmenu uit [het onderzoek](../research/beloningssysteem-onderzoek.md)
   staat als sjabloon klaar; per klas aan te passen.
 - **Instellingen** — per-klas configuratie van de klaspot (ADR-0001 §2.1.8) +
