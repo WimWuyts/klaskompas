@@ -26,6 +26,15 @@ beslissingen, niet als beslissing zelf (zie `CLAUDE.md`, canonvolgorde).
   Melissa Antinoff (@wellseasonedteacher): wie ze is, bruikbare principes en de
   belangrijke kanttekening dat haar context (VS, K–8, leesbevordering) niet 1-op-1 op een
   Vlaamse talenklas past.
+- **`klasadministratie-vergelijking.md`** — Vergelijkende analyse (juli 2026) die breed
+  onderzoek naar klasadministratie naast het bestaande prototype "Klascockpit" legt:
+  managementsamenvatting, referentie van must-haves per domein, een vergelijkingstabel
+  (best practice vs. status in prototype), sterktes om te behouden, en een geprioriteerde
+  hiaten-/verbeterlijst (o.a. opslag/backup, privacy/AVG, per-lesuur, evaluatie).
+- **`klasadministratie-bevindingen-ruw.json`** — De ruwe bevindingen per deelaspect
+  achter de vergelijking (incl. must-haves en nice-to-haves).
+- **`prototype-inventaris.json`** — Feitelijke inventaris van het Klascockpit-prototype
+  (modules, velden, datamodel, opslag/sync, UX, gaps), uitgelezen uit de code.
 
 ## Methode & voorbehoud
 

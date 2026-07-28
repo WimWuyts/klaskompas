@@ -1,0 +1,1702 @@
+[
+  {
+    "facet": "Klassen en leerlingen beheren",
+    "summary": "Voor een Vlaamse vakleerkracht (2e graad, Engels & Spaans) met meerdere klasgroepen is dit de kern van de app: snel klasgroepen opzetten en leerlingen erin krijgen zonder overtypen. De officiele bron van waarheid blijft altijd de school (Smartschool/Informat -> Discimus/AGODI); Klaskompas is een persoonlijk spiegelbeeld daarvan, geen register. Het \"geen dubbele invoer\"-principe vertaalt zich concreet naar import uit wat de leerkracht al heeft: de Excel-/fotolijst die elke Smartschool-leerkracht zelf kan exporteren, of desnoods handmatig plakken. Een echte Smartschool/OneRoster-koppeling bestaat technisch (OneRoster 1.1, OAuth2) maar wordt op schoolniveau door de beheerder beheerd, niet door een individuele leerkracht-app; reken die dus niet als basisfunctie. Het datamodel moet leerling en inschrijving scheiden (enrollment-patroon) zodat dezelfde leerling over schooljaren en groepen heen kan bestaan, en archiveren i.p.v. verwijderen ondersteunt met behoud van auditbaarheid. Privacy-by-design betekent minimale velden, foto alleen lokaal en optioneel, en geen afgeleide interpretaties.",
+    "mustHaves": [
+      "Klasgroep handmatig aanmaken met minimaal: weergavenaam/code (bv. 4-ENG-A), vak, schooljaar; en er leerlingen aan koppelen",
+      "Leerlingen importeren uit CSV/Excel met een kolom-mapping-stap (kies welke kolom voornaam, naam, e-mail is) - dit dekt de Smartschool/Informat-klaslijst-export die de leerkracht zelf kan maken",
+      "Plak-import / snelle bulkinvoer (namenlijst plakken) als drempelloze fallback naast bestandsimport",
+      "Minimale leerlingvelden: voornaam en achternaam verplicht; e-mail en weergave/roepnaam optioneel",
+      "Meerdere klasgroepen naast elkaar en meerdere schooljaren, met duidelijke scheiding en snel wisselen",
+      "Scheiding tussen leerling-entiteit en inschrijving in een klasgroep (enrollment), zodat een leerling in meerdere groepen kan zitten en over jaren behouden blijft",
+      "Archiveren i.p.v. hard verwijderen van klas en leerling, herstelbaar, met behoud van historiek (auditbaar)",
+      "Lokaal-eerst opslag in de browser; geen upload van leerlinggegevens naar een server zonder expliciete keuze",
+      "Import expliciet positioneren als persoonlijke kopie, niet als bron van waarheid; geen terugschrijven naar Smartschool/Discimus",
+      "UTF-8 / correcte verwerking van accenten en diakrieten (Spaanse namen, ñ, á) bij import"
+    ],
+    "niceToHaves": [
+      "Optionele leerlingfoto, uitsluitend lokaal opgeslagen en per klas uitschakelbaar, met bulk-import en duidelijke privacy-waarschuwing",
+      "Jaarovergang/rollover: klasgroep dupliceren of leerlingen doorschuiven naar volgend schooljaar, met vorig jaar bevroren/gearchiveerd",
+      "Configureerbare eigen velden per klas (bv. niveau, zittend, opmerking) zonder gevoelige of afgeleide categorieen",
+      "Externe koppel-id per leerling (bv. Smartschool-id of stamboeknummer) als optionele matchsleutel om her-import/dubbels te vermijden",
+      "Dubbeldetectie en samenvoegen bij her-import (matchen op naam + optionele id) i.p.v. dubbele leerlingen",
+      "Klaskleur/icoon en sorteervolgorde voor snelle visuele herkenning tijdens de les",
+      "Update-import: bestaande klas bijwerken (naam gewijzigd, leerling weg/erbij) i.p.v. altijd nieuw aanmaken",
+      "Export van eigen data terug naar CSV/Excel (portabiliteit, AVG-recht op overdraagbaarheid, back-up)",
+      "Klasgroepen groeperen per vak (Engels vs Spaans) en per graad voor overzicht bij veel groepen",
+      "Latere, optionele OneRoster/OAuth-koppeling als de school die aanbiedt - als comfort-add-on, niet als afhankelijkheid"
+    ],
+    "items": [
+      {
+        "aspect": "Smartschool-export als realistische importbron",
+        "category": "bron",
+        "what": "Elke leerkracht kan in Smartschool zelf een klaslijst (Excel) en een fotolijst per klas exporteren via het leerlingvolgsysteem. Smartschool is bewust weggegaan van losse CSV-imports; toevoegen van gebruikers/klassen gebeurt via beheerderstools.",
+        "insight": "Bouw import rond wat de leerkracht zelf mag exporteren (Excel-klaslijst/fotolijst), niet rond een beheerders- of API-koppeling. Dit is de praktische invulling van 'geen dubbele invoer' op leerkrachtniveau.",
+        "forProfile": "Vakleerkracht kan zonder ICT-coordinator per klasgroep een Excel-lijst trekken en die in Klaskompas laden.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/overzicht-van-alle-tools/"
+      },
+      {
+        "aspect": "Smartschool OneRoster/OAuth koppeling bestaat, maar op schoolniveau",
+        "category": "tool",
+        "what": "Smartschool ondersteunt OneRoster 1.1 voor uitwisseling van leerling-, klas- en leerkrachtgegevens en OAuth2 om gebruikers te laten aanmelden. Dit wordt via een OAuth-aanvraag op school-/scholengemeenschapniveau geregeld.",
+        "insight": "Een echte live koppeling is geen basisfunctie voor een persoonlijke leerkracht-app: het vergt een door de school aangevraagde OAuth-client. Behandel dit als optionele latere add-on, niet als afhankelijkheid.",
+        "forProfile": "Individuele leerkracht kan dit doorgaans niet zelf activeren zonder schoolbeheerder.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/developers/"
+      },
+      {
+        "aspect": "OneRoster-datamodel als referentie voor scheiding leerling/klas/inschrijving",
+        "category": "model",
+        "what": "OneRoster CSV bestaat uit o.a. users.csv (sourcedId, givenName, familyName, role: student/teacher/...), classes.csv (title), courses.csv, enrollments.csv (koppelt user aan class per schooljaar), orgs.csv en academicSessions.csv. sourcedId's zijn stabiele unieke sleutels.",
+        "insight": "Neem het enrollment-patroon over: leerling en klas zijn aparte entiteiten, verbonden via een inschrijving per schooljaar. Zo blijft een leerling herbruikbaar over groepen en jaren zonder overtypen.",
+        "forProfile": "Essentieel voor een vakleerkracht die dezelfde leerling in meerdere jaren of groepen kan tegenkomen.",
+        "region": "internationaal",
+        "url": "https://www.imsglobal.org/lis/imsOneRosterv1p0/imsOneRosterCSV-v1p0.html"
+      },
+      {
+        "aspect": "iDoceo als UX-referentie voor import en leerlingvelden",
+        "category": "UX-patroon",
+        "what": "iDoceo importeert CSV/XLS via drag&drop met stappen: kies header-rij, wijs naam/achternaam-kolommen aan, en markeer persoonlijke-datavelden. Herkende velden o.a. !e-mail, !birthday, !address, !phone, !parentemail, !group; foto's via face-detectie of bulk; keuze om nieuwe klas te maken of aan bestaande toe te voegen; UTF-8 aangeraden.",
+        "insight": "Een goede import is een begeleide mapping-wizard, niet een strikt vast formaat. Bied bij de laatste stap expliciet 'nieuwe klas' vs 'toevoegen aan bestaande' aan om dubbels te vermijden.",
+        "forProfile": "Sluit aan bij een vakleerkracht die per groep een eigen kolomindeling uit Smartschool/Informat krijgt.",
+        "region": "internationaal",
+        "url": "https://idoceo.net/index.php/en/instructions/howto/idoceoimport"
+      },
+      {
+        "aspect": "Custom velden en onbeperkt aantal klassen (Additio/iDoceo)",
+        "category": "functie",
+        "what": "iDoceo laat onbeperkt klassen en leerlingen toe en eigen velden per leerling toevoegen op een profielscherm; Additio beheert klassen en kan leerlingen/activiteiten/cijfers importeren en koppelen aan leeromgevingen.",
+        "insight": "Bied enkele configureerbare eigen velden aan, maar begrens ze bewust: geen velden die karaktereigenschappen, zorgbehoefte of scores afleiden. Configureerbaarheid mag privacy-by-design niet ondermijnen.",
+        "forProfile": "Vakleerkracht met veel groepen wil per vak (Engels/Spaans) lichte variatie in velden.",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/instructions/instructions/idoceofeatures"
+      },
+      {
+        "aspect": "Klaslijst in Excel bij Informat",
+        "category": "bron",
+        "what": "Informat (schooladministratie) biedt eveneens een klaslijst-in-Excel export. Veel Vlaamse scholen gebruiken Informat naast/onder Smartschool voor de administratieve leerlingdata.",
+        "insight": "Ondersteun generieke Excel/CSV-import zodat zowel Smartschool- als Informat-exports werken; ga niet uit van 1 vast schoolpakket.",
+        "forProfile": "Afhankelijk van de school krijgt de leerkracht lijsten uit Smartschool of Informat.",
+        "region": "Vlaanderen",
+        "url": "https://helpdesk.informat.be/hc/nl/articles/205344892-Klaslijst-in-Excel"
+      },
+      {
+        "aspect": "Officiele bron van waarheid = Discimus/AGODI, niet de app",
+        "category": "verplichting",
+        "what": "Alle Vlaamse scholen registreren ingeschreven leerlingen in Discimus, de leerlingendatabank van AGODI. Officiele leerlingenaantallen en inschrijvingen lopen via die keten.",
+        "insight": "Positioneer Klaskompas expliciet als persoonlijk hulpmiddel dat NOOIT terugschrijft naar officiele systemen. Import is een eenrichtings-kopie; de school blijft de administratieve bron.",
+        "forProfile": "Beschermt de leerkracht: geen risico dat een persoonlijke tool de officiele administratie 'vervangt'.",
+        "region": "Vlaanderen",
+        "url": "https://www.onderwijs.vlaanderen.be/nl/welke-gegevens_bao_en_so_vind_je_in_Dataloep"
+      },
+      {
+        "aspect": "Verwerkingsregister en AVG bij leerlinggegevens",
+        "category": "verplichting",
+        "what": "Elke school moet een verwerkingsregister bijhouden van welke persoonsgegevens ze verwerkt en hoe ze die beschermt; onderwijskoepels leveren modelregisters. Leerlingfoto's vergen aandacht (doel, verspreiding, toestemming).",
+        "insight": "Voor een persoonlijke app: minimale dataset, foto's alleen lokaal en optioneel, en documenteer welke velden waarom bestaan. Zo blijft de leerkracht binnen AVG zonder een schoolbreed register te hoeven zijn.",
+        "forProfile": "Leerkracht die zelf verwerkingsverantwoordelijke wordt voor zijn lokale kopie moet dataminimalisatie kunnen aantonen.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/bescherming-van-persoonsgegevens-in-het-onderwijs"
+      },
+      {
+        "aspect": "Leerlingfoto's: toestemming en doelbinding",
+        "category": "best-practice",
+        "what": "Voor beeldmateriaal moet duidelijk zijn welk type beeld, met welk verspreidingskanaal en doel. Publicatie van foto's vraagt toestemming; klasintern administratief gebruik verschilt van publiceren.",
+        "insight": "Ondersteun optionele foto's puur voor herkenning tijdens de les (lokaal, niet gedeeld, per klas uitschakelbaar) en publiceer/exporteer ze nooit standaard. Maak het verschil expliciet in de UI.",
+        "forProfile": "Vakleerkracht met veel nieuwe gezichten in september wil herkenning, maar mag niet in publicatie-risico lopen.",
+        "region": "Vlaanderen",
+        "url": "https://privacyopschool.katholiekonderwijs.vlaanderen/content/mag-een-school-fotos-van-leraren-leerlingen-publiceren-op-haar-website-het-schoolblad"
+      },
+      {
+        "aspect": "Jaarovergang (rollover) en archiveren",
+        "category": "best-practice",
+        "what": "SIS-praktijk voor schooljaarovergang: leerlingen doorschuiven, vorig jaar bevriezen/vergrendelen en archiveren voor je promoveert, en data eerst opschonen zodat je 'de rommel niet meeneemt'. Uitzonderingen (zittenblijvers, uitschrijvingen) apart behandelen.",
+        "insight": "Bouw een expliciete jaarovergang: klasgroep dupliceren/leerlingen doorschuiven, vorig schooljaar read-only archiveren. Behandel archiveren als eerste keus boven verwijderen, herstelbaar en auditbaar.",
+        "forProfile": "Vakleerkracht start elk jaar met grotendeels nieuwe groepen; wil oude jaren bewaren maar niet vervuilen.",
+        "region": "internationaal",
+        "url": "https://www.myaequitas.com/blog/year-end-rollover/"
+      },
+      {
+        "aspect": "Single source of truth / geen dubbele invoer",
+        "category": "best-practice",
+        "what": "In schooladministratie betekent 'single source of truth' dat data centraal staat en updates overal doorwerken, zodat overtypen en missende records verdwijnen. Voor een leerkracht-app kan dat niet centraal zijn, maar wel: eenmalig importeren i.p.v. handmatig overtypen.",
+        "insight": "Vertaal het principe naar de leerkrachtcontext: importeer wat al bestaat (Excel/plakken) en laat her-import updaten i.p.v. dupliceren. 'Geen dubbele invoer' = de leerkracht typt namen nooit twee keer.",
+        "forProfile": "Met meerdere groepen is overtypen de grootste tijdrover; import + update is de kernwinst.",
+        "region": "internationaal",
+        "url": "https://www.classter.com/blog/edtech/from-chaos-to-clarity-the-transformative-power-of-a-single-source-of-truth-for-school-operations/"
+      },
+      {
+        "aspect": "Minimaal vs ideaal datamodel",
+        "category": "model",
+        "what": "Minimaal - Leerling: lokaal id, voornaam, achternaam, klasreferentie. Klas: id, naam/code, schooljaar. Ideaal - Leerling: lokaal id (UUID), voornaam, achternaam, weergave/roepnaam, optioneel e-mail, optioneel foto (lokaal), optionele externe koppel-id, status (actief/gearchiveerd), timestamps. Klasgroep: id, weergavenaam, code, vak, graad/leerjaar, schooljaar, kleur/icoon, status. Inschrijving: leerling-id + klas-id + schooljaar (+ evt. volgorde) als aparte join-entiteit.",
+        "insight": "De sleutelbeslissing is de aparte inschrijvings-entiteit: dat maakt meerdere groepen, jaarovergang, archiveren en samenvoegen mogelijk zonder dubbele leerlingen. Houd het leerlingprofiel bewust dun (feitelijke identificatie, geen interpretatie).",
+        "forProfile": "Precies afgestemd op een vakleerkracht met meerdere klasgroepen over opeenvolgende schooljaren.",
+        "region": "internationaal",
+        "url": "https://www.imsglobal.org/lis/imsOneRosterv1p0/imsOneRosterCSV-v1p0.html"
+      }
+    ]
+  },
+  {
+    "facet": "Aanwezigheden/afwezigheden",
+    "summary": "Aanwezigheidsregistratie in Klaskompas moet twee lagen strikt gescheiden houden. Laag 1 is de snelle, persoonlijke lesregistratie door de vakleerkracht: in seconden per klasgroep noteren wie er (niet) is, met een \"iedereen aanwezig\"-startpunt, cyclische status per leerling en een live teller. Laag 2 is de juridisch correcte Vlaamse afwezigheidsadministratie (Discimus: aanwezig, ziekte/code Z, van rechtswege gewettigd, gewettigd mits akkoord directie, problematisch/code B, tucht/code R), die op schoolniveau via het leerlingensecretariaat en de directie gebeurt. Een persoonlijk hulpmiddel mag een feitelijke waarneming (\"afwezig bij mijn les\") vastleggen en optioneel een voorlopige reden noteren, maar mag NIET de officiele wettelijke code toekennen, geen medisch-attestlogica afdwingen, geen problematische-afwezigheidsteller als officieel bestempelen, en niets automatisch naar Discimus/Smartschool sturen. De correcte aanpak is dus: snelle feitelijke registratie voor de leerkracht zelf, met duidelijke labeling \"dit is geen officiele afwezigheidsadministratie\" en een exportmogelijkheid die de leerkracht helpt de school-tool correct in te vullen. Registratie gebeurt in Vlaanderen minstens per halve dag (voormiddag/namiddag), wat botst met de per-les-realiteit van een vakleerkracht.",
+    "items": [
+      {
+        "aspect": "Twee-lagen-model: snelle lesregistratie vs. wettelijke code",
+        "category": "model",
+        "what": "De feitelijke waarneming van de vakleerkracht ('leerling X was niet in mijn Engels-les van het 3e uur') is iets anders dan de officiele Discimus-afwezigheidscode, die op halve-dagniveau en op schoolniveau wordt toegekend. Klaskompas registreert alleen de eerste; de school-tool (Smartschool/Informat) doet de tweede.",
+        "insight": "Scheid 'aanwezigheid-bij-mijn-les' (persoonlijk, per lesuur, feitelijk) volledig van 'wettelijke afwezigheidsstatus' (school, halve dag, juridisch). Modelleer ze als twee aparte entiteiten; nooit een lesregistratie automatisch promoveren tot officiele code.",
+        "forProfile": "Vakleerkracht Engels/Spaans ziet een klasgroep vaak maar enkele lesuren per week; hij/zij kan onmogelijk de halve-dag-status kennen (leerling kan later op de dag wel aanwezig zijn). Daarom is per-les-registratie het enige wat een vakleerkracht betrouwbaar zelf weet.",
+        "region": "Vlaanderen"
+      },
+      {
+        "aspect": "Vlaamse Discimus-afwezigheidscodes (secundair)",
+        "category": "verplichting",
+        "what": "Sinds 1 september 2019 zijn de codes vereenvoudigd (van 23 naar 7; voor gewoon SO een kleine set). Kernonderscheid: aanwezig; ziekte (Discimus-code Z, geldt zowel voor een oudersbriefje bij korte ziekte als voor een medisch attest/code D); van rechtswege gewettigd; gewettigd mits akkoord directie; problematisch afwezig = code B ('nood aan begeleiding'); afwezigheid door tuchtmaatregel = code R.",
+        "insight": "Deze codes zijn schooladministratie, geen leerkrachttaak. Klaskompas mag de categorieen tonen als referentie/keuzehulp, maar wijst zelf geen officiele code toe. Verzin geen exacte letters in de UI zonder bronbevestiging — de conceptuele categorie volstaat.",
+        "forProfile": "De vakleerkracht komt hier normaal niet aan; het leerlingensecretariaat en de klastitularis/directie beheren de codes. Klaskompas positioneert zich bewust NAAST dit systeem.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/afwezigheidscodes-in-discimus"
+      },
+      {
+        "aspect": "Problematische afwezigheid / B-code en begeleiding",
+        "category": "verplichting",
+        "what": "Problematische afwezigheden = som van ongewettigde afwezigheden (o.a. code B). Vanaf 5 (of meer) halve dagen problematische afwezigheid per schooljaar moet de school samen met het CLB een begeleidingsdossier opstarten; mits voldoende begeleidingsinspanningen kan een problematische afwezigheid na verificatie als gewettigd worden beschouwd.",
+        "insight": "Een persoonlijk hulpmiddel mag NOOIT zelf een 'problematisch'-label of een risicoteller met gevolgen toekennen — dat is een school-/CLB-beslissing met procedure. Toon hooguit een neutrale, feitelijke telling van gemiste lesuren zonder juridische kwalificatie of automatische escalatie.",
+        "forProfile": "Grens: geen gecombineerde risicoscore, geen automatische signalering 'spijbelaar'. De leerkracht kan wel voor zichzelf zien 'deze leerling miste 6 van mijn lessen', als feit, om dit door te geven aan de titularis.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/leerplicht-aan-en-afwezigheden"
+      },
+      {
+        "aspect": "Medisch attest vs. oudersbriefje (korte ziekte)",
+        "category": "verplichting",
+        "what": "Ziekte 1-3 opeenvolgende kalenderdagen: oudersbriefje volstaat, maximaal 4 keer per schooljaar. Vanaf 4 opeenvolgende dagen, bij een 5e korte afwezigheid, of bij ziekte tijdens examens in SO is een medisch attest verplicht. Kalenderdagen tellen (weekend meegerekend).",
+        "insight": "Deze attesteringslogica is complex en verandert; bouw ze NIET in als hard afdwingende regel in een leerkracht-tool. Hooguit als optioneel informatief hulptekstje. Het beheer van attesten hoort bij het secretariaat.",
+        "forProfile": "De vakleerkracht ontvangt zelden zelf attesten; die gaan naar het onthaal/secretariaat. Klaskompas hoeft geen attestbeheer te doen.",
+        "region": "Vlaanderen",
+        "url": "https://www.go-ouders.be/ziekte"
+      },
+      {
+        "aspect": "Van rechtswege gewettigd vs. mits akkoord directie",
+        "category": "verplichting",
+        "what": "Van rechtswege gewettigd (geen toestemming nodig, wel bewijs): begrafenis/huwelijk van huisgenoot of bloed-/aanverwant, oproeping/dagvaarding rechtbank, maatregelen bijzondere jeugdzorg, overmacht (staking OV, overstroming), feestdagen eigen levensbeschouwing. Andere gevallen (bv. persoonlijke redenen) kunnen enkel mits voorafgaand akkoord van de directeur.",
+        "insight": "Deze categorieen bepalen de wettelijke code — een schoolbeslissing. Klaskompas kan ze hoogstens als niet-bindende 'reden'-keuzelijst aanbieden om de leerkracht te helpen bij het doorgeven, niet om zelf de status juridisch vast te leggen.",
+        "forProfile": "Nuttig als optioneel notitieveld bij een afwezigheid ('leerling zei: tandarts'), maar altijd als voorlopige, feitelijke leerkrachtnotitie, niet als officiele wettiging.",
+        "region": "Vlaanderen",
+        "url": "https://www.go-ouders.be/andere-omstandigheden"
+      },
+      {
+        "aspect": "Halve-dag-registratie botst met per-les-realiteit vakleerkracht",
+        "category": "verplichting",
+        "what": "Officiele registratie in Discimus/Informat gebeurt minstens per halve dag: standaard het eerste lesuur van de voormiddag en het eerste lesuur van de namiddag; problematische afwezigheden worden aangevinkt per voormiddag en/of namiddag.",
+        "insight": "Een vakleerkracht registreert per LESUUR, niet per halve dag. Dit bevestigt dat leerkracht-lesregistratie en officiele halve-dag-administratie fundamenteel verschillende granulariteiten zijn — extra reden om ze in Klaskompas gescheiden te houden en de leskrachtdata NIET te presenteren als officiele halve-dag-status.",
+        "forProfile": "Klaskompas moet per lesuur/klasgroep werken (Engels 2A, Spaans 3B, ...), niet per halve dag. Dit sluit aan bij hoe de vakleerkracht zijn dag beleeft.",
+        "region": "Vlaanderen",
+        "url": "https://helpdesk.informat.be/hc/nl/articles/204988781-Extra-uitleg-over-menu-Aanwezigheidsregister-volgens-weekregister-"
+      },
+      {
+        "aspect": "Snelle registratie-UX: 'iedereen aanwezig' als startpunt",
+        "category": "UX-patroon",
+        "what": "Gangbaar patroon in leerkracht-apps (Canvas Teacher, ClassDojo, Atcovation): standaard staat iedereen op 'aanwezig'; de leerkracht tikt enkel de afwezigen aan. 'Mark all present' als een tap.",
+        "insight": "Maak 'iedereen aanwezig' de default/opstartactie zodat de gebruikelijke les (bijna iedereen aanwezig) geen werk kost; enkel de uitzonderingen worden aangetikt. Dit realiseert het productprincipe 'maximaal enkele handelingen tijdens een les'.",
+        "forProfile": "Voor een vakleerkracht met 6-8 klasgroepen scheelt dit enorm: bij de meeste lessen slechts 0-2 tikken per groep.",
+        "region": "algemeen",
+        "url": "https://help.classdojo.com/hc/en-us/articles/203969355-How-to-Take-Attendance"
+      },
+      {
+        "aspect": "Cyclische status per leerling (one-tap cycling)",
+        "category": "UX-patroon",
+        "what": "Apps als Attendance Tracker, EMStudio en ClassDojo laten per leerling doorheen statussen tikken: aanwezig -> afwezig -> te laat -> (vroeger weg), met directe kleurwijziging (groen/rood/geel). Grid updatet meteen bij de tik.",
+        "insight": "Gebruik een klein, vast statusset met cyclisch tikken en duidelijke kleuren. Houd de set beperkt en FEITELIJK (aanwezig / afwezig / te laat), niet interpretatief. Kleuren + één-tik zijn snel en foutbestendig tijdens de les.",
+        "forProfile": "Beperk statussen tot wat een vakleerkracht objectief waarneemt in zijn lesuur; geen 'reden'/interpretatie afdwingen tijdens het lesmoment.",
+        "region": "algemeen",
+        "url": "https://apps.apple.com/us/app/attendance-tracker/id1414822095"
+      },
+      {
+        "aspect": "Live teller en overzicht",
+        "category": "UX-patroon",
+        "what": "Snelle attendance-tools tonen een live teller (bv. 'aanwezig 22 / afwezig 2 / te laat 1') zodat de leerkracht in één oogopslag ziet of de telling klopt met het aantal fysiek aanwezige leerlingen.",
+        "insight": "Toon een compacte teller die meebeweegt met de tikken; dit is de snelle controle 'klopt mijn registratie?'. Combineer met een expliciete bevestig/afronden-actie per lesuur zodat een registratie een duidelijke eindstatus krijgt.",
+        "forProfile": "Helpt de vakleerkracht razendsnel valideren voor hij naar de volgende groep of taak gaat.",
+        "region": "algemeen"
+      },
+      {
+        "aspect": "Wat een persoonlijk hulpmiddel WEL/NIET mag doen",
+        "category": "best-practice",
+        "what": "WEL: een feitelijke lesobservatie van de eigen leerkracht bijhouden, een voorlopige reden noteren, tellen hoeveel eigen lessen gemist zijn, en een overzicht/export maken om de school-tool correct in te vullen of aan de titularis te melden. NIET: officiele Discimus-codes toekennen, medisch-attestregels afdwingen, 'problematisch/spijbelaar' bestempelen, automatisch naar Smartschool/Informat/Discimus pushen, of een schoolprocedure vervangen.",
+        "insight": "Positioneer Klaskompas expliciet als persoonlijk kladschrift naast het officiele systeem, met een duidelijke disclaimer in de UI ('dit is geen officiele afwezigheidsregistratie'). De brug naar het officiele systeem is menselijk (leerkracht kopieert/meldt), niet automatisch.",
+        "forProfile": "Sluit exact aan bij het doelprofiel: persoonlijk hulpmiddel voor de vakleerkracht, geen vervanging van Smartschool/Informat/Discimus of schoolprocedures.",
+        "region": "Vlaanderen"
+      },
+      {
+        "aspect": "Privacy-by-design bij aanwezigheidsdata",
+        "category": "best-practice",
+        "what": "Aanwezigheidsdata zijn persoonsgegevens (AVG). Local-first/offline-first tools houden data lokaal in de browser, zonder cloud-sync, met dataminimalisatie en zonder afgeleide profielen.",
+        "insight": "Bewaar enkel het feitelijke minimum (leerling, klasgroep, lesuur, status, optionele korte reden). Geen interpretaties, geen historische risicoprofielen, geen combinatie met gedrag/scores. Data blijft lokaal bij de leerkracht; retentie/verwijdering eenvoudig en herstelbaar.",
+        "forProfile": "Grens uit de opdracht: geen gecombineerde risicoscores, geen afgeleide karaktereigenschappen; feitelijk gedrag boven interpretatie; AVG.",
+        "region": "Vlaanderen/EU"
+      },
+      {
+        "aspect": "Auditbaarheid en statusmodel van een registratie",
+        "category": "functie",
+        "what": "Elke lesregistratie heeft een expliciete status (bv. open -> geregistreerd -> gecorrigeerd) en houdt mutaties bij (wie/wanneer een status wijzigde), zodat correcties traceerbaar en herstelbaar zijn.",
+        "insight": "Modelleer de registratie per (klasgroep, datum, lesuur) als een expliciet object met tijdstempel en correctiegeschiedenis. Correcties overschrijven niet stil, maar zijn zichtbaar en omkeerbaar — past bij het projectprincipe 'expliciete statusmodellen, geen stille automatisering'.",
+        "forProfile": "Een vakleerkracht corrigeert vaak achteraf ('leerling kwam toch te laat binnen'); een auditbaar, herstelbaar model voorkomt fouten en discussie.",
+        "region": "algemeen"
+      }
+    ],
+    "mustHaves": [
+      "Strikte scheiding tussen snelle persoonlijke lesregistratie (per lesuur/klasgroep, feitelijk) en de officiele Vlaamse afwezigheidsadministratie (Discimus, halve dag, schoolniveau).",
+      "'Iedereen aanwezig' als default/startpunt, zodat de leerkracht enkel afwezigen/uitzonderingen aantikt.",
+      "Cyclische één-tik-status per leerling met een beperkte, feitelijke statusset (aanwezig / afwezig / te laat) en duidelijke kleuren.",
+      "Live teller (aanwezig/afwezig/te laat) plus een expliciete afrond-/bevestig-actie per lesuur.",
+      "Duidelijke in-app disclaimer dat dit GEEN officiele afwezigheidsregistratie is en Smartschool/Informat/Discimus niet vervangt.",
+      "Geen automatische toekenning van wettelijke Discimus-codes, geen medisch-attest-afdwinging, geen 'problematisch/spijbelaar'-label of risicoteller met gevolgen.",
+      "Geen automatische koppeling/push naar officiele systemen; de brug naar de schooladministratie is een menselijke handeling (overzicht/export).",
+      "Privacy-by-design: local-first, dataminimalisatie, enkel feitelijke gegevens, geen afgeleide profielen, herstelbare verwijdering.",
+      "Auditbaar statusmodel per (klasgroep, datum, lesuur) met traceerbare, omkeerbare correcties."
+    ],
+    "niceToHaves": [
+      "Optioneel, niet-bindend 'reden'-notitieveld (bv. 'zei: tandarts') als voorlopige leerkrachtnotitie, nooit als juridische wettiging.",
+      "Neutrale, feitelijke telling 'gemiste lesuren bij mij' per leerling, zonder juridische kwalificatie, als hulp om te melden aan de titularis.",
+      "Referentiehulp/keuzehulp die de Vlaamse afwezigheidscategorieen uitlegt (ziekte, van rechtswege, mits akkoord directie, problematisch, tucht) zonder zelf de code vast te leggen.",
+      "Export/overzicht per klasgroep of leerling om het officiele school-systeem sneller correct in te vullen.",
+      "Snelle klasgroep-wisselaar voor een vakleerkracht met meerdere groepen (Engels 2A, Spaans 3B, ...).",
+      "Ondersteuning voor achteraf corrigeren (te laat gekomen leerling omzetten) met zichtbare correctiegeschiedenis.",
+      "Toetsenbord-/aanraakvriendelijke snelinvoer voor tijdens de les (grote tikvlakken)."
+    ]
+  },
+  {
+    "facet": "Evaluatie en punten",
+    "summary": "Een puntenboek voor een Vlaamse vakleerkracht 2e graad moet meer zijn dan een cijfermatrix: de Vlaamse evaluatiepraktijk combineert summatieve punten met permanente evaluatie, breed en formatief evalueren, en steeds vaker rubrics, doelen, attitudes en cijferloze beheersingsniveaus. Het kern-datamodel is een matrix leerlingen x evaluaties, waarbij elke evaluatie een max-score, een categorie (bv. dagelijks werk vs. examen, of kennis/vaardigheid/attitude) en een weging krijgt, met automatische deel- en totaalgemiddelden per periode. Sterke tools (Smartschool Skore/Resultaten, Wisa) laten snelle invoer tijdens de les toe en tonen een virtueel eindtotaal om leerlingen in de gevarenzone te detecteren. Richting rapport/deliberatie geldt de Vlaamse 50%-logica en de brede, dossier-gebaseerde beoordeling door de delibererende klassenraad, niet louter puntentelling. Voor het doelprofiel (vakleerkracht Engels/Spaans met meerdere groepen) zijn snelle keyboard-invoer, per-klasgroep configuratie, taalvaardigheidsrubrics en herbruikbare feedbackformuleringen doorslaggevend. Privacy-by-design en het feit dat dit een persoonlijk hulpmiddel is (geen vervanging van Smartschool/Informat) zijn harde randvoorwaarden.",
+    "items": [
+      {
+        "aspect": "Kern-datamodel: matrix leerlingen x evaluaties",
+        "what": "Het puntenboek is fundamenteel een tabel met leerlingen (rijen) en evaluaties/toetsen (kolommen). Elke evaluatie draagt metadata: titel, datum, max-punten (bv. /20, /50, /100), behaalde score per leerling, en optioneel status-vlaggen (afwezig, niet ingediend, vrijgesteld, te laat).",
+        "insight": "Sla de behaalde score en de max-score altijd apart op (niet enkel een percentage): zo kun je achteraf herwegen, normaliseren naar /20 en gemiddelden correct berekenen. Status-vlaggen (afwezig/vrijstelling) moeten expliciet los staan van 'score 0', anders vervuilen ze gemiddelden.",
+        "category": "model",
+        "forProfile": "Vakleerkracht met meerdere klasgroepen heeft dezelfde evaluatiestructuur nodig per groep; modelleer 'evaluatie' als herbruikbaar sjabloon dat je over klasgroepen kopieert.",
+        "region": "algemeen/Vlaanderen",
+        "url": "https://collab-help.its.virginia.edu/m/assessments/l/974271-how-are-grades-calculated-in-a-points-gradebook"
+      },
+      {
+        "aspect": "Weging en categorieën (dagelijks werk vs. examen)",
+        "what": "Vlaamse rapporten splitsen klassiek in dagelijks werk (permanente evaluatie: overhoringen, taken, klasoefeningen) en examens/periodetoetsen, elk met een eigen gewicht in het periodetotaal. Daarnaast kan gewogen worden per component kennis/vaardigheden/attitudes. Twee rekenmodellen: 'punten-totaal' (som behaalde / som max) versus 'gewogen categoriegemiddelden' (categoriegemiddelde x categoriegewicht, sommeren tot 100%).",
+        "insight": "Ondersteun beide rekenmethodes en maak per evaluatie een individueel gewicht mogelijk (een grote taak weegt zwaarder dan een korte overhoring). Percentage-weging negeert het aantal punten per taak; punten-totaal negeert het relatieve belang. Toon transparant hoe het eindcijfer is opgebouwd.",
+        "category": "best-practice",
+        "forProfile": "Talenleerkracht weegt vaak vaardigheden (luisteren/lezen/spreken/schrijven/gesprek) apart; laat categorieën vrij benoembaar en per klasgroep configureerbaar.",
+        "region": "algemeen/Vlaanderen",
+        "url": "https://lekktura.com/blog/how-to-calculate-grades-points-vs-weighted"
+      },
+      {
+        "aspect": "Permanente evaluatie in het Vlaams secundair",
+        "what": "Beoordeling gebeurt via periodieke examens over grotere leerstofgehelen EN permanente evaluatie (dagelijkse korte evaluaties, huistaken, opdrachten). Permanent evalueren kan zowel formatief (leerprocesondersteunend, telt niet mee) als summatief (meetellend voor eindcijfer) ingezet worden.",
+        "insight": "Elke evaluatie moet een vlag 'formatief' of 'summatief' dragen. Formatieve items registreer je wel (voor opvolging/feedback) maar sluit je uit van het meetellend gemiddelde. Dit onderscheid is een basisvereiste, geen extra.",
+        "category": "verplichting",
+        "forProfile": "Voor 2e graad talen is de mix van kleine permanente toetsen + periode-examens de norm; het puntenboek moet vlot veel kleine items aankunnen.",
+        "region": "Vlaanderen",
+        "url": "https://www.kuleuven.be/onderwijs/evalueren/permanente-evaluatie"
+      },
+      {
+        "aspect": "Breed evalueren",
+        "what": "Breed evalueren = met verschillende instrumenten, op verschillende momenten en in verschillende situaties in kaart brengen wat een leerling kan, met oog voor het geheel (kennis, vaardigheden, leer-/sociale/zelfsturende competenties). Het Vlaams Ministerie liet 'Toolkits Competenties Nederlands Breed Evalueren' ontwikkelen voor secundair.",
+        "insight": "Het puntenboek mag niet enkel numeriek zijn: voorzie ook plaats voor observaties, zelf-/peerevaluatie en niet-numerieke vaststellingen. Maar hard grens: geen afgeleide karaktereigenschappen of interpretaties, enkel feitelijk waargenomen gedrag/prestatie.",
+        "category": "best-practice",
+        "forProfile": "Bruikbaar voor talen: spreekdurf, taalgebruik in interactie, procesattitudes bij taken - registreren als feitelijke observaties, niet als persoonlijkheid.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/breed-evalueren-kan-je-leren"
+      },
+      {
+        "aspect": "Formatief evalueren en feedback (feedup/feedback/feedforward)",
+        "what": "Formatief evalueren geeft procesgericht inzicht in het leerproces; kan met of zonder cijfers zolang je feedup (waar ga ik naartoe), feedback (waar sta ik) en feedforward (volgende stap) geeft. Kernprincipe: feedback koppelen aan doelen en aan een concrete volgende actie.",
+        "insight": "Voorzie per evaluatie én per leerling een feedbackveld dat losstaat van het cijfer, en dat over de tijd zichtbaar blijft (feedbackgeschiedenis). Dat is waardevoller dan het cijfer zelf voor groei.",
+        "category": "best-practice",
+        "forProfile": "Meerdere groepen = veel feedback; herbruikbare feedbackfragmenten/snippets besparen tijd zonder in stigmatiserende standaardzinnen te vervallen.",
+        "region": "Vlaanderen/NL",
+        "url": "https://formatieve-evaluatie.nl/formatief-handelen/"
+      },
+      {
+        "aspect": "Rubrics (analytisch/holistisch)",
+        "what": "Een rubric is een beoordelingsmatrix: rijen = criteria/deelvaardigheden, kolommen = niveaus met kwalitatieve descriptoren (bv. onvoldoende-voldoende-goed-uitmuntend) of scorepunten. Analytische rubric scoort elk criterium apart (gedetailleerd beeld); holistische rubric geeft één globaal oordeel. Vaak gebruikt voor complexe vaardigheden: communiceren, presenteren, samenwerken, schrijven, spreken.",
+        "insight": "Modelleer een rubric als herbruikbaar sjabloon (criteria x niveaus x descriptor x optionele puntwaarde). Een rubric-score moet optioneel kunnen omgezet worden naar een deelpunt in het puntenboek, of puur kwalitatief blijven. Voor talen: schrijf-/spreekrubrics zijn hét instrument.",
+        "category": "functie",
+        "forProfile": "Engels/Spaans schrijf- en spreekvaardigheid leunen sterk op rubrics; lever startsjablonen voor de vier/vijf vaardigheden.",
+        "region": "Vlaanderen",
+        "url": "https://provinciaalonderwijs.vlaanderen/wp-content/uploads/2023/12/Rubrics-POV-2022.pdf"
+      },
+      {
+        "aspect": "Cijferloos evalueren / beheersingsniveaus",
+        "what": "Sommige scholen evalueren grotendeels cijferloos: attitudes/competenties worden niet met punten maar met woorden, letters of symbolen beoordeeld, of met beheersingsniveaus (bv. 'nog niet - op weg - gaat goed - beheerst dit super', of beginner/gevorderd/expert). Skore/Resultaten ondersteunt punten, doelen, rubrics én symbolen naast elkaar.",
+        "insight": "Het puntenboek moet meerdere schaaltypes per evaluatie ondersteunen: numeriek (/max), letter/symbool, niveau-schaal, en louter tekstueel. Niet alles hoeft in een gemiddelde te vloeien.",
+        "category": "functie",
+        "forProfile": "Handig voor procesevaluatie van taken en attitudes bij talen zonder alles te becijferen.",
+        "region": "Vlaanderen",
+        "url": "https://onderzoekonderwijs.net/2023/01/23/geen-punt/"
+      },
+      {
+        "aspect": "Koppeling aan leerplandoelen/eindtermen",
+        "what": "Productevaluatie meet in welke mate leerplandoelen (gebaseerd op eindtermen, specifieke eindtermen, beroepskwalificaties) bereikt zijn. Modern evalueren koppelt evaluaties/rubric-criteria expliciet aan doelen zodat je een doelenrapport per leerling kunt tonen ('waar staat deze leerling op doel X').",
+        "insight": "Voorzie een (optionele) doelen-/leerplandoelen-lijst per vak waaraan je evaluaties of rubric-criteria kunt taggen. Dat maakt een doelgericht rapport mogelijk en helpt gerichte remediëring. Houd het licht: tagging optioneel, niet verplicht per punt.",
+        "category": "functie",
+        "forProfile": "Talenleerplannen (bv. GO!/Katholiek Onderwijs) structureren rond vaardigheden; doeltagging per vaardigheid volstaat vaak.",
+        "region": "Vlaanderen",
+        "url": "https://g-o.be/media/1945/go-_visietekst_evalueren-in-het-so_def.pdf"
+      },
+      {
+        "aspect": "Snelle invoer-UX: keyboard en bulk",
+        "what": "Toonaangevende gradebooks maximaliseren snelheid zonder muis: na invoer Enter = score vastzetten en naar volgende cel; pijltjestoetsen om te navigeren; letter-shortcuts voor statussen (bv. M=missing, L=late, X=exempt); 'fill-down' om iedereen dezelfde score te geven; directe invoer tijdens de les. Skore roemt supersnelle invoer op tablet/tijdens de les.",
+        "insight": "Kritische vereiste voor het doelprofiel: volledige toetsenbordbediening (tab/enter/pijltjes), kolomsgewijze invoer, fill-down, en snelle statuscodes. Elke seconde per leerling telt bij meerdere volle klasgroepen. Optimaliseer voor 'punten van een hele klas ingeven in één sessie'.",
+        "category": "UX-patroon",
+        "forProfile": "Meerdere groepen x veel toetsen = invoersnelheid is dé bottleneck; dit is voor deze gebruiker de belangrijkste UX-eis.",
+        "region": "algemeen",
+        "url": "https://alicekeeler.com/2022/10/22/5-fast-keyboard-shortcuts/"
+      },
+      {
+        "aspect": "Gemiddelden, virtueel eindtotaal en gevarenzone",
+        "what": "Het puntenboek berekent automatisch deelgemiddelden per categorie en een periodetotaal (genormaliseerd, bv. naar /20 of %). Vlaamse digitale puntenboeken tonen een 'virtueel eindtotaal' dat helpt detecteren welke leerlingen in de gevarenzone zitten voor gerichte remediëring.",
+        "insight": "Toon lopende/virtuele gemiddelden real-time terwijl je invoert, met visuele signalering van tekorten (< 50%). Maar: puur indicatief en per vak — GEEN gecombineerde risicoscore over vakken/gedrag heen (harde grens).",
+        "category": "functie",
+        "forProfile": "Helpt de vakleerkracht tijdig bijsturen per groep zonder officiële deliberatie na te bootsen.",
+        "region": "Vlaanderen",
+        "url": "https://www.wisa.be/index.php/puntenboek"
+      },
+      {
+        "aspect": "Richting rapport en deliberatie (Vlaamse regels)",
+        "what": "Het puntenboek voedt de perioderapporten. De delibererende klassenraad beslist over slagen/attesten (A/B/C) met ruime discretionaire bevoegdheid, op basis van het volledige dossier, niet louter puntentelling. Vaste regel: een resultaat van 50% of meer mag niet als tekort behandeld worden; elk resultaat vanaf 50% wordt in het voordeel van de leerling geïnterpreteerd.",
+        "insight": "De app ondersteunt de leerkracht richting rapport (overzichten, tekorten, evolutie) maar mag NIET zelf delibereren of attesten toekennen — dat is een schoolprocedure/klassenraadbevoegdheid. Markeer 50% als drempel in visualisaties. Exporteerbaar overzicht naar rapportvoorbereiding volstaat.",
+        "category": "verplichting",
+        "forProfile": "De vakleerkracht levert vakresultaten aan de klassenraad; de app is voorbereiding, geen beslissingssysteem.",
+        "region": "Vlaanderen",
+        "url": "https://www.elfri.be/rechtspraak/niet-slagen-is-geen-loutere-puntentelling-bij-deliberatie-klassenraad"
+      },
+      {
+        "aspect": "Rapportcommentaar / feedbackformuleringen",
+        "what": "Leerkrachten worstelen met de juiste rapportzin en hergebruiken vaak opgeslagen formuleringen. Sterke commentaren zijn groeigericht en leergericht: start met concrete, objectieve, feitelijke observaties, vermijd interpretaties, formuleer beknopt en concreet, benoem een haalbare volgende stap.",
+        "insight": "Bied een persoonlijke, bewerkbare bibliotheek van feedbackfragmenten (snippets) met invoegvelden, i.p.v. rigide standaardzinnen. Feitelijk gedrag boven interpretatie is zowel pedagogisch advies als een harde projectgrens. Laat de leerkracht altijd de eindtekst controleren.",
+        "category": "UX-patroon",
+        "forProfile": "Bespaart veel tijd bij rapporten voor meerdere groepen; tweetalig (NL + doeltaalfeedback Engels/Spaans) kan nuttig zijn.",
+        "region": "Vlaanderen",
+        "url": "https://www.klasse.be/55057/wat-schrijf-jij-op-het-rapport/"
+      },
+      {
+        "aspect": "Referentietools: Smartschool Skore/Resultaten & Wisa",
+        "what": "Smartschool 'Resultaten' (opvolger van het puntenboek) toont punten, doelen, rubrics én feedback aan leerling/ouder in real time; attitudes/competenties/doelen verschijnen naast punten; projecten worden met woorden/letters/symbolen beoordeeld. Wisa biedt een puntenboek dat resultaten invoert, gewogen berekent en rapportcijfers overdraagt.",
+        "insight": "Dit zijn de officiële schoolsystemen. Klaskompas positioneert zich er expliciet NAAST/ONDER als persoonlijk leerkracht-hulpmiddel (lokaal-eerst), geen vervanging. Neem de sterke concepten over (snelheid, rubrics, doelen, feedback) maar dupliceer geen officiële rapportering/deliberatie.",
+        "category": "tool",
+        "forProfile": "De doelgebruiker kent Skore; herkenbare invoerpatronen verlagen de leerdrempel.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/2022/05/resultaten-meer-dan-een-puntenboek-voor-leerlingen/"
+      },
+      {
+        "aspect": "Privacy-by-design bij een persoonlijk puntenboek",
+        "what": "Een persoonlijk lokaal-eerst puntenboek verwerkt leerlingprestaties (persoonsgegevens onder AVG). Officiële systemen (Smartschool/Informat/Discimus) blijven de bron van waarheid; dit is een privaat hulpmiddel van de leerkracht.",
+        "insight": "Data lokaal in de browser houden, geen cloud-verzending by default, pseudonieme/fictieve testnamen bij ontwikkeling, en dataminimalisatie: enkel score + feitelijke observatie + feedback, nooit afgeleide profielen, emotie/aandacht of gecombineerde risicoscores. Voorzie export/verwijdering (recht op wissen). Deze grenzen zijn niet-onderhandelbaar.",
+        "category": "verplichting",
+        "forProfile": "Vakleerkracht is zelf verwerkingsverantwoordelijke voor het eigen hulpmiddel; de app moet dat verantwoord maken.",
+        "region": "Vlaanderen/EU (AVG)",
+        "url": "https://eurydice.eacea.ec.europa.eu/nl/eurypedia/belgium-flemish-community/belgie-vlaamse-gemeenschapbeoordeling-het-secundair-onderwijs"
+      }
+    ],
+    "mustHaves": [
+      "Kern-datamodel: matrix leerlingen x evaluaties, met per evaluatie apart opgeslagen behaalde score én max-score (bv. /20, /50, /100), datum en titel.",
+      "Per evaluatie een categorie (bv. dagelijks werk vs. examen; of kennis/vaardigheid/attitude) en een instelbaar gewicht; automatische deelgemiddelden per categorie en een periodetotaal, genormaliseerd naar /20 of %.",
+      "Ondersteuning voor beide rekenmodellen: punten-totaal (som/som) én gewogen categoriegemiddelden, met transparante uitleg hoe het eindcijfer is opgebouwd.",
+      "Expliciete vlag formatief vs. summatief per evaluatie, zodat formatieve items wel geregistreerd maar niet meegerekend worden.",
+      "Status-vlaggen los van de score (afwezig, niet ingediend, vrijgesteld, te laat) die gemiddelden niet vervuilen.",
+      "Meerdere schaaltypes per evaluatie: numeriek, letter/symbool, beheersingsniveau en louter tekstueel/kwalitatief.",
+      "Rubrics als herbruikbaar sjabloon (criteria x niveaus x descriptoren), analytisch of holistisch, optioneel omzetbaar naar een deelpunt — met startsjablonen voor taalvaardigheden.",
+      "Feedbackveld per leerling/evaluatie dat losstaat van het cijfer en over de tijd zichtbaar blijft (feedbackgeschiedenis).",
+      "Volledige toetsenbordbediening voor snelle invoer: tab/enter/pijltjes, kolomsgewijze invoer, fill-down, snelle statuscodes — geoptimaliseerd voor een hele klasgroep in één sessie.",
+      "Real-time lopend/virtueel gemiddelde per leerling met visuele signalering van tekorten en de 50%-drempel duidelijk gemarkeerd.",
+      "Per-klasgroep configuratie en herbruikbare evaluatiesjablonen die je over meerdere groepen kunt kopiëren (vakleerkracht met meerdere klassen).",
+      "Rapportvoorbereidend overzicht/export per periode — zonder zelf te delibereren of attesten (A/B/C) toe te kennen; deliberatie blijft klassenraadbevoegdheid.",
+      "Privacy-by-design: lokaal-eerst, geen echte leerlinggegevens in ontwikkeling, dataminimalisatie, export en verwijdering mogelijk; geen afgeleide profielen, emotie-/aandachtsscores of gecombineerde risicoscores.",
+      "Feitelijk gedrag boven interpretatie in alle observatie-/commentaarvelden (harde inhoudelijke grens)."
+    ],
+    "niceToHaves": [
+      "Herbruikbare bibliotheek van bewerkbare feedbackfragmenten/snippets met invoegvelden (leerlingnaam, doel), eventueel tweetalig (NL + doeltaal Engels/Spaans).",
+      "Optionele tagging van evaluaties/rubric-criteria aan leerplandoelen/eindtermen voor een doelgericht rapport per leerling.",
+      "Peer- en zelfevaluatie als evaluatietype (in lijn met breed evalueren).",
+      "Herwegen/normaliseren achteraf (bv. een toets /50 automatisch tonen op /20) zonder herinvoer.",
+      "Evolutiegrafiek per leerling en per klasgroep over de periodes heen (louter feitelijke scores, geen voorspelling of profilering).",
+      "Import/kopieer van klaslijsten uit een bestaand bestand met fictieve namen uit data/examples.",
+      "Snelle 'les-modus' voor invoer op tablet/tijdens de les (grote raakvlakken, minimale handelingen), aansluitend bij het teacher-first-principe.",
+      "Configureerbare beheersingsniveau-schalen (bv. nog niet / op weg / gaat goed / beheerst) met eigen labels en symbolen.",
+      "Undo/herstelbaarheid van destructieve acties (verwijderen van evaluaties of scores) en auditbare mutatiegeschiedenis."
+    ]
+  },
+  {
+    "facet": "Observaties en leerlingopvolging",
+    "summary": "Vlaamse leerlingopvolging steunt op twee kaders: handelingsgericht werken (HGW, 7 uitgangspunten) en het zorgcontinuum (fase 0 brede basiszorg tot fase 3 individueel aangepast curriculum). De rode draad is dat je feitelijk, observeerbaar gedrag registreert en dat scherp scheidt van interpretatie, hypothese en onderwijsbehoefte. Een bruikbaar leerlingdossier is gelaagd: korte, herhaalbare feitobservaties (wie/wanneer/context/waargenomen gedrag), en pas daarboven een geduide analyse met stimulerende en belemmerende factoren. Voor gedrag is het ABC-schema (Antecedent-Behaviour-Consequence) het standaardinstrument om objectief en zonder oordeel vast te leggen. Privacy-by-design vereist doelbinding, minimale gegevens, expliciete bewaartermijnen, auditbare mutaties en een duidelijk onderscheid tussen persoonlijke werknota's van de leerkracht en het formele (deelbare) dossier. Voor een vakleerkracht met meerdere klasgroepen moet registreren zeer snel gaan (enkele tikken per les) en per klasgroep filterbaar zijn, zonder karakter- of risicoscores.",
+    "items": [
+      {
+        "aspect": "Handelingsgericht werken (HGW) als leidend kader",
+        "category": "best-practice",
+        "what": "HGW is de dominante Vlaamse werkwijze voor leerlingbegeleiding met 7 uitgangspunten: onderwijsbehoeften centraal; wisselwerking/afstemming kind-omgeving; de leerkracht doet ertoe; positieve aspecten benoemen; constructief samenwerken; doelgericht werken; systematisch en transparant handelen. De kern is: wat heeft DEZE leerling in DEZE context nodig.",
+        "insight": "Bouw het datamodel rond 'onderwijsbehoefte' en 'wisselwerking' i.p.v. rond het kind als probleem. Een observatie wordt pas waardevol als ze koppelt aan een concrete behoefte en een doel; het systeem moet observatie -> analyse (stimulerend/belemmerend) -> onderwijsbehoefte -> doel/aanpak kunnen ketenen.",
+        "forProfile": "Voor een vakleerkracht is de volledige HGW-cyclus vaak zorg/school-niveau; de app moet vooral fase-0 signaalregistratie ondersteunen die naadloos naar de zorgcoordinator kan.",
+        "region": "Vlaanderen",
+        "url": "https://wij-leren.nl/hgw-uitgangspunten.php"
+      },
+      {
+        "aspect": "Zorgcontinuum: 4 fasen bepalen de opvolgintensiteit",
+        "category": "verplichting",
+        "what": "Het zorgcontinuum kent fase 0 brede basiszorg (alle leerlingen systematisch opvolgen, beschermende factoren versterken), fase 1 verhoogde zorg (differentieren, remedieren, compenseren, dispenseren), fase 2 uitbreiding van zorg (CLB/handelingsgericht diagnostisch traject), fase 3 individueel aangepast curriculum met verslag.",
+        "insight": "Modelleer een 'fase'-veld op leerlingniveau zodat opvolging schaalt: in fase 0 volstaan lichte signaalnotities, in hogere fasen komen maatregelen (bv. STICORDI/redelijke aanpassingen) en overlegverslagen. De leerkracht-app zit primair in fase 0-1; hoger dan dat is school/CLB-terrein en mag niet in een persoonlijk hulpmiddel 'verdwijnen'.",
+        "forProfile": "Nuttig om per klasgroep te zien welke leerlingen al gekende maatregelen hebben (bv. verlengde tijd bij toetsen Engels/Spaans) zonder daar zelf diagnoses aan te koppelen.",
+        "region": "Vlaanderen",
+        "url": "https://prodiagnostiek.be/het-zorgcontinuum/brede-basiszorg/"
+      },
+      {
+        "aspect": "ABC-observatieschema voor gedrag",
+        "category": "model",
+        "what": "ABC splitst een gedragsituatie in Antecedent (wat ging eraan vooraf: tijd/les/context/trigger), Behaviour (het feitelijke, objectief beschreven gedrag) en Consequence (het gevolg/de reactie). Advies is te starten met de B-kolom en zo concreet mogelijk te beschrijven, met opsommingstekens en zonder oordeel.",
+        "insight": "Een sterk observatie-invoerscherm kan letterlijk de ABC-structuur volgen: context-veld, gedrag-veld (verplicht feitelijk), gevolg-veld. Dit dwingt objectiviteit af en levert meteen bruikbare patronen op (bv. welk lesmoment/welke trigger keert terug) zonder een risicoscore te berekenen.",
+        "forProfile": "Voor drukke lesgroepen ideaal als snelle 'incident-log' per leerling; door A en C als keuzelijst (veelvoorkomende antecedenten/gevolgen aanvinken) blijft invoer binnen enkele seconden.",
+        "region": "generiek (VL/NL)",
+        "url": "https://www.onderwijskennis.nl/kennisbank/gedragsanalyse-in-de-onderwijspraktijk"
+      },
+      {
+        "aspect": "Feit strikt scheiden van interpretatie",
+        "category": "best-practice",
+        "what": "Objectief observeren = beschrijven wat je letterlijk ziet/hoort zonder waardeoordeel. Richtlijnen: beschrijf concreet, verifieerbaar gedrag; vermijd vage kwantoren als 'vaak', 'erg', 'soms'; stel interpretatie uit; benoem expliciet wanneer iets jouw idee/indruk/hypothese is; zoek alternatieve verklaringen.",
+        "insight": "Maak feit en duiding tot aparte, visueel onderscheiden velden in het datamodel: een verplicht 'waargenomen gedrag' (feit) en een optioneel 'mijn interpretatie/hypothese' (gelabeld als mening). Toon ze ook in de weergave gescheiden. Dit is de belangrijkste privacy- en kwaliteitsgarantie tegen het afleiden van karakter of motivatie.",
+        "forProfile": "Beschermt de leerkracht tegen 'plakkende' oordelen die tussen klasgroepen en leerjaren meereizen; sluit direct aan bij de harde grens 'feitelijk gedrag boven interpretatie'.",
+        "region": "generiek",
+        "url": "https://wij-leren.nl/observeren-leraar.php"
+      },
+      {
+        "aspect": "Veldenset van een observatie-item",
+        "category": "functie",
+        "what": "Bruikbare kernvelden per observatie: datum/tijd, klasgroep, vak, les-/lascontext (moment), betrokken leerling(en), waargenomen gedrag (feit, verplicht), context/aanleiding (A), gevolg/genomen actie (C), optioneel geduide interpretatie (gelabeld), categorie/tag (bv. werkhouding, taak-aanpak, welbevinden, sociaal), zichtbaarheid/deelstatus, en auteur.",
+        "insight": "Houd het feitveld verplicht en de rest optioneel; gebruik tags i.p.v. vrije etikettering zodat je later per klasgroep en per thema kunt filteren zonder scores te aggregeren. Vermijd numerieke 'gedragspunten' die optellen tot een risicoscore.",
+        "forProfile": "Klasgroep + vak als verplichte context is essentieel voor een vakleerkracht die dezelfde leerling soms niet, en verschillende groepen wel, ziet.",
+        "region": "generiek",
+        "url": "https://www.smartschool.be/overzicht-van-alle-tools/btn_lvs_150x180/"
+      },
+      {
+        "aspect": "Bestaande LVS-categorieen (Smartschool/Questi)",
+        "category": "tool",
+        "what": "Smartschool-LVS bundelt administratieve en pedagogische gegevens: schoolresultaten, zorgbehoeften, observatiegegevens, werkhouding, taakaanpak, socio-emotionele ontwikkeling, overzichten van overleg, genomen acties en verslagen. Questi is sterk in gestandaardiseerde toetsen/screenings op individueel en klasniveau (vooral kleuter/lager).",
+        "insight": "Deze categorieen vormen een beproefde taxonomie om tags/rubrieken op af te stemmen (werkhouding, taakaanpak, socio-emotioneel, actie, overleg). Klaskompas hoeft deze systemen niet te vervangen maar kan een lichte, persoonlijke voorlaag zijn; positioneer het expliciet naast Smartschool/Informat, niet ervoor.",
+        "forProfile": "Herkenbare categorieen verlagen de leerdrempel; export/kopieerbaarheid naar het officiele LVS is waardevoller dan een gesloten eigen silo.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/2015/05/nieuw-leerlingvolgsysteem-beschikbaar-in-smartschool-app/"
+      },
+      {
+        "aspect": "Persoonlijke werknota's versus formeel dossier",
+        "category": "verplichting",
+        "what": "Scholen kennen lees-/schrijfrechten toe zodat duidelijk is wie welk deel van het dossier ziet en mag aanvullen. Vertrouwelijke informatie hoeft niet met het hele team gedeeld. Het inzagerecht van ouders/leerling geldt op het (formele) dossier; de school moet niet per se het hele dossier of een kopie overhandigen maar kan ook toelichten wat erin staat.",
+        "insight": "Modelleer een expliciete zichtbaarheidsstatus per notitie: 'persoonlijke werknota' (privaat, kladstatus) versus 'gedeeld/dossierwaardig'. Dit respecteert dat een leerkracht-hulpmiddel privé mag zijn, maar dwingt bewustzijn af dat gedeelde items onder inzagerecht kunnen vallen. Nooit stiekem interpretaties die de leerling schaden.",
+        "forProfile": "Precies de gevoelige zone voor een persoonlijk hulpmiddel: standaard privaat, bewust expliciete stap om iets 'dossierwaardig/deelbaar' te maken.",
+        "region": "Vlaanderen",
+        "url": "https://ikbeslis.be/ouders-leerkrachten/privacy-op-school/het-leerlingendossier"
+      },
+      {
+        "aspect": "Bewaartermijnen en doelbinding (AVG)",
+        "category": "verplichting",
+        "what": "Leerlinggebonden documenten kennen deels wettelijke bewaartermijnen; voor de rest geldt de AVG: gegevens niet langer bewaren dan nodig en verwijderen zodra het doel bereikt is. Verwerking vereist doelbinding en dataminimalisatie.",
+        "insight": "Bouw retentie in als functie: per notitietype een bewaar-/opschoonhorizon, automatische 'vervalt op'-suggesties (bv. einde schooljaar/leerjaar), en herstelbare (soft-delete) verwijdering. Toon de leerkracht welke oude items opgeschoond kunnen worden i.p.v. alles eeuwig te bewaren.",
+        "forProfile": "Een vakleerkracht wisselt jaarlijks van groepen; end-of-year archiveren/opschonen per klasgroep is een natuurlijke retentietrigger.",
+        "region": "Vlaanderen",
+        "url": "https://data-onderwijs.vlaanderen.be/edulex/document.aspx?docid=13572"
+      },
+      {
+        "aspect": "Auditbaarheid en statusmodel van notities",
+        "category": "best-practice",
+        "what": "Leerlingopvolging vereist traceerbaarheid: wie noteerde wat, wanneer, en welke wijzigingen/statusovergangen plaatsvonden (bv. van signaal naar actie naar afgehandeld).",
+        "insight": "Geef elke notitie een auteur, tijdstempel, versie/mutatiegeschiedenis en een expliciet statusmodel (bv. open signaal -> opgevolgd -> afgesloten). Statusovergangen en mutaties auditbaar bewaren; destructieve acties herstelbaar maken. Geen automatische statusovergangen met gevolgen voor de leerling.",
+        "forProfile": "Auditbaarheid beschermt de leerkracht zelf bij oudergesprekken en klassenraden: aantoonbaar wat feitelijk en wanneer genoteerd is.",
+        "region": "generiek",
+        "url": "https://pro.katholiekonderwijs.vlaanderen/uitgangspunten-continuum-van-zorg-bao"
+      },
+      {
+        "aspect": "Stimulerende en belemmerende factoren i.p.v. labels",
+        "category": "model",
+        "what": "Binnen HGW analyseer je bevorderende (beschermende) en belemmerende (risico) factoren in kind EN omgeving (onderwijs, opvoeding), gericht op leren, werkhouding of gedrag, zonder het kind te reduceren tot een label of diagnose.",
+        "insight": "Als je duiding aanbiedt, structureer die als twee lijsten (wat helpt / wat belemmert) gekoppeld aan context, niet als eigenschap van de leerling. Dit voorkomt afgeleide karaktereigenschappen en houdt de focus veranderbaar/handelingsgericht.",
+        "forProfile": "Helpt bij differentiatie in taalvakken (bv. 'werkt beter met visuele steun', 'haakt af bij lange luisterfragmenten') zonder oordeel over de persoon.",
+        "region": "Vlaanderen",
+        "url": "https://kenniscentrumpotential.be/kenniscentrum/thema/handelingsgericht-werken"
+      }
+    ],
+    "mustHaves": [
+      "Verplicht, apart 'waargenomen gedrag'-feitveld dat visueel en in het datamodel gescheiden is van een optioneel, gelabeld interpretatie/hypothese-veld",
+      "Snelle observatie-invoer (enkele tikken per les) met verplichte context klasgroep + vak + lesmoment, geschikt voor een vakleerkracht met meerdere groepen",
+      "ABC-gestructureerde optie voor gedrag (antecedent/aanleiding, feitelijk gedrag, gevolg/actie) met keuzelijsten voor A en C",
+      "Expliciete zichtbaarheidsstatus per notitie: standaard privaat 'persoonlijke werknota' versus bewust 'deelbaar/dossierwaardig'",
+      "Auteur, tijdstempel en mutatie-/versiegeschiedenis op elke notitie (auditbaar); statusovergangen (open signaal -> opgevolgd -> afgesloten) expliciet en handmatig",
+      "Bewaartermijn/retentie per notitietype met opschoonsuggesties en herstelbare (soft-delete) verwijdering, conform AVG-doelbinding en dataminimalisatie",
+      "Geen numerieke gedrags-/risicoscores, geen automatische sancties, geen afgeleide karaktereigenschappen of zorgdiagnoses",
+      "Tags/categorieen (werkhouding, taakaanpak, socio-emotioneel, sociaal, actie, overleg) i.p.v. vrije oordeeletiketten, filterbaar per klasgroep",
+      "Duidelijke positionering als persoonlijk hulpmiddel naast, niet ter vervanging van, Smartschool/Informat/CLB en schoolprocedures"
+    ],
+    "niceToHaves": [
+      "Koppeling observatie -> onderwijsbehoefte -> doel/aanpak (lichte HGW-keten) zonder verplichte volledige cyclus",
+      "Zorgcontinuum-fase-indicator (0-1) per leerling puur informatief, met verwijzing naar zorgcoordinator voor hogere fasen",
+      "Twee-lijsten-weergave 'wat helpt / wat belemmert' gekoppeld aan context i.p.v. aan de persoon",
+      "Export/kopieerfunctie naar het officiele LVS (tekst/CSV) zodat het geen gesloten silo wordt",
+      "Patroonoverzicht per leerling of per lesmoment (louter tellingen/tijdlijn van feiten, geen samengestelde score)",
+      "Sjablonen/snelknoppen voor veelvoorkomende feitobservaties per vak (Engels/Spaans) om invoertijd te minimaliseren",
+      "Einde-schooljaar-archiveringsflow per klasgroep als natuurlijke retentietrigger",
+      "Herinnering/nudge die vage kwantoren ('vaak', 'erg') detecteert en om een concreter feit vraagt"
+    ]
+  },
+  {
+    "facet": "Taken / huiswerk / materiaal: opvolging, registratie, herinneringen en koppeling aan evaluatie",
+    "summary": "Voor een vakleerkracht met meerdere klasgroepen draait dit deelaspect om drie dingen: (1) per taak snel zien wie in orde is, ingeleverd, te laat of ontbrekend; (2) materiaal-/huiswerkcontrole in de les met minimale handelingen; (3) een licht overzicht per leerling over de tijd (\"hoe vaak niet in orde\") dat de leerkracht helpt tijdig bij te sturen. Bestaande systemen (Google Classroom, Somtoday, Scoodle/Plantyn, Additio, TeacherKit, Schoolytics) hanteren een expliciet statusmodel toegewezen → ingeleverd → te laat → ontbrekend, aangevuld met een aparte \"in orde / niet in orde / vergeten\"-registratie voor materiaal. Het snelste in-de-les-patroon is een klaslijst of zittingsplan waarin je per leerling één keer tikt om door statussen te cyclen, met slimme default \"iedereen in orde\" zodat je enkel uitzonderingen aanduidt. Belangrijk voor Klaskompas: huiswerk is (anders dan afwezigheden/Discimus) géén wettelijke registratieplicht maar een persoonlijk pedagogisch hulpmiddel; de school bepaalt het huiswerk- en evaluatiereglement. Registreer feitelijk (\"taak niet ingeleverd\"), niet interpretatief (\"ongemotiveerd\"), koppel opvolging aan herstel (inhaaltaak/tweede kans) i.p.v. automatische nul of sanctie, en houd materiaal, gedrag en huiswerk als aparte feiten — nooit één gecombineerde risicoscore.",
+    "items": [
+      {
+        "aspect": "Statusmodel voor taken/inleveringen",
+        "category": "model",
+        "what": "Toonaangevende systemen gebruiken een expliciet, kleine statusset: Toegewezen (assigned) → Ingeleverd op tijd (turned in) → Te laat ingeleverd (done late) → Ontbrekend (missing). Google Classroom zet werk automatisch op 'ontbrekend' of 'te laat' zodra de deadline verstrijkt; de leerkracht kan status manueel corrigeren.",
+        "insight": "Neem exact dit compacte, expliciete statusmodel over (Klaskompas-principe 'expliciete statusmodellen'). Vier statussen volstaan; vermijd vage tussenwaarden. Sta manuele correctie toe want een deadline-overschrijding is een feit, geen automatisch oordeel.",
+        "forProfile": "Vakleerkracht met veel groepen wil per taak in één blik zien wie nog moet inleveren, over alle klassen heen.",
+        "region": "internationaal",
+        "url": "https://support.google.com/edu/classroom/answer/6020285"
+      },
+      {
+        "aspect": "Aparte materiaal- en huiswerkcontrole (in orde / niet in orde / vergeten)",
+        "category": "functie",
+        "what": "Somtoday kent een aparte 'Huiswerk- en materiaalcontrole' naast de taken-/inleverstroom: de leerkracht registreert per leerling of huiswerk gemaakt is en of het materiaal (boek, laptop, gerief) in orde is, met opties zoals in orde / niet in orde / vergeten. Dit is losgekoppeld van cijfers.",
+        "insight": "Onderscheid twee dingen die vaak verward worden: (a) een concrete IN te leveren taak met deadline, en (b) een lichte in-de-les controle 'heb je je huiswerk/materiaal bij'. Modelleer ze apart; de tweede is een snelle ja/nee-registratie zonder deadline.",
+        "forProfile": "Talenleerkracht controleert dagelijks bv. woordenschat-invuloefening of meegebracht werkboek; dat is anders dan een ingeleverde schrijftaak.",
+        "region": "Nederland",
+        "url": "https://somtoday-servicedesk.zendesk.com/hc/nl/articles/360019890597-Huiswerk-en-materiaalcontrole"
+      },
+      {
+        "aspect": "Snel in-de-les-registratiepatroon: tik-om-te-cyclen op klaslijst/zittingsplan",
+        "category": "UX-patroon",
+        "what": "TeacherKit en soortgelijke apps gebruiken een seating-chart of klaslijst waarin je per leerlingtegel tikt om door statussen te cyclen (bv. in orde → niet in orde → te laat). Met een slimme default 'iedereen in orde' hoef je enkel de uitzonderingen aan te tikken. Een live teller toont X in orde · Y niet · Z te laat. Dit patroon staat al in de eigen onderzoeksnotitie (research/onderzoek-klasmanagement-en-administratie.md, laag 1).",
+        "insight": "Dit is hét snelheidspatroon: default-goed + enkel afwijkingen aantikken maakt controle van een klas <10 s. Hergebruik exact hetzelfde tik-cyclus-component dat je voor aanwezigheden bouwt, met huiswerk/materiaal als extra registratietype. Tikdoelen ≥44px, kleur + micro-feedback.",
+        "forProfile": "Kernbehoefte doelprofiel: 'maximaal enkele handelingen tijdens een les' over meerdere groepen per dag.",
+        "region": "internationaal",
+        "url": "https://intercom.help/teacherkit/en/articles/99441-how-to-use-seating-chart-view"
+      },
+      {
+        "aspect": "Overzicht/telling per leerling over de tijd ('hoe vaak niet in orde')",
+        "category": "functie",
+        "what": "Op KlasCement staat een breed gebruikt (spreadsheet-)hulpmiddel 'Bijhouden hoe vaak leerlingen in orde zijn met huiswerk': per leerling wordt over meerdere data afgevinkt of taken/huiswerk in orde waren, met een automatische telling. Missing-work dashboards (Schoolytics) tonen per leerling een teller ontbrekende taken en laten filteren op klas, periode of categorie.",
+        "insight": "Naast de momentopname heb je een longitudinaal overzicht nodig: een simpele teller 'X van de laatste Y keer niet in orde' per leerling. Dit is signaalwaarde voor een gesprek/ouderscontact — houd het een feitelijke frequentie, geen 'score' en zeker geen automatische drempel die een sanctie triggert.",
+        "forProfile": "Helpt de vakleerkracht die een leerling maar 1-2u/week ziet om patronen te zien die anders wegvallen tussen de groepen.",
+        "region": "Vlaanderen",
+        "url": "https://www.klascement.net/downloadbaar-lesmateriaal/39698/bijhouden-hoe-vaak-leerlingen-in-orde-zijn-met-huiswerk/"
+      },
+      {
+        "aspect": "Filters en 'ontbrekend werk'-rapport voor opvolging",
+        "category": "best-practice",
+        "what": "Schoolytics/Google Classroom bieden een 'Missing Assignments'-rapport met filters op klas, datumbereik (default laatste 30 dagen) en categorie, zodat de leerkracht gericht wie-mist-wat kan opvolgen zonder alles handmatig na te lopen.",
+        "insight": "Bouw één opvolgscherm 'openstaand/ontbrekend' met filters op klasgroep, taak en periode. Dit is het werkinstrument dat de leerkracht buiten de les gebruikt om na te bellen/mailen of inhaalmomenten te plannen.",
+        "forProfile": "Met 5-8 klasgroepen is een over-alle-klassen-heen filter belangrijker dan per-klas losse lijstjes.",
+        "region": "internationaal",
+        "url": "https://www.schoolytics.com/blog/2022/11/better-tracking-missing-assignments"
+      },
+      {
+        "aspect": "Herinneringen — voor de leerkracht, niet automatisch naar leerling/ouder",
+        "category": "best-practice",
+        "what": "Google Classroom biedt deadline-reminders voor leerlingen en 'guardian email summaries' die ouders wekelijks/dagelijks ontbrekend en aankomend werk mailen. Dit zijn schoolbrede communicatiekanalen met privacy-implicaties.",
+        "insight": "Voor een lokale-eerst, persoonlijk hulpmiddel horen herinneringen gericht te zijn op de leerkracht zelf ('deze taken vervallen morgen', 'nog X inleveringen na te kijken', 'inhaaltaak van leerling openstaand'), NIET op geautomatiseerde berichten naar leerlingen of ouders. Officiële communicatie loopt via Smartschool/de school. Zo blijf je binnen 'geen stille automatisering met gevolgen voor leerlingen'.",
+        "forProfile": "Vermijdt dat Klaskompas een tweede, ongecontroleerd ouderkanaal wordt naast Smartschool.",
+        "region": "internationaal",
+        "url": "https://support.google.com/edu/classroom/answer/6386354"
+      },
+      {
+        "aspect": "Koppeling aan evaluatie: taken als (deel van) dagelijks werk / permanente evaluatie",
+        "category": "verplichting",
+        "what": "In het Vlaamse SO kunnen taken/huiswerk meetellen als 'dagelijks werk' of binnen permanente evaluatie; attitudes ('zijn') wegen in sommige kaders ~20%. Het evaluatiereglement van de school moet criteria en gewicht vooraf duidelijk communiceren zodat leerlingen het belang van elke opdracht kunnen inschatten.",
+        "insight": "Klaskompas kan taken markeren als 'telt mee voor evaluatie' met een verwijzing naar het schoolgewicht, maar bepaalt zelf géén cijferregels of gewichten — dat is schoolbeleid (canonvolgorde: geen zelfstandige pedagogische beslissing). Toon eventueel een neutraal veld 'meegenomen in evaluatie: ja/nee' zonder automatische puntenberekening.",
+        "forProfile": "Talenleerkracht met permanente evaluatie op spreek-/schrijftaken wil traceren welke taken al dan niet in de eindbeoordeling zaten.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/ouders/leren-en-evalueren/evaluatie/"
+      },
+      {
+        "aspect": "Juridische grens: geen automatische nul bij niet/te laat ingeleverd",
+        "category": "verplichting",
+        "what": "Vlaamse duiding (o.a. juridische onderwijsbronnen) stelt dat een leerkracht niet zomaar automatisch een nul mag geven voor een vergeten/te laat ingeleverde taak: er gelden proportionaliteit en het school-/evaluatiereglement; een sanctie moet in verhouding staan en het reglement volgen.",
+        "insight": "Bouw géén knop die automatisch 'nul' of een sanctie toekent op basis van status 'ontbrekend'. Registreer het feit; de beoordeling/consequentie blijft een menselijke, reglement-gebonden beslissing. Dit sluit direct aan bij de harde grens 'geen automatische sancties'.",
+        "forProfile": "Beschermt de leerkracht tegen betwistbare, niet-reglementaire beoordelingen bij betwistingen door ouders.",
+        "region": "Vlaanderen",
+        "url": "https://www.evocaat.be/nl/themas/onderwijs/mag-een-leerkracht-een-nul-geven-als-je-een-taak-vergeet-in-te-dienen"
+      },
+      {
+        "aspect": "Herstel boven straf: inhaaltaak / tweede kans als eerste opvolgstap",
+        "category": "best-practice",
+        "what": "Vlaams beleid rond vergeten materiaal en herstelgericht werken adviseert een gesprek en herkansing/inhaalmoment in plaats van directe bestraffing: achter vergeten spullen of niet-af huiswerk kan haast, planningsmoeite of onduidelijke afspraken zitten. Klasse pleit voor zinvol huiswerk met feedback boven afstraffen.",
+        "insight": "Modelleer opvolging als statuslijn signaal → afspraak/inhaaltaak → opvolging (herstelgericht), analoog aan de acties-module in de eigen onderzoeksnotitie. Bied bij status 'ontbrekend' een 'plan inhaaltaak / nieuwe deadline'-actie i.p.v. een strafknop.",
+        "forProfile": "Sluit aan bij herstelgerichte praktijk die het doelprofiel pedagogisch verkiest.",
+        "region": "Vlaanderen",
+        "url": "https://www.klasse.be/773675/zinvol-huiswerk-in-het-secundair/"
+      },
+      {
+        "aspect": "Feitelijk registreren, niet interpreteren",
+        "category": "verplichting",
+        "what": "Systemen loggen de status als feit ('niet ingeleverd', 'materiaal niet bij') met tijdstip; ze leiden er geen karaktereigenschap of motivatie uit af.",
+        "insight": "Toegestane velden: status + datum + optionele feitelijke notitie ('boek thuis vergeten'). Verboden: afgeleide labels als 'lui', 'ongemotiveerd', 'zorgleerling' of een gecombineerde huiswerk+gedrag+materiaal-risicoscore. Houd de drie registratiesoorten strikt gescheiden in datamodel en UI.",
+        "forProfile": "Direct nodig om binnen AVG en de projectgrenzen te blijven.",
+        "region": "Vlaanderen",
+        "url": "https://www.nationaleonderwijsgids.nl/van-onze-klanten/waarom-vergeten-spullen-een-gesprek-verdienen-in-plaats-van-een-straf/"
+      },
+      {
+        "aspect": "Marktreferenties met taken-/huiswerkopvolging",
+        "category": "tool",
+        "what": "Relevante bestaande tools: Google Classroom (statusmodel, guardian summaries), Scoodle/Plantyn (resultatendashboard taken, BE), Somtoday (huiswerk-/materiaalcontrole, NL), Additio (gradebook + taken + rubrics, integreert met Classroom), TeacherKit (seating-chart homework tracker), Apple Schoolwork (voortgang per leerling), Schoolytics (missing-work dashboard). KlasCement biedt kant-en-klare spreadsheets.",
+        "insight": "Geen van deze is een lokale-eerst persoonlijk hulpmiddel: ze zijn cloud-/schoolgebonden en vaak leerlingaccount-afhankelijk. Klaskompas' onderscheid = local-first, één leerkracht, geen leerlingaccounts, geen automatisering — neem hun statusmodel en tik-UX over, laat hun cloud/communicatie/cijferautomatisering vallen.",
+        "forProfile": "Positioneert Klaskompas naast (niet in plaats van) de schoolsystemen die het doelprofiel al moet gebruiken.",
+        "region": "internationaal",
+        "url": "https://www.plantyn.com/secundair-onderwijs/scoodle"
+      },
+      {
+        "aspect": "Huiswerk is géén wettelijke registratieplicht (scope-afbakening)",
+        "category": "verplichting",
+        "what": "Anders dan afwezigheden (die via Discimus wettelijk geregistreerd moeten worden), is huiswerk-/taakopvolging niet wettelijk verplicht te registreren. De school bepaalt zelf het huiswerkbeleid; huiswerk dient om te zien of leerstof begrepen/zelfstandig verwerkt wordt.",
+        "insight": "Bevestigt de scope: taken/huiswerk/materiaal in Klaskompas is een persoonlijk pedagogisch hulpmiddel, geen officieel register. Dit rechtvaardigt de local-first opzet en de vrijheid om lichte, eigen registratiepatronen te kiezen — zolang ze de schoolprocedure niet vervangen (canonvolgorde).",
+        "forProfile": "Geeft de vakleerkracht ruimte voor een eigen, snelle werkwijze zonder dubbele officiële administratie.",
+        "region": "Vlaanderen",
+        "url": "https://www.onderwijs.vlaanderen.be/huiswerk"
+      }
+    ],
+    "mustHaves": [
+      "Expliciet, klein statusmodel per taak: toegewezen → ingeleverd (op tijd) → te laat → ontbrekend, met manuele correctie en tijdstempel (auditbaar).",
+      "Aparte, snelle in-de-les-controle 'huiswerk/materiaal in orde' (ja/niet in orde/vergeten) los van cijfers en los van de inleverstroom.",
+      "Supersnel registratiepatroon: klaslijst of zittingsplan met tik-om-te-cyclen, default 'iedereen in orde', enkel uitzonderingen aantikken, live teller — enkele handelingen per les.",
+      "Per-taak opvolgoverzicht 'wie moet nog inleveren / is ontbrekend', filterbaar op klasgroep, taak en periode, over alle groepen heen.",
+      "Longitudinaal per-leerling overzicht 'hoe vaak niet in orde' als feitelijke frequentie (geen score, geen automatische drempel/sanctie).",
+      "Herinneringen uitsluitend voor de leerkracht zelf (deadlines, na te kijken, openstaande inhaaltaken); geen automatische berichten naar leerlingen of ouders.",
+      "Herstelgerichte opvolgactie bij 'ontbrekend': plan inhaaltaak / nieuwe deadline — nooit een automatische nul- of strafknop.",
+      "Strikt gescheiden registratie van huiswerk, materiaal en gedrag; nooit een gecombineerde risicoscore of afgeleid karakter-/motivatielabel.",
+      "Alleen feitelijke velden (status, datum, korte feitelijke notitie); geen interpretatieve etiketten.",
+      "Koppeling aan evaluatie enkel als neutrale markering 'telt mee: ja/nee' met verwijzing naar het schoolreglement; Klaskompas berekent zelf geen punten of gewichten."
+    ],
+    "niceToHaves": [
+      "Bulkacties: een taak in één keer voor een hele groep op 'toegewezen' zetten of collectief 'iedereen in orde' bevestigen met daarna enkel uitzonderingen.",
+      "Taaksjablonen per vak (Engels/Spaans) voor terugkerende opdrachttypes (woordenschat, spreektaak, schrijftaak).",
+      "Zichtbaar onderscheid 'controle-huiswerk' (dagelijks, geen deadline) versus 'in te leveren taak' (met deadline) in de UI.",
+      "Optioneel export/afdruk van een openstaand-werk-overzicht per groep voor een klassenraad of oudercontact (leerkracht kiest bewust te delen).",
+      "Kleur- en icoonlogica consistent met de aanwezighedenmodule zodat de leerkracht één visuele taal leert.",
+      "Snelle notitie bij een status ('boek thuis') die later een herstelgesprek of inhaalafspraak voedt.",
+      "Undo/herstelbaarheid van registraties (destructieve acties herstelbaar).",
+      "Aanpasbare deadline/herkansing per leerling (differentiatie) zonder dat dit een cijfer forceert."
+    ]
+  },
+  {
+    "facet": "Communicatie bijhouden — auditbaar loggen van contact (mail/telefoon/gesprek/CLB/oudercontact/leerlingcontact) in Klaskompas",
+    "summary": "Een communicatielogboek voor een vakleerkracht is in de kern een eenvoudige, doorzoekbare lijst van contactmomenten met een vast veldenschema: datum/tijd, betrokken leerling(en), kanaal, reden, feitelijke samenvatting, uitkomst en follow-up. Zowel internationale leerkracht-templates (parent contact logs) als Vlaamse platformen (Smartschool Oudercontact, Gimme, Questi) hanteren dit patroon. De onderscheidende meerwaarde voor Klaskompas zit niet in \"berichten sturen\" (dat doen officiele systemen), maar in het persoonlijk, auditbaar bijhouden dat een contact plaatsvond en wat de leerkracht opvolgt. Cruciaal is AVG-conformiteit: doelbinding, dataminimalisatie, inzagerecht en feitelijke registratie (ABC-cameramethode, geen interpretatie of risicoscore). Auditbaarheid vraagt mutatiegeschiedenis en soft-delete (herstelbaar wissen met tijdstempel), en export naar verslag (PDF/CSV) voor overdracht naar mentor/zorg/CLB — waarbij de vakleerkracht signaalgever blijft in fase 0-1 van het zorgcontinuum en geen CLB-dossier voert.",
+    "items": [
+      {
+        "aspect": "Vast veldenschema van een contactlog",
+        "what": "Zowel internationale parent-contact-log-templates als Vlaamse oudercontactmodules convergeren naar een vast set velden: datum + tijd, leerling(en)/klasgroep, betrokken partij (ouder/voogd/leerling/CLB/collega), kanaal, reden/onderwerp, korte samenvatting van het gesprek, uitkomst/afspraken, en follow-up/next step.",
+        "insight": "Bouw een expliciet, afgebakend datamodel met verplichte kernvelden (datum, kanaal, leerling, reden) en optionele detailvelden. Eén onderwerp per registratie houdt de log doorzoekbaar en respecteert dataminimalisatie.",
+        "category": "datamodel",
+        "forProfile": "Vakleerkracht met meerdere klasgroepen wil per contact snel de klasgroep + leerling kunnen selecteren; koppel de log dus aan leerling EN klasgroep.",
+        "region": "internationaal / Vlaanderen",
+        "url": "https://excelshe.com/education-templates/parent-teacher-communication-log-templates/"
+      },
+      {
+        "aspect": "Kanaal als gecontroleerde keuzelijst",
+        "what": "Templates gebruiken een checklist/dropdown voor de contactmethode: telefoon, e-mail, bericht (Smartschool/berichtenmodule), oudercontact/gesprek face-to-face, CLB-overleg, leerlingcontact. Een vaste enum voorkomt vrije tekst en maakt filteren mogelijk.",
+        "insight": "Modelleer 'kanaal' als enum (telefoon, mail, gesprek, bericht, oudercontact, CLB, video). Zo wordt filteren en rapporteren per kanaal triviaal en blijft de data consistent.",
+        "category": "datamodel",
+        "forProfile": "Voor Engels/Spaans over meerdere groepen is filteren op 'alle telefooncontacten deze periode' of 'alle oudercontacten van klasgroep X' concreet nuttig.",
+        "region": "internationaal",
+        "url": "https://excelshe.com/education-templates/parent-teacher-communication-log-templates/"
+      },
+      {
+        "aspect": "Uitkomst en follow-up als aparte, opvolgbare velden",
+        "what": "Goede logs scheiden 'samenvatting van het gesprek' van 'action items/next steps' en 'uitkomst'. Follow-up krijgt idealiter een status (open/afgehandeld) en eventueel een streefdatum, zodat openstaande opvolging zichtbaar blijft.",
+        "insight": "Maak follow-up een status met optionele hersteldatum (open → afgehandeld). Een dashboard 'openstaande opvolging' geeft de leerkracht overzicht zonder losse to-do-lijstjes.",
+        "category": "UX-patroon",
+        "forProfile": "Bij >100 leerlingen verdwijnt een mondelinge belofte snel; een lichte follow-up-status voorkomt dat opvolging naar ouders/zorg wegvalt.",
+        "region": "internationaal",
+        "url": "https://www.jotform.com/form-templates/virtual-school-teacher-parent-communication-log"
+      },
+      {
+        "aspect": "Doorzoekbaarheid en filtering per leerling",
+        "what": "Audit-/communicatiesoftware benadrukt tagging + filtering om snel specifieke records terug te vinden, plus tijdstempels op elk record. Kernquery's: alle contacten van één leerling chronologisch, filteren op kanaal, reden, periode of klasgroep.",
+        "insight": "De leerling-tijdlijn (alle contactmomenten van één leerling, nieuwste eerst) is de belangrijkste view. Combineer met filters op periode/kanaal/klasgroep en vrije-tekstzoek op samenvatting.",
+        "category": "best-practice",
+        "forProfile": "Vakleerkracht met meerdere groepen heeft geen klastitularis-overzicht; de per-leerling-tijdlijn compenseert dat en ondersteunt oudercontact-voorbereiding.",
+        "region": "internationaal",
+        "url": "https://www.suralink.com/blog/audit-trail-software"
+      },
+      {
+        "aspect": "Soft-delete en mutatiegeschiedenis (auditbaarheid)",
+        "what": "Audit-trailprincipes: elk record heeft tijdstempel, verantwoordelijke en gewijzigde entiteit; wijzigingen en verwijderingen worden bewaard in de trail (before/after), records zijn beschermd tegen hard verwijderen. Bewerken/verwijderen blijft zo transparant reconstrueerbaar.",
+        "insight": "Gebruik soft-delete (markeer als verwijderd met tijdstempel + herstelmogelijkheid) i.p.v. hard delete, en log create/edit/delete in een onveranderlijke mutatiegeschiedenis. Zo blijft 'wat wist ik wanneer' auditbaar en zijn destructieve acties herstelbaar.",
+        "category": "best-practice",
+        "forProfile": "Sluit aan bij projectprincipe 'bewaar statusovergangen en mutaties auditbaar' en 'maak destructieve acties herstelbaar'.",
+        "region": "internationaal",
+        "url": "https://www.datadoghq.com/knowledge-center/audit-logging/"
+      },
+      {
+        "aspect": "Export naar verslag (PDF/CSV)",
+        "what": "Communicatielogs worden standaard geexporteerd naar PDF voor rapportage of naar CSV voor gefilterde deellijsten. Export van een gefilterde/doorzochte set maakt gericht delen met interne of externe partners mogelijk.",
+        "insight": "Voorzie export van een gefilterde selectie (bv. één leerling, één periode) naar PDF (verslag/overdracht) en CSV (data). Schrijf de log 'zoals je hem aan ouder/leerling of zorg zou tonen' zodat export zonder herwerking bruikbaar is.",
+        "category": "functie",
+        "forProfile": "Bij overdracht naar mentor/zorgcoordinator of ter voorbereiding van een oudercontact/klassenraad is een net leerlingverslag directe tijdswinst.",
+        "region": "internationaal",
+        "url": "https://jatheon.com/blog/email-archiving-ediscovery-audit-trail/"
+      },
+      {
+        "aspect": "Feitelijke registratie — ABC-cameramethode",
+        "what": "Vlaams kader voor opvolging van gedrag: noteer enkel wat een camera ziet/hoort (Antecedent–Behaviour–Consequence), zonder labels, interpretatie, motivatie of karakterduiding. Dit geldt evenzeer voor de samenvatting van een contactmoment.",
+        "insight": "Stuur het samenvattingsveld met een placeholder/hint richting feitelijke taal ('Wat gebeurde er? Wat is afgesproken?'). Bied géén velden voor interpretatie, motivatie of scores aan — feitelijk gedrag boven interpretatie is een harde grens.",
+        "category": "verplichting",
+        "forProfile": "Direct relevant: de app mag geen afgeleide karaktereigenschappen of risicoscores genereren; het ontwerp van de velden moet dit afdwingen.",
+        "region": "Vlaanderen",
+        "url": "https://www.klascement.net/thema/platformen-voor-oudercommunicatie-basisonderwijs"
+      },
+      {
+        "aspect": "AVG: doelbinding, dataminimalisatie, inzagerecht",
+        "what": "Scholen in Vlaanderen vallen onder de AVG bij verwerking van leerlinggegevens: gegevens enkel voor een duidelijk, vooraf bepaald doel (doelbinding), zo weinig mogelijk gegevens (dataminimalisatie), en betrokkenen hebben inzagerecht. De AVG zelf legt geen vaste bewaartermijn op; die volgt uit doel of sectorregels.",
+        "insight": "Verwerk alleen wat nodig is voor het doel 'eigen klasadministratie/opvolging', toon per registratie duidelijk het doel, en houd de log inzage-klaar (leesbaar voor leerling/ouder). Voorzie een bewaar-/opschoonmechanisme per schooljaar of na uitschrijving.",
+        "category": "verplichting",
+        "forProfile": "Klaskompas is een persoonlijk leerkracht-hulpmiddel; de leerkracht is mede-verantwoordelijke voor deze verwerking en moet inzage/dataminimalisatie kunnen aantonen.",
+        "region": "Vlaanderen",
+        "url": "https://www.gegevensbeschermingsautoriteit.be/burger/thema-s/onderwijs"
+      },
+      {
+        "aspect": "Bewaartermijn en opschonen",
+        "what": "De AVG bevat geen vaste bewaartermijn; het schoolbestuur bepaalt die, rekening houdend met wettelijke minima en het archiefkader. Indicatief hanteert men vaak circa twee jaar na uitschrijving voor leerlinggegevens; het CLB-multidisciplinair dossier kent net langere wettelijke termijnen (min. 10 jaar na laatste systematisch contact). Best practice: elke verwijderronde loggen met aantallen.",
+        "insight": "Bouw een expliciet bewaarbeleid in (bv. archiveren/opschonen per schooljaar) en log opschoonacties auditbaar. Laat de leerkracht per registratie of per schooljaar bulk kunnen archiveren i.p.v. definitief verliezen.",
+        "category": "verplichting",
+        "forProfile": "Als vakleerkracht bewaar je geen officieel dossier; de persoonlijke log hoeft niet lang bewaard en kan best jaarlijks opgeschoond worden — dat versterkt privacy-by-design.",
+        "region": "Vlaanderen",
+        "url": "https://data-onderwijs.vlaanderen.be/edulex/document.aspx?docid=15157"
+      },
+      {
+        "aspect": "CLB-contact en rol als signaalgever (zorgcontinuum)",
+        "what": "Opschalen gebeurt via het zorgcontinuum: fase 0 brede basiszorg → fase 1 verhoogde zorg → fase 2 CLB (enkel met toestemming) → fase 3 IAC, handelingsgericht (waarnemen–begrijpen–plannen–realiseren). Een vakleerkracht is actor in fase 0-1 en signaalgever; start geen CLB-traject en voert geen CLB-dossier.",
+        "insight": "Modelleer 'CLB' als een kanaal/betrokkene in de eigen log (bv. 'signaal doorgegeven aan zorgcoordinator/CLB op datum'), maar bouw géén CLB-dossierfunctionaliteit. De log dient als eigen geheugensteun en overdrachtsbron, niet als officieel begeleidingsdossier.",
+        "category": "verplichting",
+        "forProfile": "Kernafbakening voor het doelprofiel: de app ondersteunt signaleren/opvolgen, niet de CLB-workflow — dat blijft schoolprocedure.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/onderwijspersoneel/van-basis-tot-volwassenenonderwijs/werken-in-een-clb/rol-en-samenwerking-clb/opdrachten-van-het-clb"
+      },
+      {
+        "aspect": "Bestaande Vlaamse platformen als context (geen concurrentie)",
+        "what": "Smartschool (module Oudercontact: datum, leerkracht, tijdslot, reden), Gimme (leerkracht ziet wie komt en wat al besproken is), Questi en ParentCom faciliteren vooral het plannen van/communiceren tijdens oudercontacten en berichtenverkeer richting ouders. Dit zijn officiele/schoolbrede systemen.",
+        "insight": "Klaskompas moet deze niet nabouwen: het onderscheid is de persoonlijke, klasoverstijgende registratie van 'dat en wat' er gecommuniceerd is, los van het officiele kanaal. Positioneer de log als leerkracht-geheugen dat naar die systemen verwijst, niet vervangt.",
+        "category": "tool",
+        "forProfile": "De leerkracht communiceert al via Smartschool; Klaskompas voegt waarde toe door dwarsdoorsnede per leerling/klasgroep en opvolgstatus, niet door een tweede berichtenkanaal.",
+        "region": "Vlaanderen",
+        "url": "https://www.leiepoort.be/images/sinttheresia/Pdf_docs/Communicatie-ICT-Smartschool/Handleiding-Smartschool-2024-2025.pdf"
+      },
+      {
+        "aspect": "Snelle invoer tijdens/na de les",
+        "what": "Leerkracht-templates zijn bewust minimalistisch (checklist voor methode, korte notitievelden) omdat registratie tussen lessen door moet kunnen. Productprincipe Klaskompas: maximaal enkele handelingen tijdens een les.",
+        "insight": "Ontwerp een 'snel contact loggen'-flow: leerling zoeken/kiezen, kanaal aantikken, één zin samenvatting, opslaan — details later aanvulbaar. Voorinvullen van datum/tijd en laatste klasgroep bespaart handelingen.",
+        "category": "UX-patroon",
+        "forProfile": "Met meerdere groepen en weinig tussentijd is registratielast de grootste faalfactor; lage frictie bepaalt of de log daadwerkelijk gebruikt wordt.",
+        "region": "internationaal",
+        "url": "https://worksheetzone.org/parent-contact-log-printable-k-12-teacher-resource-6a22b0a85c366eaa7cdfdeca"
+      }
+    ],
+    "mustHaves": [
+      "Vast, expliciet datamodel per contactmoment: datum+tijd, leerling(en) + klasgroep, betrokken partij, kanaal (enum), reden, feitelijke samenvatting, uitkomst, follow-up.",
+      "Kanaal als gecontroleerde keuzelijst (telefoon, mail, gesprek, bericht, oudercontact, CLB, leerlingcontact) i.p.v. vrije tekst.",
+      "Per-leerling tijdlijn: alle contactmomenten chronologisch, doorzoekbaar en filterbaar op leerling, klasgroep, kanaal, reden en periode.",
+      "Vrije-tekst zoeken in samenvatting/uitkomst.",
+      "Soft-delete (herstelbaar wissen met tijdstempel) en een onveranderlijke mutatiegeschiedenis (create/edit/delete met tijdstempel) — auditbaar en herstelbaar.",
+      "Export van een gefilterde selectie naar PDF (verslag/overdracht) en CSV (data).",
+      "Feitelijke registratie afdwingen: velden en hints sturen op ABC/cameramethode; geen velden voor interpretatie, motivatie, karakter of scores.",
+      "AVG-conformiteit: zichtbare doelbinding, dataminimalisatie, inzage-klare (leesbare) records; geen echte leerlinggegevens in ontwikkeling/testen.",
+      "Bewaar-/opschoonmechanisme (bv. archiveren per schooljaar) met auditbare opschoonlog.",
+      "Follow-up met status (open/afgehandeld) zodat openstaande opvolging zichtbaar blijft."
+    ],
+    "niceToHaves": [
+      "Dashboard 'openstaande opvolging' met optionele streefdatum per follow-up.",
+      "Snelinvoer-flow ('contact loggen' in enkele tikken) met voorinvullen van datum/tijd en laatst gebruikte klasgroep.",
+      "Tags/labels bovenop de vaste reden-enum voor eigen dwarsdoorsnedes.",
+      "Verwijzing/linkveld naar het officiele kanaal (bv. 'besproken via Smartschool op datum') zonder de inhoud te dupliceren.",
+      "Sjablonen voor terugkerende contactredenen (bv. 'afwezigheid gemeld', 'taak niet ingediend') die de samenvatting voorstructureren.",
+      "Aggregatie per klasgroep (aantal contacten per kanaal/periode) puur als overzicht, zonder leerling-risicoscores.",
+      "Herinnering/markering wanneer een follow-up lang openstaat (zonder automatische gevolgen voor de leerling)."
+    ]
+  },
+  {
+    "facet": "Acties/opvolgpunten: beheer van to-do's en opvolging per leerling en klas (statussen, deadlines, herinneringen, koppelingen)",
+    "summary": "Een bruikbaar opvolgsysteem voor een vakleerkracht draait om drie dingen: supersnel vastleggen tijdens of vlak na de les, een licht statusmodel (open -> bezig -> afgehandeld) en herinneringen die vanzelf terugkomen zonder dat de leerkracht ze bewaakt. Onderzoek naar to-do-apps toont een harde vuistregel: kost het toevoegen van een taak meer dan ~10 seconden of meerdere velden, dan valt de leerkracht terug op geheugen en losse briefjes. Klasapps (Additio, TeacherKit, Teacher's Assistant Pro) koppelen opvolgpunten aan het leerlingprofiel, aan observaties/gedrag en aan oudercommunicatie, zodat je met concrete voorbeelden (datum, feit, ondernomen actie) een gesprek ingaat. De kracht zit in het koppelen: een observatie of afwezigheid genereert direct een opvolgpunt, en de status ervan blijft auditbaar. Voor het doelprofiel (vakleerkracht, meerdere klasgroepen, tweede graad) is het cruciaal dat opvolgpunten per klasgroep filterbaar zijn en snel bulk-afhandelbaar. Privacy-by-design vraagt om feitelijke, minimale notities, een expliciet statusmodel en een bewuste bewaartermijn/opschoning, zonder afgeleide oordelen of scores.",
+    "items": [
+      {
+        "aspect": "10-seconden-regel voor vastleggen (quick capture)",
+        "what": "De belangrijkste ontwerpeis van moderne to-do-apps: een taak toevoegen mag niet meer dan ongeveer 10 seconden of meerdere verplichte velden kosten. Anders valt de gebruiker terug op geheugen en losse notities.",
+        "insight": "Bied 1 snel invoerpunt: quick-add vanaf elk scherm, alleen 'wie + wat' verplicht, rest (deadline/klas/type) optioneel of achteraf. Overhead is de nummer-1 doodsoorzaak van opvolgsystemen.",
+        "category": "best-practice",
+        "region": "algemeen",
+        "forProfile": "Vakleerkracht heeft tijdens/na de les seconden, niet minuten; snelle capture per leerling is essentieel bij meerdere groepen.",
+        "url": "https://zapier.com/blog/best-todo-list-apps/"
+      },
+      {
+        "aspect": "Natuurlijke-taal-invoer voor deadlines",
+        "what": "Apps als Todoist/Things parseren zinnen als 'opvolgen met X vrijdag' automatisch naar taak + datum, zonder aparte datumkiezer.",
+        "insight": "Laat de leerkracht een opvolgpunt in gewone taal typen en detecteer datum/leerling automatisch; scheelt kliks en houdt de flow tijdens de les kort.",
+        "category": "UX-patroon",
+        "region": "algemeen",
+        "url": "https://www.any.do/blog/the-9-best-to-do-list-apps-in-2026-tested-and-compared/"
+      },
+      {
+        "aspect": "Licht, expliciet statusmodel",
+        "what": "Voortgang wordt getoond via checkmarks, statussen of voortgangsbalken. Een minimaal model volstaat: open -> (bezig) -> afgehandeld, eventueel 'uitgesteld'.",
+        "insight": "Houd het aantal statussen klein en expliciet. Elke statusovergang met tijdstempel bewaren maakt opvolging auditbaar zonder interpretatie toe te voegen.",
+        "category": "datamodel",
+        "region": "algemeen",
+        "forProfile": "Sluit aan bij projectprincipe 'expliciete statusmodellen' en 'auditbare statusovergangen'.",
+        "url": "https://thedigitalprojectmanager.com/tools/best-to-do-list-apps/"
+      },
+      {
+        "aspect": "Herinneringen die vanzelf terugkomen (defer/snooze/tickler)",
+        "what": "GTD-principe: een opvolgpunt dat nu niet kan, wordt 'gedeferd' naar een toekomstige datum (tickler) en duikt vanzelf weer op. Moderne mail/to-do-apps hebben snooze/defer.",
+        "insight": "Een 'stel uit tot...'-knop (bv. tot maandag / na de vakantie) voorkomt dat opvolgpunten blijven staan schreeuwen. De leerkracht hoeft niets te bewaken; het systeem brengt het terug op het juiste moment.",
+        "category": "UX-patroon",
+        "region": "algemeen",
+        "forProfile": "Bij meerdere groepen is 'uit het zicht tot relevant' belangrijker dan een lange platte lijst.",
+        "url": "https://hamberg.no/gtd"
+      },
+      {
+        "aspect": "Next action: klein en concreet formuleren",
+        "what": "Een opvolgpunt is de eerstvolgende zichtbare, concrete handeling die iets vooruit helpt. Vage punten ('iets met leerling X') blijven liggen.",
+        "insight": "Stimuleer concrete acties ('mail ouders van X', 'vraag herwerkte taak op'). De 2-minutenregel: kleine acties meteen doen i.p.v. registreren.",
+        "category": "best-practice",
+        "region": "algemeen",
+        "url": "https://super-productivity.com/blog/gtd-next-actions-guide/"
+      },
+      {
+        "aspect": "Koppeling opvolgpunt <-> observatie/gedrag",
+        "what": "Klas-apps koppelen een opvolgactie aan een gelogde observatie of gedrag: datum, feit, ondernomen actie, oudercontact. Zo loop je een gesprek in met concrete voorbeelden per datum.",
+        "insight": "Laat een opvolgpunt ontstaan vanuit een observatie (1 klik: 'hier actie op nemen'). De observatie levert het feit, het opvolgpunt de handeling; feit en actie gescheiden houden.",
+        "category": "functie",
+        "region": "algemeen",
+        "forProfile": "Ondersteunt 'feitelijk gedrag boven interpretatie' en brede basiszorg door de vakleerkracht.",
+        "url": "https://lekktura.com/features/teacher-behavior-tracker"
+      },
+      {
+        "aspect": "Koppeling opvolgpunt <-> oudercommunicatie (contactlog)",
+        "what": "Een oudercontactlog registreert datum, communicatiemiddel (telefoon/mail/gesprek), doel, gespreksnotities en vereiste vervolgacties. Vervolgactie is een vast veld.",
+        "insight": "Elk oudercontact kan een opvolgpunt genereren en omgekeerd; log ook communicatie die je niet zelf deed. Zo blijft de vervolgstatus per leerling volledig.",
+        "category": "functie",
+        "region": "algemeen",
+        "url": "https://learn-management.com/47-free-editable-parent-contact-logs-wordexcel-and-pdf/"
+      },
+      {
+        "aspect": "Koppeling opvolgpunt <-> afwezigheid",
+        "what": "Afwezigheden vragen vaak om opvolging (inhaaltaak, gemiste toets, ouders informeren). Klas-apps bundelen aanwezigheid, gedrag en opvolging in het leerlingprofiel.",
+        "insight": "Een afwezigheid met bepaalde reden/duur kan automatisch een opvolgpunt voorstellen (bv. 'inhaaltoets plannen'). Het blijft een persoonlijk hulpmiddel: geen vervanging van Smartschool/Discimus-registratie.",
+        "category": "functie",
+        "region": "Vlaanderen",
+        "forProfile": "Vakleerkracht ziet leerling maar enkele uren/week; gemiste taken opvolgen is een reeel pijnpunt.",
+        "url": "https://additioapp.com/en/features/"
+      },
+      {
+        "aspect": "Opvolgpunten per klasgroep filteren en bulk afhandelen",
+        "what": "TeacherKit/Additio organiseren alles rond klas en leerlingprofiel; je kunt per klas filteren en delen. Voor een vakleerkracht met veel groepen is filteren op klasgroep essentieel.",
+        "insight": "Bied views 'per leerling', 'per klasgroep' en 'alles wat vandaag/deze week moet'. Snel meerdere punten tegelijk afvinken voorkomt opstapeling over groepen heen.",
+        "category": "UX-patroon",
+        "region": "algemeen",
+        "forProfile": "Kernbehoefte doelprofiel: meerdere klasgroepen Engels/Spaans, tweede graad.",
+        "url": "https://www.capterra.com/p/216693/TeacherKit/"
+      },
+      {
+        "aspect": "Terugkerende opvolging (recurring)",
+        "what": "TickTick e.a. ondersteunen terugkerende taken gekoppeld aan deadlines voor onderhoudswerk met lage inspanning.",
+        "insight": "Sommige opvolging is periodiek (wekelijkse check bij een kwetsbare leerling, maandelijkse oudercontact-ronde). Een terugkerend opvolgpunt bespaart heraanmaken.",
+        "category": "functie",
+        "region": "algemeen",
+        "url": "https://www.any.do/blog/the-9-best-to-do-list-apps-in-2026-tested-and-compared/"
+      },
+      {
+        "aspect": "Widget / one-tap / voice capture",
+        "what": "Beste to-do-apps bieden widgets voor invoer met 1 tik, quick-add-sneltoetsen en share-sheet-integratie om iets direct in de lijst te zetten.",
+        "insight": "Voor een lokale-eerst web-app: sneltoets/quick-add en desnoods een startscherm-tegel; wrijving weghalen is belangrijker dan features.",
+        "category": "UX-patroon",
+        "region": "algemeen",
+        "url": "https://toolfinder.com/best/reminder-apps"
+      },
+      {
+        "aspect": "Administratieve last is het echte probleem",
+        "what": "Leerkrachten besteden 6-8 uur/week aan administratie; opvolgsystemen en handelingsplannen zijn juist wat men wil vereenvoudigen. Elke extra ondersteuningsbehoefte kost ~15 min/week extra registratie.",
+        "insight": "Een opvolgsysteem moet netto tijd besparen, niet toevoegen. Ontwerpcriterium: minder velden, slimme voorstellen, en zichtbaar rendement (klaar voor oudergesprek).",
+        "category": "best-practice",
+        "region": "algemeen",
+        "forProfile": "Werkdrukreductie is de bestaansreden; anders wordt de app niet gebruikt.",
+        "url": "https://www.ftm.nl/artikelen/bureaucratie-jaagt-leraar-uit-klas"
+      },
+      {
+        "aspect": "Plaats binnen het zorgcontinuum (Vlaanderen)",
+        "what": "In fase 0 'brede basiszorg' volgt elke leerkracht systematisch leerlingen op en werkt actief aan het verminderen van risicofactoren, bij voorkeur binnen de gewone klascontext.",
+        "insight": "Opvolgpunten passen precies in brede basiszorg: signaleren en zelf actie nemen. De app ondersteunt de leerkracht-rol, maar mag CLB/zorgcoordinator-procedures of verhoogde zorg niet overnemen.",
+        "category": "verplichting",
+        "region": "Vlaanderen",
+        "forProfile": "Kadert het persoonlijke opvolgen door de vakleerkracht in het Vlaamse zorgmodel.",
+        "url": "https://prodiagnostiek.be/het-zorgcontinuum/brede-basiszorg/"
+      },
+      {
+        "aspect": "Dataminimalisatie en need-to-know (AVG)",
+        "what": "AVG-uitgangspunt is dataminimalisatie: alleen persoonsgegevens die noodzakelijk zijn voor het leerproces, volgens need-to-know. De AVG noemt geen vaste bewaartermijn; die stelt men zelf vast op basis van noodzaak.",
+        "insight": "Opvolgnotities feitelijk en minimaal houden, geen afgeleide oordelen. Bied een expliciete bewaar-/opschoonlogica (bv. afgehandelde punten archiveren/verwijderen na X) en houd data lokaal bij de leerkracht.",
+        "category": "verplichting",
+        "region": "Vlaanderen/NL",
+        "forProfile": "Persoonlijk hulpmiddel: de leerkracht is verwerkingsverantwoordelijke voor eigen notities; privacy-by-design is verplicht.",
+        "url": "https://www.privacyopschool.nl/kennisbank/wat-zijn-de-geldende-bewaartermijnen-in-het-onderwijs/"
+      },
+      {
+        "aspect": "Herstelgericht i.p.v. straf-/scorelogica",
+        "what": "Klas-apps met puntensystemen (bv. ClassDojo) tellen positief/negatief gedrag op. Dit botst met de harde grenzen: geen gecombineerde risicoscores of automatische sancties.",
+        "insight": "Opvolgpunten mogen NIET optellen tot een score of automatische sanctie. Framing als concrete, herstelgerichte vervolgactie (afspraak, gesprek, herkansing), niet als strafpunt.",
+        "category": "best-practice",
+        "region": "algemeen",
+        "forProfile": "Respecteert harde grenzen: herstel boven straf, geen scores.",
+        "url": "https://www.continentalpress.com/blog/classroom-management-apps/"
+      }
+    ],
+    "mustHaves": [
+      "Supersnel vastleggen: quick-add vanaf elk scherm, alleen 'wie + wat' verplicht, deadline/klas/type optioneel (10-seconden-regel).",
+      "Expliciet, klein statusmodel (open -> bezig -> afgehandeld, optioneel uitgesteld) met tijdgestempelde, auditbare statusovergangen.",
+      "Deadline + herinnering per opvolgpunt, inclusief 'stel uit tot...'-defer zodat punten vanzelf terugkomen op het juiste moment.",
+      "Koppeling van een opvolgpunt aan bron: observatie/gedrag, oudercommunicatie of afwezigheid (feit en actie gescheiden houden).",
+      "Views en filters per leerling en per klasgroep, plus een 'wat moet vandaag/deze week'-lijst; snel meerdere punten afvinken.",
+      "Feitelijke, minimale notities zonder afgeleide oordelen; geen optelscores of automatische sancties.",
+      "Privacy-by-design: lokale opslag, fictieve testdata, expliciete bewaartermijn met archiveren/opschonen van afgehandelde punten.",
+      "Concrete next-action-formulering (de eerstvolgende zichtbare handeling), niet vage punten."
+    ],
+    "niceToHaves": [
+      "Natuurlijke-taal-invoer die datum en leerling automatisch herkent uit een getypte zin.",
+      "Terugkerende opvolgpunten voor periodiek onderhoud (wekelijkse check, maandelijkse oudercontactronde).",
+      "1-klik: van observatie of afwezigheid direct een voorgesteld opvolgpunt genereren.",
+      "Widget/sneltoets of startscherm-tegel voor invoer met 1 handeling.",
+      "Bulk-afhandelen over klasgroepen heen aan het eind van een lesdag.",
+      "Compacte 'gespreksklaar'-weergave per leerling (datum + feit + ondernomen actie) als voorbereiding op een oudergesprek.",
+      "Optioneel exporteren/samenvatten van openstaande punten voor overleg met zorgcoordinator, zonder de schoolprocedure te vervangen."
+    ]
+  },
+  {
+    "facet": "Overzicht en planning: dashboards, weekoverzicht, agenda/lesplanning en to-do-koppeling voor een Vlaamse vakleerkracht (2e graad, meerdere klasgroepen)",
+    "summary": "Voor een vakleerkracht met veel klasgroepen is de kernvraag van een overzicht/planning-scherm: \"wat telt vandaag en deze week, per groep en in totaal?\". De sterkste patronen combineren (1) een \"Vandaag/Deze week\"-startscherm dat het uurrooster van de dag toont met per lesuur de betrokken groep, wat gepland staat en welke taken/deadlines vervallen; (2) een agenda met dag/week/maand/timeline-weergaven plus een dagboek (voortgang) per klasgroep; en (3) een to-do die geaggregeerd is over alle groepen, met prioriteit, deadlines en herhaling (bv. verbeterwerk in batches). Onderzoek naar leraar-dashboards benadrukt: toon geaggregeerde, actionabele signalen op klasniveau, niet interpretatieve oordelen per leerling, en verlaag cognitieve belasting (weinig kleuren, heldere hiërarchie, één helder actiepad). In Vlaanderen legt de inspectie geen agendavorm op: jaarplan, week-/dagagenda en lesvoorbereiding zijn nuttige instrumenten die het schoolteam zelf kiest; het echte risico is planlast door overmatig rapporteren, niet het plannen zelf. Een persoonlijk leerkracht-hulpmiddel moet dus overzicht geven zonder extra rapportagedruk en zonder officiele systemen te vervangen.",
+    "items": [
+      {
+        "aspect": "\"Vandaag\"-startscherm dat de lesdag als anker neemt",
+        "category": "UX-patroon",
+        "what": "Het dashboard opent op de dag: het uurrooster van vandaag, per lesuur de klasgroep, wat gepland staat en welke taken/deadlines op die dag vervallen. TeachMate en DoIt tonen expliciet een daglijst van lessen, taken en herinneringen 'due in the coming week' in een enkel scherm.",
+        "insight": "Voor een vakleerkracht is het uurrooster de natuurlijke ruggengraat van 'wat vandaag telt': koppel per lesuur direct de groep, de geplande les en de openstaande taken, zodat 'vandaag' in een oogopslag leesbaar is.",
+        "forProfile": "Cruciaal bij 4-6 groepen Engels/Spaans: het rooster desambigueert welke groep welk uur aan bod komt.",
+        "region": "internationaal",
+        "url": "https://apps.apple.com/ca/app/teachmate/id6749447853"
+      },
+      {
+        "aspect": "Roosterondersteuning met A/B-weken en cyclusroosters",
+        "category": "functie",
+        "what": "iDoceo laat je 'simple week schedules or complex rotating cycles with holidays' configureren; het rooster is de basis voor dag/week-weergaven over alle klassen heen.",
+        "insight": "Vlaamse secundaire roosters kennen vaak vaste weekstructuren maar ook vrije dagen/pedagogische studiedagen; correcte vakantie- en (eventueel) cyclusafhandeling is voorwaarde om 'vandaag' betrouwbaar te tonen.",
+        "forProfile": "Een vakleerkracht ziet meerdere groepen per dag; zonder correct rooster klopt het dagoverzicht niet.",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/instructions/instructions/idoceofeatures"
+      },
+      {
+        "aspect": "Meerdere agendaweergaven + dagboek per klasgroep",
+        "category": "functie",
+        "what": "iDoceo biedt dag/week/maand/timeline-weergaven van de agenda plus een 'diary per class' om per groep de voortgang bij te houden, en aparte dag/week-planners voor een overzicht over alle klassen.",
+        "insight": "Splits twee vragen: 'waar staat elke groep in de leerstof?' (dagboek per groep) versus 'wat moet ik deze week doen over alle groepen?' (geaggregeerde weekplanner). Beide zijn nodig; ze niet vermengen.",
+        "forProfile": "Dezelfde lesreeks Engels/Spaans loopt in parallelle groepen op verschillend tempo; per-groep-voortgang voorkomt dat je een groep 'kwijt' bent.",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/instructions/instructions/idoceofeatures"
+      },
+      {
+        "aspect": "To-do geaggregeerd over alle groepen, met prioriteit en herhaling",
+        "category": "best-practice",
+        "what": "To-do-apps voor leraren (Todoist, PlanWiz, DoIt) bieden deadlines, prioriteiten, herhalende taken (bv. verbeteren in vaste 'grading mode'-blokken) en meldingen; DoIt voegt 'smart focus suggestions based on priority and time' toe.",
+        "insight": "Een leerkracht-to-do werkt best als hij taken over alle groepen samenbrengt en sorteert op deadline+prioriteit, met herhaling voor terugkerend werk (verbeteren, punten ingeven), zodat 'het dringende niet altijd wint van het belangrijke'.",
+        "forProfile": "Verbeterwerk stapelt zich op over meerdere groepen; batch-planning per week is realistischer dan per taak.",
+        "region": "internationaal",
+        "url": "https://www.todoist.com/inspiration/an-educators-guide-to-todoist"
+      },
+      {
+        "aspect": "Directe koppeling les <-> taak <-> leermateriaal",
+        "category": "UX-patroon",
+        "what": "Smartschool koppelt in de digitale schoolagenda leermateriaal aan lessen; EMStudio's principe is 'data entered once flows everywhere it's needed' (les, punten, aanwezigheid, curriculum verbonden).",
+        "insight": "Vermijd dubbele invoer: een taak of deadline hoort ontstaan vanuit een lesitem in de planning, niet los te worden bijgehouden. Eenmalig ingeven, overal zichtbaar.",
+        "forProfile": "Bespaart tijd bij een vakleerkracht die dezelfde les in meerdere groepen inplant.",
+        "region": "internationaal",
+        "url": "https://emstudio.pro/"
+      },
+      {
+        "aspect": "Toon geaggregeerde, actionabele signalen — geen oordelen per leerling",
+        "category": "model",
+        "what": "Onderzoek naar leraar-dashboards adviseert 'aggregated, actionable indicators (class-level engagement trends...) rather than granular individual student judgments' en waarschuwt tegen een 'punitive surveillance atmosphere'.",
+        "insight": "Aandachtspunten op een overzichtsscherm horen op klas-/taakniveau te staan (bv. 'groep 3B: 4 taken nog niet ingegeven'), feitelijk en handelingsgericht — niet interpretatief per leerling. Dit sluit direct aan bij de harde grenzen (geen risicoscores, feitelijk gedrag).",
+        "forProfile": "Houdt het dashboard binnen AVG- en projectgrenzen terwijl het toch nuttige signalen geeft.",
+        "region": "internationaal",
+        "url": "https://arxiv.org/pdf/2511.00105"
+      },
+      {
+        "aspect": "Ontwerp voor lage cognitieve belasting",
+        "category": "best-practice",
+        "what": "Studies tonen dat dashboard-informatiedesign de cognitieve belasting van leraren beïnvloedt; misbruik van kleur verlengt fixatie op irrelevante zaken en vertraagt begrip. Aanbevolen: heldere visualisaties, actionabele feedback, tooltips die van inzicht naar actie leiden; overweeg single- vs multi-page afhankelijk van visualisatiegeletterdheid.",
+        "insight": "Beperk kleuren tot betekenisdragers (bv. 1 accent voor 'vervalt vandaag'), zorg voor duidelijke hiërarchie en één helder actiepad per signaal; overdaad aan kleur/detail werkt averechts.",
+        "forProfile": "Een leerkracht scant het scherm tussen lessen door in seconden; rust en hiërarchie zijn belangrijker dan volledigheid.",
+        "region": "internationaal",
+        "url": "https://link.springer.com/article/10.1007/s10639-024-12606-1"
+      },
+      {
+        "aspect": "Actionabele, motiverend geframede signalen",
+        "category": "best-practice",
+        "what": "LA-dashboards zijn het effectiefst met 'actionable, motivationally framed feedback'; zonder actiegerichtheid stijgt de cognitieve last omdat leraren de data moeten interpreteren.",
+        "insight": "Elk aandachtspunt op het overzicht koppelt best aan een concrete vervolgactie (bv. 'ga naar punteninvoer 3B'), zodat het scherm werk vermindert i.p.v. interpretatiewerk toevoegt.",
+        "forProfile": "",
+        "region": "internationaal",
+        "url": "https://link.springer.com/article/10.1186/s41239-021-00313-7"
+      },
+      {
+        "aspect": "Vlaamse planningsdocumenten: jaarplan, agenda, lesvoorbereiding",
+        "category": "verplichting",
+        "what": "De geïntegreerde lerarenopdracht omvat planning en voorbereiding van lessen. Jaarplan, schoolagenda en lesvoorbereidingen zijn de aangewezen organisatorische/inhoudelijke planningsdocumenten in het secundair.",
+        "insight": "Een persoonlijk overzicht-/planningsscherm sluit best aan op de bestaande trits jaarplan -> week-/dagagenda -> lesvoorbereiding, zodat het aanvult wat de leerkracht toch al moet plannen.",
+        "forProfile": "Herkenbare structuur voor een Vlaamse 2e-graads vakleerkracht.",
+        "region": "Vlaanderen",
+        "url": "https://pro.katholiekonderwijs.vlaanderen/prestatieregeling/gewoon-en-buitengewoon-secundair-onderwijs"
+      },
+      {
+        "aspect": "Inspectie legt geen agendavorm op; hoed je voor planlast",
+        "category": "verplichting",
+        "what": "'De onderwijsinspectie legt inhoudelijk en vormelijk geen enkele verplichting op. Het schoolteam kiest zelf hoe het haar aanbod plant en welke instrumenten het nuttig acht (jaarplan, dag- of weekagenda, klasboek).' Lesvoorbereidingen maken is geen planlast, maar het overmatig rapporteren daarover wel.",
+        "insight": "Bouw het overzicht als persoonlijk hulpmiddel dat plant en herinnert, niet als rapportagemachine. Vrijheid van vorm is een kans: optimaliseer voor de leerkracht, niet voor externe verantwoording.",
+        "forProfile": "Bevestigt dat de app een persoonlijk hulpmiddel mag zijn, geen officieel systeem — conform de opdrachtgrenzen.",
+        "region": "Vlaanderen",
+        "url": "https://docs.vlaamsparlement.be/files/pfile?id=2108257"
+      },
+      {
+        "aspect": "Administratieve jaarkalender (schoolniveau) als context, niet als kernfunctie",
+        "category": "bron",
+        "what": "De administratieve jaarkalender secundair onderwijs (AGODI/Onderwijs Vlaanderen) bundelt deadlines voor formulieren en documenten aan de administratie.",
+        "insight": "Dit zijn school-/directieverplichtingen, niet de dagelijkse klasadministratie van een vakleerkracht; een persoonlijk overzicht hoeft deze niet te dragen, maar kan hooguit enkele relevante datums (rapportperiodes, deliberaties) als context tonen.",
+        "forProfile": "Baken af: het persoonlijke overzicht vervangt Smartschool/Informat/Discimus niet.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/directies-administraties-en-besturen/tools-voor-scholen-en-centra/administratieve-deadlines-in-jaarkalenders/administratieve-jaarkalender-secundair-onderwijs"
+      },
+      {
+        "aspect": "Configureerbare dashboard-widgets per klas",
+        "category": "functie",
+        "what": "iDoceo biedt een 'class summary' met configureerbare widgets, statistieken en grafieken; de leerkracht bepaalt zelf welke overzichtsinformatie prominent staat.",
+        "insight": "Laat de leerkracht kiezen welke signalen tellen (bv. openstaand verbeterwerk, aanwezigheidshiaten, geplande toetsen), passend bij het projectprincipe 'universele kern, configureerbare klaspreventie'.",
+        "forProfile": "Elke groep heeft een eigen ritme; configureerbaarheid voorkomt een one-size-fits-all overzicht.",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/instructions/instructions/idoceofeatures"
+      },
+      {
+        "aspect": "Weekoverzicht met vaste lesurenstructuur en algemene to-do-strook",
+        "category": "UX-patroon",
+        "what": "Vlaamse/Nederlandse leerkrachtagenda's (Klasmateriaal.be, Leerkracht Organizer) gebruiken een weekweergave met voorgedrukte lesuren (1-10) plus een algemene to-do-lijst en notitieruimte per week voor aandachtspunten en overdracht.",
+        "insight": "Het beproefde papieren patroon — weekraster met lesuren + zijstrook 'to-do/aandacht deze week' — vertaalt goed naar een digitaal weekscherm en is direct herkenbaar voor Vlaamse leraren.",
+        "forProfile": "Sluit aan bij hoe 2e-graads vakleerkrachten nu al met een papieren lerarenagenda werken.",
+        "region": "Vlaanderen",
+        "url": "https://www.klasmateriaal.be/lerarenagenda/"
+      }
+    ],
+    "mustHaves": [
+      "Een 'Vandaag'-startscherm dat het uurrooster van de dag toont, per lesuur gekoppeld aan de juiste klasgroep, met de geplande les en de taken/deadlines die die dag vervallen.",
+      "Een weekoverzicht met lesurenraster over alle groepen heen, plus een geaggregeerde 'wat moet ik deze week doen'-lijst.",
+      "Correcte roosterafhandeling met vakanties, vrije/pedagogische dagen (en eventueel vaste weekstructuren), zodat 'vandaag/deze week' altijd klopt.",
+      "Per-klasgroep voortgang/dagboek zodat de leerkracht weet waar elke parallelle groep in de leerstof staat.",
+      "Een to-do die over alle groepen aggregeert, met deadline, prioriteit, herhalende taken en herinneringen — zonder extra rapportagedruk te creëren.",
+      "Directe koppeling les -> taak -> (optioneel) materiaal, zodat gegevens eenmalig worden ingegeven en overal zichtbaar zijn (geen dubbele invoer).",
+      "Aandachtssignalen uitsluitend feitelijk en op klas-/taakniveau (bv. 'nog punten in te geven voor 3B'), nooit interpretatieve oordelen of scores per leerling.",
+      "Lage cognitieve belasting: heldere hiërarchie, spaarzaam kleurgebruik met betekenis, en per signaal één concrete vervolgactie.",
+      "Duidelijke afbakening dat het overzicht een persoonlijk hulpmiddel is en Smartschool/Informat/Discimus of schoolprocedures niet vervangt."
+    ],
+    "niceToHaves": [
+      "Configureerbare widgets per leerkracht/groep zodat men zelf kiest welke signalen prominent staan (universele kern, configureerbare preventie).",
+      "Meerdere agendaweergaven (dag/week/maand/timeline) naast het dagelijkse startscherm.",
+      "'Smart focus'-suggestie die openstaande taken sorteert op prioriteit én beschikbare tijd, zonder automatische beslissingen te nemen.",
+      "Contextuele weergave van enkele schoolbrede sleuteldatums (rapportperiodes, deliberaties, oudercontact) als louter informatie, niet als beheerfunctie.",
+      "Herhalende 'verbeter-/punteninvoer'-blokken die batchwerk over meerdere groepen inplanbaar maken.",
+      "Snelle overdrachts-/notitiestrook per week voor losse aandachtspunten, naar analogie met de papieren lerarenagenda."
+    ]
+  },
+  {
+    "facet": "Output: rapporten, overzichten en verslagen genereren + export naar PDF/CSV (privacyvriendelijk)",
+    "summary": "Een vakleerkracht met meerdere klasgroepen heeft in de praktijk drie soorten output nodig: (1) een leerlingoverzicht/profielblad per leerling, (2) een puntenoverzicht/klaslijst met cijfers over dagelijks werk en toetsen, en (3) een oudercontact- of gespreksvoorbereiding met feitelijke notities. Referentietools (iDoceo, Acadlio, Smartschool Skore) tonen dat leerkrachten zowel PDF (om te printen, mee te nemen naar oudercontact, of aan de leerling te geven) als CSV/Excel nodig hebben (om cijfers over te zetten naar het officiele systeem). Voor Klaskompas is de kern: alles client-side genereren (jsPDF/SheetJS) zodat data de browser nooit verlaat, met kolom-/veldselectie en minimale gegevens per doel. Cruciaal Vlaams onderscheid: dit is een persoonlijke werkkopie, geen officieel rapport of leerlingdossier; de school geeft het echte rapport uit via Smartschool/Informat. Export moet feitelijk gedrag tonen (geen interpretatie, geen scores/labels) en ondersteunt tegelijk betrokkenenrechten (ouder heeft recht op inzage/kopie binnen 4 weken).",
+    "items": [
+      {
+        "aspect": "Leerlingoverzicht / profielblad per leerling",
+        "category": "functie",
+        "what": "Een samenvattend blad per leerling dat cijfers, aanwezigheid, en genoteerde observaties/afspraken bundelt. iDoceo's report generator gebruikt configureerbare blokken (General, Gradebook, Attendance, custom fields) die de leerkracht aan-/uitzet per rapport.",
+        "insight": "Bouw het overzicht modulair op met aan-/uitvinkbare blokken, zodat de leerkracht per doel (oudercontact, klassenraad, eigen opvolging) enkel de relevante secties meeneemt in plaats van alles te tonen.",
+        "forProfile": "Vakleerkracht ziet elke leerling maar enkele uren/week; een compact profielblad per leerling helpt om zonder klassenraad-context toch een gesprek voor te bereiden.",
+        "region": "internationaal",
+        "url": "https://idoceo.net/index.php/en/instructions/the-report-generator"
+      },
+      {
+        "aspect": "Puntenoverzicht / klaslijst met cijfers",
+        "category": "functie",
+        "what": "Matrixoverzicht (leerlingen x evaluaties) met scores voor dagelijks werk en toetsen, eventueel met kolomtotalen/gemiddelden. Standaardfunctie in elk puntenboek (iDoceo, PowerTeacher, Lekktura, Smartschool Skore).",
+        "insight": "De klasmatrix is de meest gebruikte export. Voorzie zowel een print-vriendelijke PDF (per klasgroep, per periode) als een platte CSV/XLS voor overdracht; laat de leerkracht kiezen welke evaluatiekolommen mee gaan.",
+        "forProfile": "Met meerdere klasgroepen Engels/Spaans wil de leerkracht snel per groep en per periode een puntenlijst kunnen trekken.",
+        "region": "internationaal",
+        "url": "https://www.idoceo.net/index.php/en/grade-book-articles/21-reports/66-export-data-from-idoceo"
+      },
+      {
+        "aspect": "Oudercontact-/gespreksverslag",
+        "category": "functie",
+        "what": "Voorbereidings- en verslagblad voor oudercontact. Vlaamse voorbeeldsjablonen (KlasCement, KU Leuven 'oudercontact met rapport') werken met invulrubrieken per vak/domein en ruimte voor opmerkingen van de ouder tijdens het gesprek. Meeste secundaire scholen houden 3 oudercontacten/jaar.",
+        "insight": "Genereer een half-ingevuld voorbereidingsblad (naam, vak, recente feiten/cijfers) met lege ruimte voor gespreksnotities; de leerkracht vult tijdens/na het gesprek aan. Houd het feitelijk: waarnemingen en afspraken, geen karakterduiding.",
+        "forProfile": "Bij 3 oudercontacten x meerdere klasgroepen is snel per leerling een voorbereidingsblad kunnen printen een reele tijdswinst.",
+        "region": "Vlaanderen",
+        "url": "https://www.klascement.net/thema/oudercontact"
+      },
+      {
+        "aspect": "Client-side PDF-generatie",
+        "category": "tool",
+        "what": "PDF's rechtstreeks in de browser genereren met jsPDF (+ jspdf-autotable voor tabellen) of via een print-to-PDF HTML-template. Data blijft lokaal, werkt offline, geen server nodig.",
+        "insight": "jsPDF + autotable is de standaard voor lokale-eerst puntenlijsten en profielbladen; het privacyvoordeel is dat gevoelige data nooit naar een externe dienst gaat. Let op geheugengebruik bij grote batches/afbeeldingen.",
+        "region": "internationaal",
+        "url": "https://github.com/parallax/jsPDF"
+      },
+      {
+        "aspect": "Client-side CSV/Excel-export",
+        "category": "tool",
+        "what": "CSV/XLSX in de browser opbouwen met SheetJS (xlsx) of een eenvoudige CSV-writer. CSV is universeel importeerbaar in Excel, Google Sheets en schoolsystemen.",
+        "insight": "Voorzie een nette CSV als brugformaat richting het officiele systeem (bv. cijfers overzetten naar Smartschool Skore/Excel). Documenteer kolomkoppen expliciet zodat import elders voorspelbaar is.",
+        "forProfile": "De leerkracht houdt in Klaskompas persoonlijk bij en zet de definitieve punten daarna over naar Smartschool; een schone CSV/Excel-export maakt dat overtypen overbodig.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/2022/05/resultaten-meer-dan-een-puntenboek-voor-leerlingen/"
+      },
+      {
+        "aspect": "Local-first privacy: data blijft in de browser",
+        "category": "best-practice",
+        "what": "Acadlio (report card generator) toont het model: dataïnvoer en -bewerking gebeurt lokaal in de browser, niets wordt naar servers geupload, export als PDF. 'What happens in your browser stays in your browser' is het kernprincipe van privacy-first PDF-tools.",
+        "insight": "Positioneer export expliciet als 100% lokaal: een tijdelijke in-memory download-URL, geen upload. Dit is meteen de sterkste AVG-boodschap en past bij privacy-by-design.",
+        "region": "internationaal",
+        "url": "https://www.acadlio.com/"
+      },
+      {
+        "aspect": "Minimale gegevens per exportdoel",
+        "category": "verplichting",
+        "what": "AVG-beginsel van minimale gegevensverwerking: verwerk/toon niet meer dan nodig voor het doel. Voor onderwijs geldt doelbinding + dataminimalisatie voor leerlinggegevens, resultaten en oudercontactinfo.",
+        "insight": "Maak het exportdoel leidend: een puntenlijst voor eigen opvolging heeft geen adres/rijksregisternummer nodig; een oudercontactblad geen volledige cijferhistoriek. Standaard zo weinig mogelijk velden, opt-in voor extra kolommen.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/bescherming-van-persoonsgegevens-in-het-onderwijs"
+      },
+      {
+        "aspect": "Kolom-/veldselectie voor de export",
+        "category": "UX-patroon",
+        "what": "Voor de export kiest de leerkracht welke velden meegaan (identificatie, welke evaluaties, periode, notities). iDoceo laat blokken en velden per rapport selecteren; PowerTeacher exporteert selectief naar CSV of PDF.",
+        "insight": "Een voorbeeldweergave + expliciete veldkeuze vlak voor genereren voorkomt dat gevoelige data ongemerkt in een gedeeld bestand belandt. Toon vooraf wie/wat zichtbaar wordt.",
+        "region": "internationaal",
+        "url": "https://www.knowledgeforschools.com/knowledge-base/how-do-i-export-grades-from-powerteacher/"
+      },
+      {
+        "aspect": "Persoonlijk hulpmiddel is geen officieel rapport",
+        "category": "verplichting",
+        "what": "In Vlaanderen geeft de school het officiele rapport/dossier uit (via Smartschool/Informat/Discimus); evaluatiebeleid, rapportering en deliberatie zijn schoolgebonden. Klaskompas-output is een persoonlijke werkkopie.",
+        "insight": "Markeer elke export duidelijk als niet-officiele werkkopie (voettekst/watermerk) om verwarring met het echte rapport te vermijden. Vervang geen schoolprocedure.",
+        "forProfile": "Als vakleerkracht lever je punten aan; de klassenraad/school beslist en publiceert het rapport. De tool mag dat niet imiteren.",
+        "region": "Vlaanderen",
+        "url": "https://pro.katholiekonderwijs.vlaanderen/evaluatie-in-het-secundair-onderwijs/evaluatiebeleid"
+      },
+      {
+        "aspect": "Feitelijk gedrag, geen interpretatie in verslagen",
+        "category": "best-practice",
+        "what": "Harde projectgrens en pedagogisch principe: rapporteer waarneembaar gedrag en feiten (aanwezigheid, taak gemaakt/niet, score, afspraak), niet afgeleide karaktereigenschappen, motivatie of zorgbehoeften.",
+        "insight": "Laat verslagvelden feitelijk formuleren (datum + waarneming + afspraak). Bied geen automatische samenvattende 'labels', risicoscores of gedragsbeoordelingen in de output.",
+        "region": "algemeen",
+        "url": "https://www.piva-oudenaarde.be/swp/permanente_evaluatie.html"
+      },
+      {
+        "aspect": "Batch- versus per-leerling-export",
+        "category": "UX-patroon",
+        "what": "iDoceo genereert een aparte PDF per leerling (om individueel te mailen/geven) of één gebundelde PDF met alle leerlingen. Zelfde keuze voor klas versus individu.",
+        "insight": "Ondersteun beide: één PDF per leerling (privacy: elk kind krijgt enkel eigen blad) en één klasbundel voor eigen archief. Per-leerling-splitsing is de privacyveilige default bij delen.",
+        "region": "internationaal",
+        "url": "https://idoceo.net/index.php/en/instructions/gradebook/students/how-to-student-report-2"
+      },
+      {
+        "aspect": "Export ondersteunt betrokkenenrechten (inzage/kopie)",
+        "category": "verplichting",
+        "what": "Onder AVG hebben leerling/ouder recht op inzage en een kopie van de over hen verwerkte gegevens (in NL doorgaans binnen 4 weken); ook recht op correctie van feitelijk onjuiste gegevens.",
+        "insight": "Een per-leerling-export is meteen het instrument om een inzage-/kopieverzoek in te willigen: exporteer enkel de gegevens van die ene leerling. Dit maakt van export een privacyfunctie, niet enkel gemak.",
+        "region": "algemeen",
+        "url": "https://oudersenonderwijs.nl/kennisbank/privacy-en-leerlinggegevens/leerlinggegevens/inzage-leerlingdossier-en-andere-rechten/"
+      },
+      {
+        "aspect": "Fictieve testdata voor sjablonen",
+        "category": "best-practice",
+        "what": "Projectgrens: nooit echte leerlinggegevens gebruiken; sjablonen en previews met fictieve namen uit data/examples.",
+        "insight": "Ontwikkel en demo alle rapportsjablonen met fictieve leerlingen; toon in de UI een duidelijke 'voorbeeld/demo'-status zodat testexports niet met echte data verward worden.",
+        "region": "algemeen"
+      }
+    ],
+    "mustHaves": [
+      "Puntenoverzicht per klasgroep en per periode als PDF (print-vriendelijk) en als CSV/Excel voor overdracht naar het officiele systeem.",
+      "Leerlingoverzicht/profielblad per leerling met modulaire, aan-/uitvinkbare blokken (cijfers, aanwezigheid, feitelijke notities).",
+      "Oudercontact-voorbereidings-/verslagblad met vooringevulde feiten en lege ruimte voor gespreksnotities en ouderopmerkingen.",
+      "Volledig client-side generatie (jsPDF/SheetJS): data verlaat de browser nooit, werkt offline, geen server-upload.",
+      "Veld-/kolomselectie met voorbeeldweergave vlak voor export, met minimale gegevens als default (dataminimalisatie, doelbinding).",
+      "Per-leerling-export als privacyveilige default bij delen (elk blad bevat enkel de eigen leerling); klasbundel enkel voor eigen archief.",
+      "Duidelijke markering op elke export dat het een persoonlijke, niet-officiele werkkopie is (geen vervanging van schoolrapport/dossier).",
+      "Enkel feitelijke inhoud in verslagen: geen afgeleide karaktereigenschappen, risicoscores, gedragslabels of automatische samenvattingen.",
+      "Alle sjablonen en previews werken met fictieve testdata; geen echte leerlinggegevens."
+    ],
+    "niceToHaves": [
+      "Herbruikbare, benoembare exportsjablonen (bv. 'oudercontact Q2', 'klassenraad juni') die de leerkracht opslaat en hergebruikt.",
+      "CSV-export met expliciet gedocumenteerde kolomkoppen afgestemd op import in Smartschool/Excel, zodat overtypen wegvalt.",
+      "Keuze tussen anonieme/gepseudonimiseerde export (bv. enkel initialen of leerlingnummer) voor lijsten die breder gedeeld worden.",
+      "Instelbare koptekst/voettekst (eigen naam, vak, schooljaar, periode) zonder schoollogo/officiele huisstijl te imiteren.",
+      "Export van een grafiek/trend per leerling of klas (bv. evolutie over periodes), mits feitelijk en zonder interpretatieve scores.",
+      "Optie om een export lokaal te archiveren met datumstempel voor auditbaarheid, herstelbaar/verwijderbaar door de leerkracht.",
+      "Meertalige sjablonen (NL, met vakcontext Engels/Spaans) voor de tekstlabels in de output."
+    ]
+  },
+  {
+    "facet": "Techniek van data: lokale-eerst opslag, backup/herstel, sync tussen apparaten en interoperabiliteit",
+    "summary": "Voor een lokale-eerst leerkracht-app is IndexedDB (bij voorkeur via een lichte wrapper zoals Dexie) de standaardkeuze voor gestructureerde data; localStorage is enkel geschikt voor kleine instellingen/UI-state wegens de ~5 MB-limiet, synchrone blokkering van de main thread en gebrek aan indexering. Het grootste risico is stil dataverlies: browsers ruimen \"best-effort\" opslag op bij schijfdruk (LRU), en vooral WebKit/Safari wist alle script-schrijfbare opslag (inclusief IndexedDB en localStorage) na 7 dagen zonder bezoek — een fataal scenario voor een app met vakanties en weekends. Mitigaties: navigator.storage.persist() aanvragen, de app als PWA op het startscherm laten installeren (ontsnapt aan de 7-dagenregel), en vooral: nooit vertrouwen op de browser als enige kopie. Betrouwbaar herstel vereist expliciete, geregelde export naar een echt bestand (JSON of ZIP via Dexie export-import of de File System Access API) dat de leerkracht bewaart. Sync tussen apparaten kan simpel (handmatige versleutelde JSON-export/import) of geavanceerd (end-to-end versleutelde CRDT-sync met Yjs/Automerge, of gebruikersgestuurd via Syncthing). Voor interoperabiliteit is CSV de pragmatische lingua franca; OneRoster (1EdTech) is de formele standaard maar wellicht overgedimensioneerd voor een persoonlijk hulpmiddel — merk op dat het Vlaamse ecosysteem (Smartschool/Informat) juist wegbeweegt van CSV richting directe koppelingen, wat de app-scope buiten die officiele systemen bevestigt.",
+    "items": [
+      {
+        "aspect": "IndexedDB als primaire opslag (i.p.v. localStorage)",
+        "category": "best-practice",
+        "what": "IndexedDB is een asynchrone, transactionele, geindexeerde browser-database die gestructureerde objecten en blobs opslaat en tot ~50% van de vrije schijfruimte kan gebruiken. localStorage is een synchrone key-value store van strings, geplafonneerd op ~5 MB per origin, die de main thread blokkeert.",
+        "insight": "Gebruik IndexedDB voor alle klasadministratiedata (leerlingen, groepen, registraties, notities) en beperk localStorage tot kleine UI-instellingen. De synchrone aard van localStorage wordt traag en schokkerig zodra de dataset groeit.",
+        "forProfile": "Een vakleerkracht met meerdere klasgroepen bouwt snel honderden registraties op; dat overschrijdt de localStorage-limiet en vraagt query's per groep/leerling die alleen IndexedDB efficient bedient.",
+        "region": "algemeen",
+        "url": "https://dev.to/tene/localstorage-vs-indexeddb-javascript-guide-storage-limits-best-practices-fl5"
+      },
+      {
+        "aspect": "Dexie.js als lichte IndexedDB-wrapper",
+        "category": "tool",
+        "what": "Dexie.js is een minimalistische wrapper rond de omslachtige IndexedDB-API met een leesbare query-syntax, transacties en versiebeheer/migraties van het schema. De addon dexie-export-import voegt db.export() en Dexie.import(blob) toe.",
+        "insight": "Een wrapper voorkomt veelvoorkomende IndexedDB-fouten en levert gratis een betrouwbaar backup/herstel-mechanisme (volledige database als Blob). Schema-migraties zijn cruciaal wanneer het datamodel evolueert zonder gebruikersdata te verliezen.",
+        "forProfile": "Houdt de codebase klein en onderhoudbaar voor een persoonlijk hulpmiddel; migraties beschermen de administratie van de leerkracht bij app-updates.",
+        "region": "algemeen",
+        "url": "https://dexie.org/docs/ExportImport/dexie-export-import"
+      },
+      {
+        "aspect": "Stil dataverlies door browser-eviction (best-effort opslag)",
+        "category": "verplichting",
+        "what": "Standaard is browseropslag 'best-effort': bij schijfdruk wist de browser data van de minst recent gebruikte origins zonder waarschuwing. navigator.storage.persist() vraagt de status 'persistent' aan, waardoor de origin wordt overgeslagen bij eviction.",
+        "insight": "Roep bij eerste succesvol gebruik navigator.storage.persist() aan en toon de opslagstatus/quota (navigator.storage.estimate()) transparant aan de leerkracht. Beschouw persistente opslag echter als een verzachting, niet als een garantie.",
+        "forProfile": "Een leerkracht verwacht dat administratie 'gewoon blijft staan'; onaangekondigd verlies ondermijnt vertrouwen volledig. Toon expliciet dat data lokaal staat en wanneer laatst geexporteerd is.",
+        "region": "algemeen",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+      },
+      {
+        "aspect": "Safari/WebKit 7-dagenregel: kritiek risico voor onderwijsgebruik",
+        "category": "verplichting",
+        "what": "Sinds iOS 13.4 / Safari 13.1 wist WebKit's ITP alle script-schrijfbare opslag (IndexedDB, localStorage, sessionStorage, Cache, service worker-registraties) na 7 dagen zonder gebruikersinteractie op de site. De teller reset bij elk bezoek. Als PWA op het startscherm geinstalleerd geldt een eigen teller en wordt de data niet gewist.",
+        "insight": "Voor een schoolapp met weekends, vakanties en examenperiodes is 7 dagen inactiviteit realistisch; op iPhone/iPad-Safari kan dit alle lokale data wissen. Dwing daarom nooit af dat de browser de enige kopie is: stimuleer PWA-installatie op het startscherm en periodieke export naar bestand als echte veiligheidsnet.",
+        "forProfile": "Vlaamse leerkrachten gebruiken vaak iPads/iPhones; een krokusvakantie kan volstaan om de administratie te wissen als er geen externe backup en geen startscherm-installatie is.",
+        "region": "algemeen",
+        "url": "https://searchengineland.com/what-safaris-7-day-cap-on-script-writeable-storage-means-for-pwa-developers-332519"
+      },
+      {
+        "aspect": "PWA / offline-first als installeerbare app",
+        "category": "UX-patroon",
+        "what": "Een Progressive Web App met manifest en service worker is installeerbaar op het startscherm en werkt volledig offline. Naar-startscherm-toegevoegde webapps vallen buiten Safari's 7-dagenregel en krijgen een eigen gebruiksteller.",
+        "insight": "PWA-installatie is niet alleen UX-comfort maar ook de belangrijkste opslag-beschermingsmaatregel op iOS. Cache de app-shell via service worker zodat de app ook zonder netwerk opent; data blijft in IndexedDB.",
+        "forProfile": "Tijdens de les moet de app onmiddellijk en offline openen (soms zwakke wifi in klaslokalen); een geinstalleerde PWA voelt als een echte app en beschermt tegelijk de data.",
+        "region": "algemeen",
+        "url": "https://web.dev/articles/persistent-storage"
+      },
+      {
+        "aspect": "Backup/herstel via expliciete bestandsexport (JSON of ZIP)",
+        "category": "functie",
+        "what": "Een export-Blob (JSON, of een ZIP met CSV's) kan aan de gebruiker als download worden aangeboden of via de File System Access API (showSaveFilePicker) naar een gekozen bestand/map worden weggeschreven. Import leest hetzelfde bestand terug in.",
+        "insight": "Bied een duidelijke 'Exporteer alles / Herstel uit bestand'-knop plus een herinnering ('laatste backup: X dagen geleden'). Het geexporteerde bestand is de enige echte, browser-onafhankelijke kopie en overleeft eviction, apparaatwissel en browserwissel.",
+        "forProfile": "Geeft de leerkracht volledige eigenaarschap en portabiliteit (bv. bewaren in eigen OneDrive/Drive-map), volledig los van school-IT en officiele systemen.",
+        "region": "algemeen",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-system-access"
+      },
+      {
+        "aspect": "File System Access API — beperkte browsersupport",
+        "category": "tool",
+        "what": "showSaveFilePicker/showOpenFilePicker laten de app rechtstreeks naar een bestand op het toestel schrijven en teruglezen, met een onthouden file handle voor herhaalde backups. Ondersteuning is echter beperkt tot Chromium-desktop; Firefox, Safari en mobiele browsers ondersteunen het niet.",
+        "insight": "Gebruik de File System Access API als 'progressive enhancement' voor een vlotte backup-ervaring op desktop-Chrome/Edge, maar val altijd terug op een klassieke download (a[download]/Blob-URL) zodat backup op elk toestel werkt.",
+        "forProfile": "Op schoollaptops (vaak Chrome/Edge) kan de leerkracht met een klik in dezelfde map backuppen; op iPad blijft de download-fallback nodig.",
+        "region": "algemeen",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
+      },
+      {
+        "aspect": "Sync tussen apparaten — eenvoudig: versleutelde JSON-export/import",
+        "category": "UX-patroon",
+        "what": "De pragmatische baseline voor multi-device is handmatige overdracht: exporteer een (optioneel met wachtwoord versleutelde) JSON/ZIP op toestel A en importeer op toestel B. Bitwarden en Keeper bieden bv. zowel platte als versleutelde JSON-exports.",
+        "insight": "Voor een persoonlijk hulpmiddel zonder serverinfrastructuur is dit de veiligste en goedkoopste sync: geen cloud, geen account, gebruiker houdt de sleutel. Versleutel het exportbestand (WebCrypto, bv. AES-GCM met wachtwoord-afgeleide sleutel) zodat een verloren bestand geen datalek is.",
+        "forProfile": "Leerkracht die thuis voorbereidt en op school registreert kan bewust een backup meenemen; geen afhankelijkheid van school-cloud of DPO-goedkeuring voor een externe dienst.",
+        "region": "algemeen",
+        "url": "https://bitwarden.com/blog/how-to-export-your-bitwarden-vault/"
+      },
+      {
+        "aspect": "Sync tussen apparaten — geavanceerd: E2E-versleutelde CRDT-sync (Yjs/Automerge)",
+        "category": "model",
+        "what": "CRDT's (Conflict-free Replicated Data Types) laten meerdere apparaten offline bewerken en later automatisch conflictvrij samenvoegen. Yjs (snel, met y-indexeddb voor lokale persistentie) en Automerge (JSON-achtig) zijn de volwassen bibliotheken; changes kunnen end-to-end versleuteld over een relay lopen (bv. Serenity Notes met Yjs).",
+        "insight": "Alleen nodig als naadloze, automatische multi-device sync een echte eis wordt; het voegt aanzienlijke complexiteit toe. Voor een lokale-eerst persoonlijk hulpmiddel is dit eerder een latere uitbreiding dan een startvereiste — begin met export/import en houd het datamodel CRDT-vriendelijk zodat de deur openblijft.",
+        "forProfile": "Zou 'thuis-laptop' en 'klas-tablet' automatisch gelijk houden, maar de meerwaarde weegt vaak niet op tegen de complexiteit voor een solo-leerkracht.",
+        "region": "algemeen",
+        "url": "https://github.com/yjs/yjs"
+      },
+      {
+        "aspect": "Sync via gebruikers-eigen tooling (Syncthing) i.p.v. eigen cloud",
+        "category": "UX-patroon",
+        "what": "Syncthing synchroniseert bestanden peer-to-peer en versleuteld tussen apparaten van de gebruiker, zonder centrale clouddienst. In combinatie met een op-schijf exportbestand kan de leerkracht zelf de sync verzorgen.",
+        "insight": "Laat sync desnoods buiten de app: als de app naar een vast bestand exporteert/importeert, kan de gebruiker een tool als Syncthing of zijn eigen cloudmap gebruiken. Dit houdt de app simpel en de data-eigenaarschap bij de leerkracht.",
+        "forProfile": "Technisch onderlegde leerkracht kan volledig cloudloos werken; de app hoeft geen sync-server te bouwen of te onderhouden.",
+        "region": "algemeen",
+        "url": "https://www.howtogeek.com/free-open-source-tool-solves-the-main-problem-with-local-first-apps/"
+      },
+      {
+        "aspect": "Interoperabiliteit — CSV als pragmatische lingua franca",
+        "category": "functie",
+        "what": "CSV-import/-export laat de leerkracht klaslijsten binnenhalen (bv. uit een gedownloade lijst) en resultaten/registraties naar Excel/Sheets exporteren. Het is universeel leesbaar en vereist geen standaard-implementatie.",
+        "insight": "Bied robuuste CSV-import (kolommapping, encoding UTF-8, scheidingsteken ; voor NL-Excel) en -export als eerste interoperabiliteitslaag. Let op de AVG: importeer enkel de strikt nodige velden (naam/groep), niet volledige officiele dossiers.",
+        "forProfile": "De leerkracht wil klasgroepen niet manueel overtypen; CSV-import van een naamlijst per groep is de meest gevraagde, laagdrempelige koppeling.",
+        "region": "Vlaanderen",
+        "url": "https://www.imsglobal.org/lis/imsOneRosterv1p0/imsOneRosterCSV-v1p0.html"
+      },
+      {
+        "aspect": "Interoperabiliteit — OneRoster (1EdTech) als formele standaard",
+        "category": "model",
+        "what": "OneRoster is de 1EdTech-standaard voor het uitwisselen van rosters (personen, klassen, inschrijvingen, cijfers) tussen SIS en leersystemen, via een set gezipte CSV-tabellen of een REST-API. v1.1 = 14 CSV-bestanden, v1.2 = 22 CSV-bestanden.",
+        "insight": "OneRoster is waardevol als inspiratie voor het datamodel (users, classes, enrollments), maar de volledige spec is overgedimensioneerd voor een persoonlijk hulpmiddel. Overweeg hooguit een OneRoster-CSV-import (users.csv/classes.csv) als optioneel compatibiliteitspad; bouw geen volledige OneRoster-provider.",
+        "forProfile": "Niet direct nodig voor de dagelijkse workflow, maar het model geeft nette, herbruikbare benamingen voor groepen en inschrijvingen.",
+        "region": "algemeen",
+        "url": "https://www.1edtech.org/standards/oneroster"
+      },
+      {
+        "aspect": "Vlaamse context — Smartschool/Informat bewegen weg van CSV",
+        "category": "bron",
+        "what": "In Vlaanderen synchroniseren de officiele systemen Smartschool en Informat leerlingen en afwezigheden real-time en rechtstreeks met elkaar; Smartschool communiceert expliciet 'Bye bye CSV-bestanden'. Deze koppelingen zijn schoolgebonden en vereisen beheerderstoegang.",
+        "insight": "Verwacht geen officiele API-toegang voor een persoonlijk leerkracht-hulpmiddel en probeer die systemen niet te vervangen. De app blijft bewust een lokale, aanvullende laag; interoperabiliteit beperkt zich realistisch tot handmatige CSV-import van klaslijsten die de leerkracht zelf mag zien.",
+        "forProfile": "Bevestigt de kernpositionering: Klaskompas is geen vervanging van Smartschool/Informat/Discimus, maar een persoonlijk werkinstrument dat naast die systemen leeft.",
+        "region": "Vlaanderen",
+        "url": "https://www.smartschool.be/informat/"
+      },
+      {
+        "aspect": "Vlaamse AVG — dataminimalisatie en lokale opslag",
+        "category": "verplichting",
+        "what": "Onder de AVG mogen scholen/leerkrachten enkel strikt noodzakelijke persoonsgegevens verwerken, voor een bepaald doel, niet langer bewaren dan nodig, met verantwoordingsplicht. De Vlaamse overheid en Gegevensbeschermingsautoriteit bieden hierover leidraden.",
+        "insight": "Lokale-eerst opslag helpt privacy-by-design (data verlaat het toestel niet), maar ontslaat niet van dataminimalisatie en bewaartermijnen. Bouw functies voor gemakkelijk wissen (einde schooljaar), gebruik fictieve testnamen, en sla feitelijk gedrag op zonder afgeleide interpretaties.",
+        "forProfile": "De leerkracht is mede-verantwoordelijke; de app moet helpen weinig te bewaren en tijdig te wissen, met export als de manier om over te dragen i.p.v. onbeperkt te stapelen.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/bescherming-van-persoonsgegevens-in-het-onderwijs"
+      },
+      {
+        "aspect": "Toekomstige opslagpiste — OPFS + SQLite-WASM",
+        "category": "tool",
+        "what": "Het Origin Private File System (OPFS) biedt een private, snelle, per-origin bestandsopslag; gecombineerd met SQLite gecompileerd naar WebAssembly draait een volwaardige relationele database in de browser met synchrone toegang via een web worker. Persistente OPFS werkt vandaag het best in Chromium-desktop; mobiel/Firefox is beperkter (vaak in-memory).",
+        "insight": "OPFS+SQLite is krachtig voor complexe query's en grote datasets, maar de wisselende mobiele ondersteuning maakt het (nog) risicovol als enige opslag voor een cross-device leerkracht-app. Houd IndexedDB als betrouwbare baseline; OPFS is een optie voor later als de datacomplexiteit sterk groeit.",
+        "forProfile": "Overkill voor de huidige scope (enkele klasgroepen); relevant om te kennen, niet om nu te bouwen.",
+        "region": "algemeen",
+        "url": "https://powersync.com/blog/sqlite-persistence-on-the-web"
+      }
+    ],
+    "mustHaves": [
+      "Primaire opslag in IndexedDB (via een wrapper zoals Dexie), niet in localStorage, met versiebeheer/migraties van het schema zodat updates geen data wissen",
+      "localStorage uitsluitend voor kleine, niet-kritieke UI-instellingen (max enkele KB), nooit voor leerling- of registratiedata",
+      "navigator.storage.persist() aanvragen en de opslagstatus/quota (estimate()) transparant tonen aan de leerkracht",
+      "Expliciete, gebruikersgestuurde volledige backup naar een echt bestand (JSON of ZIP) met download-fallback die op elke browser/toestel werkt",
+      "Import/herstel uit datzelfde backupbestand, met validatie en zonder bestaande data ongemerkt te overschrijven",
+      "Duidelijke backup-herinnering ('laatste backup: X geleden'), omdat browseropslag onbetrouwbaar is (eviction, Safari 7-dagenregel)",
+      "Installeerbaar als PWA (manifest + service worker) die offline opent, mede om Safari's wissing van script-schrijfbare opslag te vermijden",
+      "CSV-import van klaslijsten (UTF-8, NL-vriendelijk scheidingsteken, kolommapping) en CSV/JSON-export van eigen data",
+      "AVG-by-design: dataminimalisatie bij import, functies om per klasgroep/schooljaar te wissen, en geen afgeleide interpretaties opslaan — enkel feitelijk gedrag",
+      "Data blijft lokaal op het toestel; geen verplichte cloud, geen account, geen verzending naar externe servers zonder expliciete gebruikersactie"
+    ],
+    "niceToHaves": [
+      "Met wachtwoord versleutelde export (WebCrypto AES-GCM) zodat een backupbestand geen datalek vormt bij verlies",
+      "File System Access API (showSaveFilePicker met onthouden handle) als vlotte desktop-backup, met download als fallback",
+      "Automatische periodieke backup-prompt of achtergrond-export naar een gekozen map (waar ondersteund)",
+      "Optioneel OneRoster-CSV-compatibel import/export-pad (users/classes/enrollments) voor herbruikbaarheid",
+      "E2E-versleutelde multi-device sync via CRDT (Yjs + y-indexeddb of Automerge) als latere uitbreiding, mits het datamodel nu al CRDT-vriendelijk wordt gehouden",
+      "Ondersteuning voor gebruikers-eigen sync (bv. exportmap in Syncthing/eigen cloud) zonder dat de app zelf een sync-server hoeft te draaien",
+      "Toekomstige migratiepiste naar OPFS + SQLite-WASM voor complexe query's bij sterk groeiende datasets",
+      "Zichtbare 'data-eigenaarschap'-indicator: waar staat mijn data, wanneer laatst geexporteerd, hoeveel ruimte in gebruik"
+    ]
+  },
+  {
+    "facet": "Privacy & recht (AVG / privacy-by-design) voor Klaskompas als lokale-eerst klasadministratie",
+    "summary": "Zodra Klaskompas leerlinggegevens verwerkt in een beroepscontext valt het onder de AVG; de \"huishoudelijke uitzondering\" geldt niet voor een leerkracht die in functie werkt, en recente rechtspraak trekt zelfs persoonlijke werknotities onder het inzagerecht. De school (schoolbestuur) blijft juridisch verwerkingsverantwoordelijke voor leerlinggegevens; de leerkracht handelt onder dat gezag. Het grote juridische voordeel van lokale-eerst is niet dat de AVG wegvalt, maar dat er GEEN externe verwerker is: geen datastroom naar een cloudleverancier, dus geen verwerkersovereenkomst, geen doorgifte buiten de EER en geen afhankelijkheid van de beveiliging van derden. De leerkracht zelf blijft wel verantwoordelijk voor de kernbeginselen: dataminimalisatie, doelbinding, bewaartermijnen, en de rechten van betrokkenen (inzage, correctie, verwijdering, export). Ontwerpkeuzes moeten die beginselen technisch afdwingen (privacy by design en by default, art. 25 AVG): standaard minimale velden, feitelijk gedrag i.p.v. interpretatie, ingebouwd wissen/exporteren, en lokale opslag zonder trackers. Bewaartermijnen zijn niet in de AVG zelf bepaald maar volgen uit Vlaamse onderwijsregelgeving en het archiefkader; voor een persoonlijk leerkracht-hulpmiddel geldt de vuistregel: bewaar zo kort als functioneel nodig en wis/anonimiseer na afsluiten van het schooljaar of de graad.",
+    "items": [
+      {
+        "aspect": "Val je onder de AVG? Huishoudelijke uitzondering geldt NIET",
+        "category": "verplichting",
+        "what": "De AVG kent een uitzondering voor puur persoonlijke/huishoudelijke activiteiten (art. 2, lid 2c). Een leerkracht die in beroepscontext leerlinggegevens bijhoudt, valt daar NIET onder: het is een professionele verwerking. Recente lijn (o.a. AP-wijziging 2026) trekt zelfs meningen en persoonlijke werknotities onder het inzagerecht.",
+        "insight": "Klaskompas moet AVG-compliant ontworpen zijn ook al is het 'persoonlijk'. Reken niet op de huishoudelijke uitzondering. Ontwerp dus met inzage/export/verwijdering ingebouwd.",
+        "forProfile": "Vakleerkracht die eigen registraties bijhoudt over leerlingen van meerdere groepen doet dit in functie -> AVG van toepassing.",
+        "region": "EU/Vlaanderen",
+        "url": "https://pec.surf.nl/faqs/inzagerecht-persoonlijke-werknotities/"
+      },
+      {
+        "aspect": "Wie is verwerkingsverantwoordelijke: school vs. leerkracht",
+        "category": "verplichting",
+        "what": "Het schoolbestuur is juridisch verwerkingsverantwoordelijke voor leerlinggegevens; de leerkracht verwerkt onder dat gezag. In Vlaanderen is dit expliciet vastgelegd in het modelcontract 'digitale onderwijsmiddelen' (onderwijsverstrekkers = verwerkingsverantwoordelijke).",
+        "insight": "Positioneer Klaskompas expliciet als persoonlijk hulpmiddel ONDER het gezag van de school, geen zelfstandig systeem. Laat de app dit ook in tekst/onboarding communiceren zodat de leerkracht binnen het schoolbeleid blijft.",
+        "forProfile": "Belangrijk: de leerkracht mag geen parallel 'schaduwdossier' opzetten dat schoolprocedures vervangt (sluit aan bij CLAUDE.md harde grens).",
+        "region": "Vlaanderen",
+        "url": "https://www.law.kuleuven.be/apps/jura/public/art/55n4/dewaele.pdf"
+      },
+      {
+        "aspect": "Juridisch voordeel lokale-eerst: geen verwerker, geen verwerkersovereenkomst",
+        "category": "best-practice",
+        "what": "Bij lokale-eerst blijft data op het toestel (browser, IndexedDB/bestand) en gaat niet naar een cloudleverancier. Er is dan geen externe verwerker, dus geen verwerkersovereenkomst nodig, geen doorgifte buiten de EER, en geen afhankelijkheid van de beveiligingspraktijk van derden. Dit vermijdt precies de zwaarste AVG-verplichtingen die cloud-edtech oplegt.",
+        "insight": "Dit is het sterkste juridische verkoopargument van Klaskompas. Let op de nuance: lokaal betekent NIET automatisch 'buiten de AVG' — de verwerkingsverantwoordelijkheid (art. 30, art. 25) blijft bij de gebruiker/school.",
+        "forProfile": "Een individuele vakleerkracht kan zo starten zonder juridisch traject via de ICT-coordinator/DPO, mits binnen schoolbeleid.",
+        "region": "EU",
+        "url": "https://www.inkandswitch.com/essay/local-first/"
+      },
+      {
+        "aspect": "Dataminimalisatie en 'need-to-know'",
+        "category": "verplichting",
+        "what": "Kernbeginsel AVG: verzamel alleen persoonsgegevens die 'toereikend, ter zake dienend en beperkt tot het noodzakelijke' zijn voor het doel. Onderwijs werkt met het need-to-know-principe: enkel wie de info nodig heeft, krijgt ze.",
+        "insight": "Ontwerp velden minimaal: naam/klasgroep/feitelijke registratie volstaan meestal. Vermijd gevoelige velden (gezondheid, thuissituatie, herkomst). Geen vrije-tekstvelden die interpretatie/persoonskenmerken uitlokken.",
+        "forProfile": "Vakleerkracht heeft doorgaans genoeg aan groep + voornaam + feitelijke observatie; geen volledig leerlingdossier nodig.",
+        "region": "EU",
+        "url": "https://www.onetrust.com/blog/gdpr-principles/"
+      },
+      {
+        "aspect": "Doelbinding (purpose limitation)",
+        "category": "verplichting",
+        "what": "Gegevens verzameld voor een doel (eigen klasadministratie/opvolging) mogen niet zomaar hergebruikt worden voor een ander, onverenigbaar doel (bv. delen met derden, commerciele profilering, gecombineerde risicoscores).",
+        "insight": "Leg per registratietype het doel vast en toon het. Geen automatische koppeling/aggregatie tot risicoprofielen (sluit aan bij harde grens). Export mag maar met doel-bewuste waarschuwing.",
+        "forProfile": "Feitelijke gedragsregistratie mag niet stilzwijgend een 'dossier voor sancties' worden zonder schoolprocedure.",
+        "region": "EU",
+        "url": "https://www.dataprotection.ie/en/individuals/data-protection-basics/principles-data-protection"
+      },
+      {
+        "aspect": "Bewaartermijnen: niet in AVG, wel via Vlaamse onderwijs- en archiefregels",
+        "category": "verplichting",
+        "what": "De AVG bevat geen concrete termijnen; die volgen uit onderwijsregelgeving en het archiefkader. Vuistregel leerlinggegevens: bewaren tot ca. 2 jaar na vertrek voor courante gegevens; sommige leerlinggebonden documenten (bv. i.v.m. studiebewijzen/getuigschriften) kennen lange termijnen. Na de termijn: wissen of archiveren volgens selectielijst.",
+        "insight": "Voor een PERSOONLIJK hulpmiddel: koppel bewaring aan functionele noodzaak, niet aan de lange officiele termijnen (die horen bij het officiele schooldossier, niet bij de leerkracht-notities). Standaard: wissen/anonimiseren na einde schooljaar of graad.",
+        "forProfile": "Aan het einde van het schooljaar de groepen archiveren/wissen; enkel bewaren wat de leerkracht zelf nog nodig heeft voor continuiteit (bv. bij zelfde groep in 4e jaar).",
+        "region": "Vlaanderen",
+        "url": "https://data-onderwijs.vlaanderen.be/edulex/document.aspx?docid=13572"
+      },
+      {
+        "aspect": "Rechten van betrokkenen: inzage, correctie, verwijdering, overdraagbaarheid",
+        "category": "verplichting",
+        "what": "Betrokkenen (in secundair: ouders/wettelijke vertegenwoordigers voor minderjarigen, of de leerling zelf) hebben recht op inzage, kopie, correctie van feitelijk onjuiste data, en in gevallen wissing. Reactietermijn: in de regel 1 maand. Recht op overdraagbaarheid vereist gestructureerd, machineleesbaar formaat.",
+        "insight": "Bouw deze rechten in als functies, niet als handmatig werk: per leerling een inzicht-/exportknop (bv. JSON/CSV/PDF) en een verwijderknop. Dit maakt een verzoek in seconden afhandelbaar.",
+        "forProfile": "Vlaamse nuance: vanaf 16 jaar beslist de leerling vaker zelf; voor volwassen leerlingen lopen contacten rechtstreeks met de leerling.",
+        "region": "Vlaanderen",
+        "url": "https://oudersenonderwijs.nl/kennisbank/privacy-en-leerlinggegevens/leerlinggegevens/inzage-leerlingdossier-en-andere-rechten/"
+      },
+      {
+        "aspect": "Privacy by design & by default (art. 25 AVG)",
+        "category": "verplichting",
+        "what": "Verwerkingsverantwoordelijke moet technische/organisatorische maatregelen NEMEN vanaf het ontwerp: minimalisatie, pseudonimisering waar mogelijk, transparantie, mogelijkheid voor betrokkene om te interveniren. 'By default' = standaard alleen noodzakelijke data, meest privacyvriendelijke instelling.",
+        "insight": "De privacyvraag komt voor de eerste regel code: welk doel, welke data strikt nodig, meest beschermende default. Standaard geen delen, geen export naar cloud, geen optionele gevoelige velden aangevinkt.",
+        "forProfile": "Concreet: pseudonimisering-optie (voornaam + initiaal/leerlingnummer i.p.v. volledige naam) als default voor vakleerkracht met veel groepen.",
+        "region": "EU",
+        "url": "https://gdpr-text.com/read/article-25/"
+      },
+      {
+        "aspect": "DPO/functionaris gegevensbescherming: verplicht op schoolniveau, niet op appniveau",
+        "category": "verplichting",
+        "what": "Scholen (overheids-/gesubsidieerde instellingen) MOETEN een DPO aanstellen. Bij gemeentelijk onderwijs vervult de DPO van het lokaal bestuur die rol. Dit is een schoolverplichting, niet iets wat de leerkracht met een lokale app zelf oplost.",
+        "insight": "Klaskompas hoeft zelf geen DPO-structuur te bieden, maar moet de leerkracht aanraden zijn/haar gebruik af te stemmen met de school-DPO/ICT-coordinator, en mag verwijzen naar het schoolbeleid.",
+        "forProfile": "Nuttige onboarding-tekst: 'Stem persoonlijk gebruik af met de DPO/ICT-coordinator van je school.'",
+        "region": "Vlaanderen",
+        "url": "https://declercq.com/blogs/functionaris-gegevensbescherming-onderwijs"
+      },
+      {
+        "aspect": "Feitelijk gedrag boven interpretatie (AVG + juistheidsbeginsel)",
+        "category": "best-practice",
+        "what": "AVG-juistheidsbeginsel + verbod op afgeleide karaktereigenschappen: registreer waarneembare feiten ('kwam 10 min te laat', 'materiaal vergeten'), geen interpretaties ('ongemotiveerd', 'lui'). Zulke interpretaties zijn bovendien via inzagerecht opvraagbaar en juridisch riskant.",
+        "insight": "Dwing dit af in de UI: gestructureerde feitelijke categorieen i.p.v. vrije oordeelsvelden; eventueel een neutrale toon-hint bij vrije tekst.",
+        "forProfile": "Beschermt de leerkracht bij een inzageverzoek van ouders: enkel verdedigbare feiten staan geregistreerd.",
+        "region": "EU/Vlaanderen",
+        "url": "https://capra.nl/privacy-in-het-onderwijs-aan-de-hand-van-enkele-uitspraken/"
+      },
+      {
+        "aspect": "Register van verwerkingsactiviteiten (art. 30) blijft van toepassing",
+        "category": "verplichting",
+        "what": "Ook bij on-device verwerking geldt art. 30: er is een verwerking, met een verantwoordelijke. Lokaal betekent niet 'geen AVG'. De EDPB behandelt on-device verwerking als verantwoordelijkheid aan de controller-zijde.",
+        "insight": "Klaskompas kan dit vergemakkelijken door een ingebouwde, exporteerbare 'privacyfiche' (doel, categorieen data, bewaartermijn, opslaglocatie=lokaal) die de leerkracht aan de school-DPO kan bezorgen.",
+        "region": "EU",
+        "url": "https://radar.firstaimovers.com/local-first-ai-stack-privacy-trade-offs-2026"
+      },
+      {
+        "aspect": "Concrete ontwerpkeuzes voor lokale opslag & beveiliging",
+        "category": "UX-patroon",
+        "what": "Lokale-eerst brengt eigen risico's: verlies/diefstal toestel, gedeelde computer, browser-cache. Mitigaties: lokale opslag (IndexedDB/OPFS), optionele encryptie/wachtwoordslot, geen externe trackers/CDN-calls, expliciete lokale back-up/export door de gebruiker, en duidelijke 'wissen'-knop die echt verwijdert.",
+        "insight": "Compenseer het ontbreken van cloud-beveiliging met device-niveau maatregelen: app-lock, encryptie-at-rest, en een zichtbare indicator 'data staat alleen op dit toestel'.",
+        "forProfile": "Vakleerkracht werkt soms op gedeelde schoolPC -> app-lock en snelle 'vergrendel'-actie zijn belangrijk.",
+        "region": "EU",
+        "url": "https://super-productivity.com/guides/privacy-productivity/"
+      },
+      {
+        "aspect": "Transparantie & rechtsgrond",
+        "category": "verplichting",
+        "what": "Verwerking heeft een rechtsgrond nodig; in onderwijs vaak 'algemeen belang/wettelijke taak' van de school of gerechtvaardigd belang, niet toestemming. Betrokkenen moeten geinformeerd zijn (transparantiebeginsel).",
+        "insight": "Klaskompas moet zich baseren op de rechtsgrond van de school (taak van openbaar belang), niet op losse 'toestemming' die de leerkracht zelf vraagt. Voorzie een korte, herbruikbare informatietekst die past binnen de schoolcommunicatie.",
+        "region": "Vlaanderen",
+        "url": "https://gdprlocal.com/gdpr-for-schools/"
+      }
+    ],
+    "mustHaves": [
+      "Dataminimalisatie by default: minimale velden (groep, voornaam/pseudoniem, feitelijke registratie); geen gevoelige of interpretatievelden standaard aan",
+      "Feitelijke-gedrag-invoer: gestructureerde feitcategorieen i.p.v. oordeel-/karaktervelden; geen afgeleide scores of risicoprofielen",
+      "Ingebouwde betrokkenenrechten per leerling: inzage-overzicht, export in gestructureerd machineleesbaar formaat (CSV/JSON, en leesbare PDF), en echte verwijdering",
+      "Doelbinding zichtbaar: per registratietype een vastgelegd doel; geen stille aggregatie of hergebruik",
+      "Bewaartermijn-mechanisme: standaard wissen/anonimiseren na einde schooljaar of graad, met herinnering en herstelbare (soft-delete) opschoning",
+      "Lokale opslag zonder externe datastroom: geen cloud, geen trackers, geen externe CDN/analytics; alles on-device (zodat geen verwerkersovereenkomst nodig is)",
+      "Beveiliging op toestelniveau: app-lock/wachtwoordslot en encryptie-at-rest, plus zichtbare indicator 'data staat alleen op dit toestel'",
+      "Onboarding/positionering: expliciet 'persoonlijk hulpmiddel onder schoolgezag; stem af met DPO/ICT-coordinator; vervangt geen officieel systeem of schoolprocedure'"
+    ],
+    "niceToHaves": [
+      "Pseudonimisering-optie (voornaam + initiaal of leerlingnummer) als privacyvriendelijke default voor leerkrachten met veel groepen",
+      "Exporteerbare 'privacyfiche' (doel, datacategorieen, bewaartermijn, opslag=lokaal) die de leerkracht aan de school-DPO kan bezorgen ter ondersteuning van art. 30",
+      "Neutrale-toon-hint bij vrije tekst om interpretatie/oordelen te ontmoedigen",
+      "Snelle 'vergrendel/verberg scherm'-actie voor gebruik op gedeelde schoolcomputers",
+      "Lokale back-up/herstel volledig in handen van de gebruiker (versleuteld exportbestand)",
+      "Automatische verval-/archiveerwizard aan het einde van het schooljaar met per-groep keuze wissen of archiveren",
+      "Herbruikbare, korte informatietekst voor ouders/leerlingen over welke feitelijke gegevens de leerkracht bijhoudt en waarom"
+    ]
+  },
+  {
+    "facet": "Invoersnelheid en gebruiksgemak (snelle, intuïtieve klasadministratie op laptop en tablet)",
+    "summary": "Snelle klasadministratie voor een drukke vakleerkracht draait om één principe: zo weinig mogelijk handelingen per leerling, en de app moet meedenken in plaats van formulieren opleggen. De sterkste patronen zijn \"bulk-eerst\" (zet iedereen in één klik op een standaardstatus en corrigeer alleen de uitzonderingen), een Excel-achtig raster met volledige toetsenbordnavigatie (pijltjes, Tab, Enter, F2, fill-down, plakken uit Excel) op de laptop, en cyclische tap-statussen met grote touch-targets op de tablet. Onzichtbaar opslaan (autosave met optimistic UI en debounce) haalt de \"Bewaren\"-knop en de bijbehorende twijfel weg, mits er duidelijke opslag-feedback en undo is. Voor het overzicht bij veel klasgroepen zijn sticky naamkolom + bevroren kopregel, snel zoeken/filteren en een quick-add-FAB essentieel. Local-first (IndexedDB/PWA) maakt offline werken in een klaslokaal met zwakke wifi betrouwbaar en snel. Voor de Vlaamse 2e graad geldt dat het een persoonlijk hulpmiddel is naast Smartschool/Informat; de officiële halve-dag-afwezigheidsregistratie en Discimus-codes blijven bij het schoolsysteem, dus Klaskompas moet snel en feitelijk noteren zonder die verplichting over te nemen.",
+    "items": [
+      {
+        "aspect": "Bulk-eerst: standaardstatus + uitzonderingen",
+        "category": "UX-patroon",
+        "what": "De snelste administratie begint bij het vermoeden dat het meestal 'normaal' is: zet in één handeling de hele klas op een standaardwaarde (bv. iedereen aanwezig, of iedereen 'huiswerk in orde') en laat de leerkracht enkel de afwijkingen aantikken. Moodle en vergelijkbare systemen bieden hiervoor een 'Set status for all'-rij bovenaan de lijst.",
+        "insight": "Voor een aanwezigheidsregistratie waar 90% aanwezig is, reduceert dit een klas van 25 tot 2-3 handelingen. Maak 'Iedereen aanwezig' de nuldrempel-actie bovenaan elke lijst; correcties zijn de uitzondering, niet de regel.",
+        "forProfile": "Vakleerkracht met meerdere groepen wint per lesuur seconden die optellen over 5-6 groepen per dag.",
+        "region": "algemeen",
+        "url": "https://docs.moodle.org/501/en/Attendance_activity"
+      },
+      {
+        "aspect": "Cyclische tap-status (één tik = volgende toestand)",
+        "category": "UX-patroon",
+        "what": "Op tablet/touch tikt de leerkracht op een leerlingcel die cyclisch door een korte, vaste reeks statussen loopt (bv. aanwezig → te laat → afwezig → aanwezig). Geen menu, geen bevestiging, één tik per statuswissel. Kleurcodering (groen/oranje/rood) maakt de toestand in één oogopslag leesbaar; lang-indrukken opent pas details (reden, notitie).",
+        "insight": "Vermijd dropdowns en modals tijdens de les: die kosten 3-4 handelingen per leerling. Beperk de cyclus tot maximaal 3-4 statussen — bij meer wordt cyclisch tikken traag en foutgevoelig; val dan terug op een segmented control of snelkiezer.",
+        "forProfile": "Feitelijk gedrag (aanwezig/te laat) blijft objectief; geen interpretatie of scores — past binnen de harde grenzen.",
+        "region": "algemeen"
+      },
+      {
+        "aspect": "Excel-achtige toetsenbordnavigatie in een raster",
+        "category": "UX-patroon",
+        "what": "Op de laptop wint een datagrid met volledige keyboard-first navigatie: pijltjestoetsen tussen cellen, Tab/Shift+Tab horizontaal, Enter naar volgende rij, F2 of typen om te bewerken, Esc annuleert, en plakken (Ctrl+V) van een kolom cijfers rechtstreeks uit Excel/Google Sheets. Bibliotheken als Handsontable, AG Grid en jSpreadsheet implementeren dit als standaard.",
+        "insight": "De leerkracht mag de hand nooit naar de muis hoeven verplaatsen bij het ingeven van een reeks cijfers. 'Enter = opslaan + naar volgende leerling' is het kernritme. Ondersteun plakken uit Excel: veel leerkrachten hebben al kolommen in een spreadsheet staan.",
+        "forProfile": "Bij cijfers voor Engels/Spaans over meerdere groepen is kolomsgewijs invoeren (één toets per leerling) de bottleneck die je moet wegwerken.",
+        "region": "algemeen",
+        "url": "https://handsontable.com/docs/12.3/javascript-data-grid/keyboard-shortcuts/"
+      },
+      {
+        "aspect": "Fill-down / 'toepassen op iedereen'",
+        "category": "UX-patroon",
+        "what": "Eén waarde ingeven en die met een handeling doorvoeren naar de hele kolom of een selectie. Gradelink noemt dit expliciet 'fill-down' om door eenvoudige scores te 'blazen' wanneer iedereen hetzelfde krijgt (bv. iedereen aanwezig, of iedereen volpunt op een quiz).",
+        "insight": "Combineer fill-down met bulk-eerst: eerst een kolom vullen met de meest voorkomende waarde, dan enkel de uitzonderingen aanpassen. Dit is het snelste patroon voor herhaalde, uniforme registraties.",
+        "forProfile": "Handig voor 'materiaal mee', 'huiswerk in orde' of deelname-registraties die per groep grotendeels uniform zijn.",
+        "region": "algemeen",
+        "url": "https://gradelink.com/teacher-gradebooks/"
+      },
+      {
+        "aspect": "Onzichtbaar opslaan (autosave + optimistic UI + debounce)",
+        "category": "best-practice",
+        "what": "Geen 'Bewaren'-knop: elke wijziging wordt onmiddellijk lokaal getoond (optimistic UI) en met een debounce van ~500 ms weggeschreven. Een subtiele opslag-indicator ('Alle wijzigingen bewaard' / 'Bewaren…') geeft vertrouwen, en per actie is er een korte undo-mogelijkheid (toast met 'Ongedaan maken').",
+        "insight": "Autosave verwijdert de grootste cognitieve last ('ben ik iets kwijt?'), maar mag niet stil zijn: toon expliciete opslagstatus én bied undo, want zonder Bewaren-knop verdwijnt ook het natuurlijke bevestigingsmoment. Debounce voorkomt dat elke toetsaanslag een schrijfactie is.",
+        "forProfile": "Een leerkracht die tijdens de les snel wegklikt naar de volgende taak, mag nooit hoeven nadenken over opslaan.",
+        "region": "algemeen",
+        "url": "https://design.gitlab.com/patterns/saving-and-feedback/"
+      },
+      {
+        "aspect": "Sticky naamkolom + bevroren kopregel",
+        "category": "UX-patroon",
+        "what": "De leerlingnaam (eerste kolom) blijft vastgeplakt bij horizontaal scrollen en de kolomhoofden (datum/toets) blijven vast bij verticaal scrollen. Technisch: CSS position:sticky met een achtergrondkleur en hogere z-index op de bevroren cellen; let op de bekende valkuil dat overflow-x op de container sticky headers kan breken.",
+        "insight": "Zonder bevroren naamkolom raakt de leerkracht bij de 8e kolom kwijt wie welke rij is — dé bron van invoerfouten. Houd kophokjes kort ('26/09' i.p.v. volledige datum) want op tablet telt elke pixel.",
+        "forProfile": "Cruciaal bij brede rasters: veel toetsen/lesdagen naast elkaar per klasgroep.",
+        "region": "algemeen",
+        "url": "https://ninjatables.com/sticky-headers-vs-fixed-columns/"
+      },
+      {
+        "aspect": "Local-first / offline werken (IndexedDB + PWA)",
+        "category": "best-practice",
+        "what": "Data staat primair lokaal in de browser (IndexedDB, via een wrapper als Dexie.js), zodat invoer instant is en blijft werken zonder netwerk. Een service worker + background sync queuet acties offline en speelt ze later af; IndexedDB is gedeeld over tabbladen zodat alle tabs dezelfde actuele staat tonen.",
+        "insight": "In een klaslokaal met wisselende wifi is local-first geen luxe maar een snelheidseis: geen laadspinners, geen dataverlies bij een dip. IndexedDB (niet localStorage) omdat je gestructureerde, geïndexeerde datasets per klasgroep nodig hebt. Past perfect bij 'lokale-eerst' opzet van Klaskompas.",
+        "forProfile": "Persoonlijk hulpmiddel op eigen laptop/tablet, geen serverafhankelijkheid — sluit aan bij privacy-by-design (data blijft lokaal).",
+        "region": "algemeen",
+        "url": "https://blog.logrocket.com/offline-first-frontend-apps-2025-indexeddb-sqlite/"
+      },
+      {
+        "aspect": "Quick-add FAB / snelinvoer-knop",
+        "category": "UX-patroon",
+        "what": "Een vaste, altijd bereikbare knop (Floating Action Button, rechtsonder) voor de meest voorkomende toevoeg-actie: snel een notitie, een gebeurtenis of een leerling toevoegen. Bij 3-6 gerelateerde acties kan de FAB uitklappen tot een 'speed dial'; bij meer acties is een FAB niet de juiste keuze.",
+        "insight": "Één duimbereik-knop voor 'nieuwe registratie nu' verlaagt de drempel om iets meteen te noteren i.p.v. uit te stellen. Houd de speed-dial kort (max ~5 acties) en geef elke actie een duidelijk label/tooltip voor toegankelijkheid.",
+        "forProfile": "Ondersteunt 'maximaal enkele handelingen tijdens een les' — snel iets vastleggen zonder de huidige lijst te verlaten.",
+        "region": "algemeen",
+        "url": "https://mui.com/material-ui/react-speed-dial/"
+      },
+      {
+        "aspect": "Snel zoeken en filteren (instant, per groep)",
+        "category": "UX-patroon",
+        "what": "Een zoekbalk die tijdens het typen filtert (naam, klasgroep) en snelfilters/segmented controls om direct van klasgroep, vak of weergave (cijfers ↔ aanwezigheid ↔ notities) te wisselen zonder de pagina te verlaten. Lekktura beschrijft één raster waarin je 'instantly' schakelt tussen Grading, Attendance en Behavior.",
+        "insight": "Voor een vakleerkracht met veel groepen is 'juiste groep/leerling vinden' vaak trager dan het invoeren zelf. Instant filteren en één-tik groepwissel zijn daarom directe snelheidswinst. Bewaar de laatst gebruikte groep/weergave als startpunt.",
+        "forProfile": "Meerdere klasgroepen Engels & Spaans: snel wisselen tussen groepen is een kernscenario, geen randgeval.",
+        "region": "algemeen",
+        "url": "https://lekktura.com/features/teacher-online-gradebook"
+      },
+      {
+        "aspect": "Grote touch-targets & duim-ergonomie op tablet",
+        "category": "best-practice",
+        "what": "Op tablet moeten tikbare cellen/statusknoppen ruim genoeg zijn (richtlijn ±44-48px) en bereikbaar met de duim; belangrijke acties onderaan/zijkant i.p.v. bovenaan. Één raster dat responsief werkt op laptop (keyboard) én tablet (touch) zonder aparte modus.",
+        "insight": "Dezelfde app moet twee invoermodaliteiten dienen: keyboard-first op laptop, tap-first op tablet. Ontwerp de statuscel zo dat ze zowel met Enter/spatie (keyboard) als met een dikke tik (touch) bediend wordt — niet twee losse UI's.",
+        "forProfile": "Leerkracht loopt rond met tablet tijdens de les, werkt cijfers bij op laptop na de les.",
+        "region": "algemeen"
+      },
+      {
+        "aspect": "Plakken/importeren uit Excel & bulk-import",
+        "category": "best-practice",
+        "what": "Leerkrachten hebben vaak al lijsten of cijfers in Excel/Google Sheets. Ondersteun rechtstreeks plakken van een kolom in het raster (cell-to-cell paste) en een eenvoudige CSV/Excel-import voor het initieel opzetten van klaslijsten met fictieve/eigen namen.",
+        "insight": "Dwing niemand om bestaande data over te typen. Cell-paste uit een spreadsheet is een van de snelste 'bulk-eerst'-invoerwegen en verlaagt de instapdrempel enorm.",
+        "forProfile": "Gebruik fictieve testnamen uit data/examples/ bij demo's; nooit echte leerlinggegevens importeren.",
+        "region": "algemeen",
+        "url": "https://jspreadsheet.com/docs/shortcuts"
+      },
+      {
+        "aspect": "Undo / herstelbare acties i.p.v. bevestigingsdialogen",
+        "category": "best-practice",
+        "what": "In plaats van 'Weet u het zeker?'-modals die de flow breken: voer de actie meteen uit en bied kort undo aan (toast 'Verwijderd — Ongedaan maken'). Zo blijft invoer snel maar zonder risico op onherstelbaar dataverlies.",
+        "insight": "Bevestigingsdialogen vertragen elke handeling en worden toch weggeklikt. Undo houdt snelheid én veiligheid; sluit aan bij de projecteis 'maak destructieve acties herstelbaar waar praktisch mogelijk'.",
+        "region": "algemeen",
+        "url": "https://design.gitlab.com/patterns/saving-and-feedback/"
+      },
+      {
+        "aspect": "Vlaamse context: officiële registratie blijft bij het schoolsysteem",
+        "category": "verplichting",
+        "what": "In Vlaanderen zijn scholen verplicht per halve dag aan- en afwezigheden te registreren; dit wordt dagelijks uitgewisseld met AGODI en gecontroleerd door de verificatie op correcte Discimus-afwezigheidscodes (SO70 e.a.). Smartschool/Informat regelen dit officieel; Smartschool Live zet zelfs de status automatisch op basis van aanwezige leerlingen.",
+        "insight": "Klaskompas mag deze wettelijke halve-dag-registratie en de codering NIET overnemen of vervangen — het is een persoonlijk hulpmiddel. Snelle eigen registratie (bv. te laat, materiaal) is prima, maar houd ze feitelijk en gescheiden van de officiële workflow om dubbele/foutieve wettelijke registratie te vermijden.",
+        "forProfile": "Vlaamse 2e graad secundair: officiële afwezigheden lopen via Smartschool/Informat/Discimus, niet via Klaskompas.",
+        "region": "Vlaanderen",
+        "url": "https://onderwijs.vlaanderen.be/nl/afwezigheidscodes-in-discimus"
+      },
+      {
+        "aspect": "Één raster, meerdere registratietypes zonder contextwissel",
+        "category": "UX-patroon",
+        "what": "Cijfers, aanwezigheid en gedragsnotities in dezelfde rasterweergave met een snelle tabwissel, zodat de leerkracht niet tussen aparte modules navigeert. Averages/tellingen updaten live mee. Lekktura en SchoolTool benadrukken 'fast data entry that automatically saves' plus onmiddellijk filteren/sorteren.",
+        "insight": "Contextwissels (andere schermen, herladen) zijn een verborgen tijdrover. Houd de leerkracht op één plek en laat de weergave veranderen, niet de locatie. Live berekende totalen geven directe feedback zonder extra handeling.",
+        "forProfile": "Tijdens één lesuur snel schakelen tussen 'wie is er' en 'punt op de mondelinge oefening'.",
+        "region": "algemeen",
+        "url": "https://www.mindex.com/schooltool-spotlight/gradebook-upgrades"
+      }
+    ],
+    "mustHaves": [
+      "Bulk-eerst invoer: hele klas in één handeling op standaardstatus zetten, alleen uitzonderingen corrigeren",
+      "Volledige toetsenbordnavigatie in een raster op laptop (pijltjes, Tab, Enter=volgende, F2/typen om te bewerken, Esc annuleert)",
+      "Cyclische tap-status met grote touch-targets en kleurcodering op tablet, zonder menu of bevestiging",
+      "Autosave zonder Bewaren-knop, met optimistic UI, debounce én zichtbare opslag-indicator ('Alle wijzigingen bewaard')",
+      "Undo/herstelbare acties in plaats van blokkerende bevestigingsdialogen",
+      "Sticky leerlingnaam-kolom en bevroren kopregel voor overzicht bij brede rasters",
+      "Local-first/offline werken (IndexedDB via bv. Dexie, PWA met service worker) zodat invoer instant en netwerkonafhankelijk is",
+      "Instant zoeken/filteren en snelle wissel tussen klasgroepen en registratieweergaven zonder pagina te verlaten",
+      "Responsief één-raster-ontwerp dat zowel keyboard-first (laptop) als tap-first (tablet) bedient",
+      "Officiële Vlaamse halve-dag-afwezigheidsregistratie en Discimus-codering NIET overnemen — persoonlijk hulpmiddel naast Smartschool/Informat, feitelijk en gescheiden houden"
+    ],
+    "niceToHaves": [
+      "Fill-down / 'toepassen op iedereen' voor uniforme kolommen",
+      "Rechtstreeks plakken van een kolom cijfers uit Excel/Google Sheets in het raster",
+      "CSV/Excel-import voor het initieel opzetten van klaslijsten (met fictieve/eigen namen)",
+      "Quick-add FAB (eventueel speed dial, max ~5 acties) voor snelle nieuwe registratie in duimbereik",
+      "Onthouden van laatst gebruikte klasgroep/weergave als startpunt",
+      "Live berekende totalen/tellingen (gemiddelde, aantal afwezig) die meteen meebewegen",
+      "Lang-indrukken op een cel voor optionele detail/reden zonder de snelle flow te onderbreken",
+      "Korte, compacte kopteksten (bv. datum '26/09') om schermruimte op tablet te sparen",
+      "Toetsenbord-sneltoetsen voor groepwissel en het openen van de zoekbalk"
+    ]
+  }
+]
