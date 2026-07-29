@@ -359,15 +359,26 @@ textarea.invoer { resize: vertical; }
   box-shadow: inset 0 0 25px rgba(255,255,255,.2), inset 0 -18px 30px rgba(21,39,25,.12), 0 16px 24px rgba(22,48,30,.18); }
 .kb-tube::before, .kb-tube::after { content: ""; position: absolute; left: 50%; z-index: 12; transform: translateX(-50%); width: 108%; height: 24px; border: 4px solid rgba(40,51,42,.6); border-radius: 50%; background: linear-gradient(180deg, rgba(255,255,255,.34), transparent 45%), var(--kb-g900); }
 .kb-tube::before { top: -10px; } .kb-tube::after { bottom: -10px; }
-.kb-notes { position: absolute; right: 10px; top: 16px; bottom: 12px; left: 10px; z-index: 3; }
-.kb-note { position: absolute; left: 50%; width: 90%; height: 30px; border: 1px solid rgba(54,53,39,.28); border-radius: 5px; box-shadow: 0 3px 5px rgba(35,39,31,.18), inset 0 0 0 1px rgba(255,255,255,.2); overflow: hidden; transition: bottom .5s cubic-bezier(.2,.8,.2,1); display: grid; place-items: center; }
-.kb-note .val { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 800; opacity: .8; }
-.kb-note-50 { background: linear-gradient(100deg,#d9a44e,#f0c578 42%,#c98a3d); color: #7b4b14; }
+.kb-notes { position: absolute; right: 12px; top: 16px; bottom: 26px; left: 12px; z-index: 3;
+  display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-start; gap: 3px; }
+.kb-note { position: relative; width: 88%; height: 24px; flex: 0 0 auto; border: 1px solid rgba(54,53,39,.28); border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(35,39,31,.18), inset 0 0 0 1px rgba(255,255,255,.22); display: grid; place-items: center; }
+.kb-note .val { font-family: Georgia, serif; font-size: .95rem; font-weight: 800; opacity: .85; }
+.kb-note-5 { background: linear-gradient(100deg,#a7a29a,#d0cbc2 45%,#928e88); color: #3f3c37; }
+.kb-note-10 { background: linear-gradient(100deg,#c0655a,#e0a49b 45%,#a64f45); color: #5c231c; }
 .kb-note-20 { background: linear-gradient(100deg,#6e9fbd,#a8c7d9 45%,#5d8eaa); color: #214a61; }
+.kb-note-50 { background: linear-gradient(100deg,#d9a44e,#f0c578 42%,#c98a3d); color: #7b4b14; }
+.kb-note-100 { background: linear-gradient(100deg,#5f9e6a,#9cc79f 45%,#4d8a58); color: #1c4426; }
+.kb-note-200 { background: linear-gradient(100deg,#c9b24e,#e6d67a 45%,#b39a35); color: #544413; }
+.kb-note-500 { background: linear-gradient(100deg,#a06fb0,#cbb0d6 45%,#8c5aa0); color: #3f2450; }
+.kb-munt { position: relative; width: 24px; height: 24px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center;
+  font-size: .6rem; font-weight: 800; color: #5a4a18; border: 1px solid rgba(90,70,20,.4); box-shadow: 0 2px 3px rgba(35,39,31,.25);
+  background: radial-gradient(circle at 35% 30%, #f4e3a8, #d9b64e 70%, #b7912f); }
+.kb-munt-1 { background: radial-gradient(circle at 35% 30%, #efe9d6, #cdbf9a 70%, #a9997a); color: #4a4433; }
 .kb-threshold { position: absolute; left: 8px; right: 8px; z-index: 20; display: flex; align-items: center; gap: 6px; transition: top .5s; }
 .kb-threshold-line { flex: 1; border-top: 1.5px dashed var(--kb-g700); }
 .kb-threshold-label { font-family: var(--mono,monospace); font-size: .58rem; font-weight: 800; line-height: 1.15; white-space: nowrap; text-align: right; padding: 1px 5px; border-radius: 5px; background: color-mix(in srgb, var(--kb-panel) 82%, transparent); }
-.kb-bottom { position: absolute; left: 8px; right: 8px; bottom: 9%; z-index: 20; display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-family: var(--mono,monospace); font-size: .54rem; font-weight: 800; text-transform: uppercase; color: var(--kb-soft); }
+.kb-bottom { position: absolute; left: 8px; right: 8px; bottom: 18px; z-index: 20; display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-family: var(--mono,monospace); font-size: .54rem; font-weight: 800; text-transform: uppercase; color: var(--kb-soft); }
 .kb-bottom::before { content: ""; flex: 1; border-top: 1.5px dashed var(--kb-g700); }
 .kb-cap-footer { padding-top: 10px; border-top: 1px solid var(--kb-line); display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--kb-soft); font-size: .8rem; }
 .kb-cap-footer strong { color: var(--kb-text); font-family: var(--mono,monospace); font-size: 1.1rem; }
@@ -5414,6 +5425,7 @@ textarea.invoer { resize: vertical; }
   var klasscherm_exports = {};
   __export(klasscherm_exports, {
     cleanup: () => cleanup,
+    coupures: () => coupures,
     render: () => render16
   });
   var actief = { stream: null, ctx: null, raf: 0, tick: 0 };
@@ -5427,6 +5439,21 @@ textarea.invoer { resize: vertical; }
   }
   function cleanup() {
     stopAlles();
+  }
+  function coupures(bedrag) {
+    const briefjes = [500, 200, 100, 50, 20, 10, 5];
+    const munten = [2, 1];
+    let rest = Math.max(0, Math.round(Number(bedrag) || 0));
+    const uit = [];
+    for (const c of briefjes) while (rest >= c) {
+      uit.push({ type: "briefje", waarde: c });
+      rest -= c;
+    }
+    for (const m of munten) while (rest >= m) {
+      uit.push({ type: "munt", waarde: m });
+      rest -= m;
+    }
+    return uit.slice(0, 16);
   }
   async function render16(root, ctx) {
     stopAlles();
@@ -5526,15 +5553,10 @@ textarea.invoer { resize: vertical; }
     grid.append(capital);
     function tekenKapitaal(s) {
       amount.textContent = euro(s.saldo);
-      const doel = Math.max(s.config.prijsdrempel || 1, 1);
-      const fractie = Math.max(0, Math.min(1, s.saldo / doel));
-      const maxNotes = 7;
-      const aantal = Math.round(fractie * maxNotes);
       leeg(notes);
-      for (let i = 0; i < aantal; i++) {
-        const denom = i % 3 === 2 ? 20 : 50;
-        const note = el("div", { class: `kb-note kb-note-${denom}`, style: { bottom: `${i / maxNotes * 90}%`, transform: `translateX(-50%) rotate(${i % 2 ? 1.5 : -1.6}deg)` } }, el("span", { class: "val" }, String(denom)));
-        notes.append(note);
+      for (const st of coupures(s.saldo)) {
+        if (st.type === "munt") notes.append(el("div", { class: `kb-munt kb-munt-${st.waarde}` }, "€" + st.waarde));
+        else notes.append(el("div", { class: `kb-note kb-note-${st.waarde}` }, el("span", { class: "val" }, String(st.waarde))));
       }
       leeg(capFooter);
       if (s.saldo >= (s.config.prijsdrempel || Infinity)) {

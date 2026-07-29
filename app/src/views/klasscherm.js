@@ -20,6 +20,21 @@ function stopAlles() {
 }
 export function cleanup() { stopAlles(); }
 
+/**
+ * Splits een bedrag op in echte euro-coupures (briefjes) + muntjes voor de rest < €5.
+ * Greedy, grootste eerst: €5→[5], €70→[50,20], €90→[50,20,20], €100→[100], €23→[20,2,1].
+ * @returns {Array<{type:'briefje'|'munt', waarde:number}>}
+ */
+export function coupures(bedrag) {
+  const briefjes = [500, 200, 100, 50, 20, 10, 5];
+  const munten = [2, 1];
+  let rest = Math.max(0, Math.round(Number(bedrag) || 0));
+  const uit = [];
+  for (const c of briefjes) while (rest >= c) { uit.push({ type: 'briefje', waarde: c }); rest -= c; }
+  for (const m of munten) while (rest >= m) { uit.push({ type: 'munt', waarde: m }); rest -= m; }
+  return uit.slice(0, 16); // veiligheidsplafond tegen overvloed
+}
+
 export async function render(root, ctx) {
   stopAlles();
   if (!ctx.klasId) {
@@ -98,15 +113,11 @@ export async function render(root, ctx) {
 
   function tekenKapitaal(s) {
     amount.textContent = euro(s.saldo);
-    const doel = Math.max(s.config.prijsdrempel || 1, 1);
-    const fractie = Math.max(0, Math.min(1, s.saldo / doel));
-    const maxNotes = 7;
-    const aantal = Math.round(fractie * maxNotes);
+    // Beeld het echte bedrag uit als een stapel realistische coupures (grootste onderaan).
     leeg(notes);
-    for (let i = 0; i < aantal; i++) {
-      const denom = i % 3 === 2 ? 20 : 50;
-      const note = el('div', { class: `kb-note kb-note-${denom}`, style: { bottom: `${(i / maxNotes) * 90}%`, transform: `translateX(-50%) rotate(${(i % 2 ? 1.5 : -1.6)}deg)` } }, el('span', { class: 'val' }, String(denom)));
-      notes.append(note);
+    for (const st of coupures(s.saldo)) {
+      if (st.type === 'munt') notes.append(el('div', { class: `kb-munt kb-munt-${st.waarde}` }, '€' + st.waarde));
+      else notes.append(el('div', { class: `kb-note kb-note-${st.waarde}` }, el('span', { class: 'val' }, String(st.waarde))));
     }
     leeg(capFooter);
     if (s.saldo >= (s.config.prijsdrempel || Infinity)) {
