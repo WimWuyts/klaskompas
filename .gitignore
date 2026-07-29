@@ -1,3 +1,5 @@
 node_modules/
 *.log
 .DS_Store
+# tijdelijke preview-screenshots (worden rechtstreeks aan de gebruiker bezorgd)
+app/dist/koker-*.png
