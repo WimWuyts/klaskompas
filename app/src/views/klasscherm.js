@@ -261,10 +261,13 @@ async function bouwZitplan(klasId) {
   ]);
   const naam = new Map(leerlingen.map((l) => [l.id, `${l.voornaam || ''} ${l.naam || ''}`.trim()]));
   const vandaag = isoDatum(new Date());
+  // Ontdubbel per leerling: bij meerdere lesuren telt elke leerling maar één keer.
+  const statusPerLeerling = new Map();
+  for (const a of aanwVandaag.filter((x) => x.datum === vandaag)) statusPerLeerling.set(a.leerlingId, a.status);
   const teller = { aanwezig: 0, telaat: 0, afwezig: 0 };
-  for (const a of aanwVandaag.filter((x) => x.datum === vandaag)) {
-    if (a.status === 'aanwezig') teller.aanwezig++;
-    else if (a.status === 'telaat') teller.telaat++;
+  for (const status of statusPerLeerling.values()) {
+    if (status === 'aanwezig') teller.aanwezig++;
+    else if (status === 'telaat') teller.telaat++;
     else teller.afwezig++;
   }
   // regels tellen per type voor de chips

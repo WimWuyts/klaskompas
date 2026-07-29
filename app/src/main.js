@@ -3,6 +3,7 @@
 import { db, all, getSetting, setSetting } from './db/repo.js';
 import { zaaiStartMenu } from './domain/beloningen.js';
 import { lockStatus, controleerPin } from './domain/beveiliging.js';
+import { initEncryptie, ontgrendelSleutel } from './domain/veldencryptie.js';
 import { el, leeg, toast } from './ui/components.js';
 
 import * as dashboard from './views/dashboard.js';
@@ -18,6 +19,7 @@ import * as acties from './views/acties.js';
 import * as zitplan from './views/zitplan.js';
 import * as afspraken from './views/afspraken.js';
 import * as beloningen from './views/beloningen.js';
+import * as handleiding from './views/handleiding.js';
 import * as instellingen from './views/instellingen.js';
 import * as klasscherm from './views/klasscherm.js';
 
@@ -35,6 +37,7 @@ const ROUTES = {
   afspraken: { titel: 'Afspraken & instructie', icoon: '🤝', view: afspraken, groep: 'admin' },
   schooljaar: { titel: 'Schooljaar & kalender', icoon: '📅', view: schooljaar, groep: 'admin' },
   rooster: { titel: 'Rooster', icoon: '🗓️', view: rooster, groep: 'admin' },
+  handleiding: { titel: 'Handleiding', icoon: '❓', view: handleiding, groep: 'admin' },
   instellingen: { titel: 'Instellingen & backup', icoon: '⚙️', view: instellingen, groep: 'admin' },
   klasscherm: { titel: 'Klasscherm', icoon: '📺', view: klasscherm, groep: 'les' },
 };
@@ -48,6 +51,7 @@ const app = {
 };
 
 async function init() {
+  initEncryptie();
   try {
     await db();
   } catch (e) {
@@ -70,7 +74,7 @@ function toonSlot(onOk) {
   const invoer = el('input', { class: 'slot__invoer', type: 'password', inputmode: 'numeric', autocomplete: 'off', placeholder: '••••', 'aria-label': 'Pincode' });
   const fout = el('div', { class: 'slot__fout' });
   const probeer = async () => {
-    if (await controleerPin(invoer.value)) { scherm.remove(); onOk(); }
+    if (await controleerPin(invoer.value)) { await ontgrendelSleutel(invoer.value); scherm.remove(); onOk(); }
     else { fout.textContent = 'Verkeerde pincode.'; invoer.value = ''; invoer.focus(); scherm.querySelector('.slot__kaart').classList.remove('slot--shake'); void scherm.offsetWidth; scherm.querySelector('.slot__kaart').classList.add('slot--shake'); }
   };
   invoer.addEventListener('keydown', (e) => { if (e.key === 'Enter') probeer(); });

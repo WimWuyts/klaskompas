@@ -56,6 +56,16 @@ De losse `app/` blijft de bron; `dist/klaskompas.html` is een build-artefact.
 - **Zitplan** — plaatsengenerator met randvoorwaarden ("slotjes"); zichtbaar op het Klasscherm.
 - **Instellingen** — per-klas klaspot-configuratie (ADR-0001 §2.1.8), **optie C**-voorwaarden,
   **app-lock (pincode)** + **versleutelde backup**, gewone backup/herstel en diagnostiek.
+- **Handleiding** — een beknopte, ingebouwde gebruiksaanwijzing.
+
+### Extra's (v0.3)
+
+- **Afdrukken & exporteren** — printbaar puntenboek + CSV-export; afdrukbaar leerlingrapport.
+- **Rooster-import** — plak een getranscribeerd rooster als JSON; **aanwezigheid per lesuur**.
+- **Zitplan slepen** — bankjes verslepen om te wisselen.
+- **Ongedaan maken** — verwijderen kan met één klik teruggedraaid worden.
+- **Veld-encryptie at rest** — gevoelige vrije tekst wordt versleuteld opgeslagen (sleutel uit de pincode).
+- **Tests** — zie [`../test/`](../test/) (unit-tests + CI + rooktest).
 
 ## Architectuur
 

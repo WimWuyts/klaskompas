@@ -1,7 +1,7 @@
 // Service worker: maakt Klaskompas offline-bruikbaar (app-shell caching).
 // Gegevens zelf leven in IndexedDB en worden nooit gecachet of verstuurd.
 
-const CACHE = 'klaskompas-v0.2.0';
+const CACHE = 'klaskompas-v0.3.0';
 const SHELL = [
   './',
   './index.html',
@@ -20,6 +20,8 @@ const SHELL = [
   './src/domain/zitplan.js',
   './src/domain/evaluaties.js',
   './src/domain/beveiliging.js',
+  './src/domain/veldencryptie.js',
+  './src/domain/export.js',
   './src/ui/components.js',
   './src/views/dashboard.js',
   './src/views/klassen.js',
@@ -34,6 +36,7 @@ const SHELL = [
   './src/views/zitplan.js',
   './src/views/afspraken.js',
   './src/views/beloningen.js',
+  './src/views/handleiding.js',
   './src/views/instellingen.js',
   './src/views/klasscherm.js',
 ];

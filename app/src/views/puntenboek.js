@@ -5,8 +5,10 @@
 import { get, put, remove, byIndex } from '../db/repo.js';
 import { EVALUATIE_TYPE, maakEvaluatie, maakEvalResultaat } from '../domain/model.js';
 import { puntenboek } from '../domain/evaluaties.js';
+import { exporteerCsv, afdruk, escapeHtml } from '../domain/export.js';
 import {
   el, leeg, toast, dialoog, bevestig, stijl, veld, keuze, tekstveld, datumKort, leegKaart,
+  verwijderMetUndo, markeerFout,
 } from '../ui/components.js';
 
 stijl('css-puntenboek', `
@@ -50,6 +52,8 @@ export async function render(root, ctx) {
 
   const kop = el('div', { class: 'kaart__kop kaart__kop--los' },
     el('h2', {}, `Evaluaties & puntenboek — ${klas?.naam || ''}`),
+    el('button', { class: 'knop', onClick: () => exporteerPuntenboek(ctx, klas) }, '⬇️ CSV'),
+    el('button', { class: 'knop', onClick: () => afdrukPuntenboek(ctx, klas) }, '🖨️ Afdrukken'),
     el('button', { class: 'knop knop--primair', onClick: () => evaluatieDialoog(root, ctx, null) }, '+ Evaluatie'),
   );
   root.append(kop);
@@ -172,6 +176,43 @@ async function ververGemiddelden(ctx, gemCellen) {
   }
 }
 
+// Bouw de gedeelde gegevens (koppen + rijen) voor CSV- en afdrukexport.
+async function bouwExportData(ctx) {
+  const pb = await puntenboek(ctx.klasId);
+  const evalTitel = (e) => e.titel || (EVALUATIE_TYPE[e.type] || 'Evaluatie');
+  const koppen = ['Leerling', ...pb.evaluaties.map((e) => `${evalTitel(e)} (${e.maxPunten})`), 'Gemiddelde'];
+  const rijen = pb.leerlingen.map((l) => {
+    const naam = `${l.voornaam} ${l.naam}`.trim();
+    const punten = pb.evaluaties.map((e) => {
+      const r = pb.resultaat(l.id, e.id);
+      return (r && !r.afwezig && r.punten != null) ? r.punten : '';
+    });
+    const gem = pb.gemiddelde.get(l.id);
+    return { naam, punten, gem: gem == null ? '' : `${Math.round(gem)}%` };
+  });
+  return { koppen, rijen, aantalEval: pb.evaluaties.length };
+}
+
+async function exporteerPuntenboek(ctx, klas) {
+  const { koppen, rijen } = await bouwExportData(ctx);
+  const matrix = [koppen, ...rijen.map((r) => [r.naam, ...r.punten, r.gem])];
+  exporteerCsv(`puntenboek-${klas?.naam || 'klas'}.csv`, matrix);
+}
+
+async function afdrukPuntenboek(ctx, klas) {
+  const { koppen, rijen } = await bouwExportData(ctx);
+  const thead = '<tr>' + koppen.map((k, i) =>
+    `<th${i === 0 ? '' : ' class="num"'}>${escapeHtml(k)}</th>`).join('') + '</tr>';
+  const tbody = rijen.map((r) => '<tr>'
+    + `<td>${escapeHtml(r.naam)}</td>`
+    + r.punten.map((p) => `<td class="num">${escapeHtml(p)}</td>`).join('')
+    + `<td class="num">${escapeHtml(r.gem)}</td>`
+    + '</tr>').join('');
+  const html = `<h1>${escapeHtml(klas?.naam || '')} — Puntenboek</h1>`
+    + `<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
+  afdruk(`Puntenboek — ${klas?.naam || ''}`, html);
+}
+
 function evaluatieDialoog(root, ctx, bestaand) {
   dialoog(bestaand ? 'Evaluatie bewerken' : 'Nieuwe evaluatie', (body, sluit) => {
     const titel = veld('Titel', { value: bestaand?.titel || '' });
@@ -186,18 +227,19 @@ function evaluatieDialoog(root, ctx, bestaand) {
     if (bestaand) {
       acties.append(el('button', { class: 'knop knop--stil', onClick: async () => {
         if (!(await bevestig(`"${bestaand.titel || 'deze evaluatie'}" verwijderen? Alle bijhorende punten gaan mee.`, { gevaar: true, jaLabel: 'Verwijderen' }))) return;
+        // Keuze: de bijhorende resultaten wissen we hier definitief (aparte remove);
+        // enkel het evaluatie-record loopt via verwijderMetUndo. "Ongedaan maken"
+        // herstelt daardoor de evaluatie zonder haar oude punten — dat is aanvaardbaar.
         const res = await byIndex('evalresultaten', 'evaluatieId', bestaand.id);
         for (const r of res) await remove('evalresultaten', r.id);
-        await remove('evaluaties', bestaand.id);
         sluit();
-        toast('Evaluatie verwijderd');
-        hertekenRoot(root, ctx);
+        await verwijderMetUndo('evaluaties', bestaand, () => hertekenRoot(root, ctx), 'Evaluatie verwijderd');
       } }, '🗑 Verwijderen'));
     }
     acties.append(
       el('button', { class: 'knop', onClick: sluit }, 'Annuleren'),
       el('button', { class: 'knop knop--primair', onClick: async () => {
-        if (!titel.input.value.trim()) { toast('Geef een titel', 'fout'); return; }
+        if (!titel.input.value.trim()) { markeerFout(titel.input, 'Geef een titel'); return; }
         const velden = {
           titel: titel.input.value.trim(),
           type: type.select.value,

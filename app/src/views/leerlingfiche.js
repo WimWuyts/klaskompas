@@ -12,6 +12,7 @@ import {
   AANWEZIGHEID_STATUS,
 } from '../domain/model.js';
 import { ficheData } from '../domain/individueel.js';
+import { afdruk, escapeHtml } from '../domain/export.js';
 import { el, leeg, keuze, datumKort, leegKaart, stijl } from '../ui/components.js';
 
 export async function render(root, ctx) {
@@ -47,14 +48,28 @@ export async function render(root, ctx) {
 
   const detail = el('div', { class: 'lf-detail' });
 
+  // — Afdrukknop (rapport voor de geselecteerde leerling) —
+  const printKnop = el('button', {
+    class: 'knop lf-printknop',
+    type: 'button',
+    disabled: true,
+    onClick: () => { if (huidigeData?.leerling) afdruk(`Rapport — ${naamVan(huidigeData.leerling)}`, rapportHtml(huidigeData, naamVan, ctx)); },
+  }, '🖨️ Rapport afdrukken');
+
+  let huidigeData = null;
+
   const toon = async (leerlingId) => {
     leeg(detail);
+    huidigeData = null;
+    printKnop.disabled = true;
     if (!leerlingId) return;
     const data = await ficheData(leerlingId);
     if (!data?.leerling) {
       detail.append(el('p', { class: 'zacht' }, 'Leerling niet gevonden.'));
       return;
     }
+    huidigeData = data;
+    printKnop.disabled = false;
     toonFiche(detail, data, naamVan);
   };
 
@@ -97,6 +112,7 @@ export async function render(root, ctx) {
   root.append(
     el('div', { class: 'kaart' },
       el('div', { class: 'lf-kiezer' }, kies.wrap, zoekVeld),
+      el('div', { class: 'lf-kiezer__acties' }, printKnop),
     ),
     detail,
   );
@@ -229,6 +245,77 @@ function toonFiche(root, data, naamVan) {
   ));
 }
 
+// — Afdrukbaar rapport (HTML-string voor afdruk(...)) —
+
+function rapportHtml(data, naamVan, ctx) {
+  const { leerling, aanwezigheid, observaties, quota, consequenties, inhaalwerk, notities } = data;
+  const e = escapeHtml;
+  const klasNaam = (ctx?.klassen || []).find((k) => k.id === ctx?.klasId)?.naam || '';
+
+  const metaDelen = [];
+  if (leerling.email) metaDelen.push(e(leerling.email));
+  if (klasNaam) metaDelen.push('Klas: ' + e(klasNaam));
+  const meta = metaDelen.length ? metaDelen.join(' · ') : 'Geen bijkomende gegevens';
+
+  const deel = (titel, binnen) => `<h2>${e(titel)}</h2>${binnen}`;
+
+  // Aanwezigheid — tellingen per status
+  const aanwRijen = Object.entries(AANWEZIGHEID_STATUS)
+    .map(([sleutel, label]) => `<tr><td>${e(label)}</td><td class="num">${e(aanwezigheid[sleutel] ?? 0)}</td></tr>`)
+    .join('');
+  const aanwHtml = `<table><thead><tr><th>Status</th><th class="num">Aantal</th></tr></thead><tbody>${aanwRijen}</tbody></table>`;
+
+  // Observaties
+  const obsHtml = observaties.length
+    ? `<table><thead><tr><th>Datum</th><th>Categorie</th><th>A — Aanleiding</th><th>B — Gedrag</th><th>C — Gevolg</th></tr></thead><tbody>${
+        observaties.map((o) =>
+          `<tr><td>${e(datumKort(o.datum))}</td><td>${e(OBSERVATIE_CATEGORIE[o.categorie] || o.categorie)}</td>` +
+          `<td>${e(o.aanleiding || '—')}</td><td>${e(o.gedrag || '—')}</td><td>${e(o.gevolg || '—')}</td></tr>`,
+        ).join('')
+      }</tbody></table>`
+    : '<p>Geen</p>';
+
+  // Quota
+  const quotaHtml = quota.length
+    ? `<table><thead><tr><th>Type</th><th class="num">Aantal</th><th class="num">Drempel</th></tr></thead><tbody>${
+        quota.map((q) =>
+          `<tr><td>${e(QUOTA_TYPES[q.type] || q.type)}</td><td class="num">${e(q.aantal)}</td><td class="num">${e(q.drempel)}</td></tr>`,
+        ).join('')
+      }</tbody></table>`
+    : '<p>Geen</p>';
+
+  // Consequenties
+  const consHtml = consequenties.length
+    ? `<ul>${consequenties.map((c) => `<li>${e(datumKort(c.datum))} — ${e(c.stap || '—')}</li>`).join('')}</ul>`
+    : '<p>Geen</p>';
+
+  // Inhaalwerk
+  const inhaalHtml = inhaalwerk.length
+    ? `<table><thead><tr><th>Type</th><th>Titel</th><th>Status</th></tr></thead><tbody>${
+        inhaalwerk.map((i) =>
+          `<tr><td>${e(INHAALWERK_TYPE[i.type] || i.type)}</td><td>${e(i.titel || '(zonder titel)')}</td><td>${e(INHAALWERK_STATUS[i.status] || i.status)}</td></tr>`,
+        ).join('')
+      }</tbody></table>`
+    : '<p>Geen</p>';
+
+  // Communicatie-notities
+  const notitieHtml = notities.length
+    ? `<table><thead><tr><th>Kanaal</th><th>Datum</th><th>Tekst</th></tr></thead><tbody>${
+        notities.map((n) =>
+          `<tr><td>${e(NOTITIE_KANAAL[n.kanaal] || n.kanaal)}</td><td>${e(datumKort(n.datum))}</td><td>${e(n.tekst || '—')}</td></tr>`,
+        ).join('')
+      }</tbody></table>`
+    : '<p>Geen</p>';
+
+  return `<h1>${e(naamVan(leerling))}</h1><div class="meta">${meta}</div>` +
+    deel('Aanwezigheid', aanwHtml) +
+    deel('Observaties', obsHtml) +
+    deel('Quota', quotaHtml) +
+    deel('Consequenties', consHtml) +
+    deel('Inhaalwerk', inhaalHtml) +
+    deel('Communicatie-notities', notitieHtml);
+}
+
 // — kleine bouwstenen —
 
 function kaart(titel, inhoud) {
@@ -250,6 +337,8 @@ function abcRegel(letter, tekst) {
 const CSS = `
 .lf-kiezer { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 16px; }
 .lf-kiezer .veld { margin-bottom: 0; }
+.lf-kiezer__acties { margin-top: 12px; }
+.lf-printknop[disabled] { opacity: 0.55; cursor: not-allowed; }
 .lf-zoekresultaat { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
 .lf-treffer {
   text-align: left; display: flex; flex-direction: column; gap: 1px; cursor: pointer;

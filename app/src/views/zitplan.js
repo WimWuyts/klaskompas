@@ -1,8 +1,8 @@
 // Zitplan (OD-8): raster met randvoorwaarden ("slotjes"), genereren/schudden en bewaren.
 // Toont enkel neutrale zitinfo; persoonlijke notities blijven in Administratie.
 
-import { el, leeg, toast, dialoog, keuze, veld, leegKaart, stijl } from '../ui/components.js';
-import { get, put, remove, byIndex, leerlingenVanKlas } from '../db/repo.js';
+import { el, leeg, toast, dialoog, keuze, veld, leegKaart, stijl, verwijderMetUndo } from '../ui/components.js';
+import { get, put, byIndex, leerlingenVanKlas } from '../db/repo.js';
 import { ZITREGEL_TYPE, maakZitregel } from '../domain/model.js';
 import { genereerZitplan } from '../domain/zitplan.js';
 
@@ -71,6 +71,22 @@ const ZITSTIJL = `
 }
 .zp-seat--leeg::before { opacity: 0.3; }
 .zp-seat--slot { border-color: var(--goud); }
+.zp-seat[draggable="true"] { cursor: grab; }
+.zp-seat[draggable="true"]:active { cursor: grabbing; }
+.zp-seat--sleep { opacity: 0.45; }
+.zp-seat--over {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--paneel));
+}
+.zp-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 0.74rem;
+  color: var(--tekst-zacht);
+}
 .zp-naam {
   font-size: 0.84rem;
   font-weight: 800;
@@ -156,6 +172,73 @@ export async function render(root, ctx) {
     return m;
   }
 
+  // Onthoudt vanwaar er gesleept wordt (dataTransfer is niet leesbaar tijdens dragover).
+  let sleepBron = null;
+
+  /** Wissel/verplaats leerlingen tussen twee posities en bewaar het plan meteen. */
+  async function wisselPlaatsen(bronRij, bronKol, doelRij, doelKol) {
+    if (!plan?.plaatsen?.length) return;
+    if (bronRij === doelRij && bronKol === doelKol) return;
+    const pBron = plan.plaatsen.find((p) => p.rij === bronRij && p.kol === bronKol);
+    if (!pBron) return; // niets om te verplaatsen
+    const pDoel = plan.plaatsen.find((p) => p.rij === doelRij && p.kol === doelKol);
+    if (pDoel) {
+      // twee bezette plaatsen: wissel hun rij/kol
+      pDoel.rij = bronRij; pDoel.kol = bronKol;
+      pBron.rij = doelRij; pBron.kol = doelKol;
+    } else {
+      // lege doelplaats: verplaats de gesleepte leerling
+      pBron.rij = doelRij; pBron.kol = doelKol;
+    }
+    plan.aangemaakt = new Date().toISOString();
+    await put('zitplannen', {
+      klasId: ctx.klasId,
+      naam: plan.naam || 'Zitplan',
+      plaatsen: plan.plaatsen,
+      rijen: plan.rijen,
+      kolommen: plan.kolommen,
+      onopgelost: plan.onopgelost || [],
+      aangemaakt: plan.aangemaakt,
+    });
+    bewaard = true;
+    toast('Plaatsen gewisseld');
+    await teken();
+  }
+
+  /** Maak een bankje sleepbaar (indien bezet) en altijd een geldig drop-doel. */
+  function maakSleepbaar(seat, rij, kol, leegSeat) {
+    if (!leegSeat) {
+      seat.addEventListener('dragstart', (e) => {
+        sleepBron = { rij, kol };
+        seat.classList.add('zp-seat--sleep');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          try { e.dataTransfer.setData('text/plain', `${rij},${kol}`); } catch (_) { /* leeg */ }
+        }
+      });
+      seat.addEventListener('dragend', () => {
+        seat.classList.remove('zp-seat--sleep');
+      });
+    }
+    seat.addEventListener('dragover', (e) => {
+      if (!sleepBron) return;
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      seat.classList.add('zp-seat--over');
+    });
+    seat.addEventListener('dragleave', () => {
+      seat.classList.remove('zp-seat--over');
+    });
+    seat.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      seat.classList.remove('zp-seat--over');
+      const bron = sleepBron;
+      sleepBron = null;
+      if (!bron) return;
+      await wisselPlaatsen(bron.rij, bron.kol, rij, kol);
+    });
+  }
+
   async function teken() {
     leeg(root);
     const regels = await laadRegels();
@@ -225,23 +308,28 @@ export async function render(root, ctx) {
     for (let rij = 0; rij < plan.rijen; rij++) {
       for (let kol = 0; kol < plan.kolommen; kol++) {
         const lid = cellen.get(`${rij},${kol}`);
-        if (!lid) {
-          seats.append(el('div', { class: 'zp-seat zp-seat--leeg' },
-            el('span', { class: 'zp-leegtekst' }, 'leeg')));
-          continue;
-        }
-        const l = naamVan.get(lid);
-        const slot = slots.get(lid);
-        seats.append(
-          el('div', { class: 'zp-seat' + (slot ? ' zp-seat--slot' : '') },
-            el('div', { class: 'zp-naam' }, l?.voornaam || '', l ? el('br') : null, l?.naam || (!l ? '(onbekend)' : '')),
-            slot ? el('div', { class: 'zp-slot' }, `🔒 ${slot}`) : null,
-          ),
+        const leegSeat = !lid;
+        const l = leegSeat ? null : naamVan.get(lid);
+        const slot = leegSeat ? null : slots.get(lid);
+        const seat = el('div', {
+          class: 'zp-seat' + (leegSeat ? ' zp-seat--leeg' : '') + (slot ? ' zp-seat--slot' : ''),
+          draggable: !leegSeat,
+          dataset: { rij: String(rij), kol: String(kol) },
+        },
+          leegSeat
+            ? el('span', { class: 'zp-leegtekst' }, 'leeg')
+            : el('div', { class: 'zp-naam' }, l?.voornaam || '', l ? el('br') : null, l?.naam || (!l ? '(onbekend)' : '')),
+          slot ? el('div', { class: 'zp-slot' }, `🔒 ${slot}`) : null,
         );
+        maakSleepbaar(seat, rij, kol, leegSeat);
+        seats.append(seat);
       }
     }
 
     kaart.append(
+      el('p', { class: 'zp-hint' },
+        el('span', {}, '🖐'),
+        el('span', {}, 'Sleep een leerling op een andere om te wisselen.')),
       el('div', { class: 'zp-room' },
         el('div', { class: 'zp-board' }, '♟ Bord · leerkrachtzone'),
         seats,
@@ -327,10 +415,7 @@ export async function render(root, ctx) {
                   ' — ',
                   regelBetrokkenen(r)),
                 el('button', { class: 'icoonknop', title: 'Verwijderen', onClick: async () => {
-                  await remove('zitregels', r.id);
-                  toast('Randvoorwaarde verwijderd');
-                  await vul();
-                  await teken();
+                  await verwijderMetUndo('zitregels', r, async () => { await vul(); await teken(); }, 'Regel verwijderd');
                 } }, '✕'),
               ),
             );

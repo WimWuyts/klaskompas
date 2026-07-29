@@ -205,6 +205,25 @@ textarea.invoer { resize: vertical; }
 .toast--in { opacity: 1; transform: none; }
 .toast--fout { background: var(--rood); color: #fff; }
 .toast--info { background: var(--accent); color: #fff; }
+.toast--actie { display: flex; align-items: center; gap: 14px; }
+.toast__actie { background: transparent; border: 1px solid rgba(255,255,255,0.45); color: inherit; border-radius: 7px; padding: 5px 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
+.toast__actie:hover { background: rgba(255,255,255,0.15); }
+
+/* validatie */
+.invoer--fout { border-color: var(--rood) !important; outline: 2px solid color-mix(in srgb, var(--rood) 40%, transparent); }
+
+/* toegankelijkheid: zichtbare focus */
+:where(.knop, .nav__link, .nav__lesmodus, .icoonknop, .tegel, .klaskaart, .kb-mini, .kb-mode, .kb-step, .stap):focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.visueel-verborgen { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* afdruk-terugval (echte rapporten gaan via een print-iframe) */
+@media print {
+  .zijbalk, .topbalk, .toast-laag, .overlay { display: none !important; }
+  .shell { grid-template-columns: 1fr; }
+  .inhoud { padding: 0; }
+}
 
 /* ————————————————————————————————— kalender & rooster ————— */
 .kalender { display: flex; flex-direction: column; gap: 6px; }
@@ -452,7 +471,7 @@ textarea.invoer { resize: vertical; }
       __defProp(target, name, { get: all2[name], enumerable: true });
   };
 
-  // src/db/idb.js
+  // app/src/db/idb.js
   function wrap(req) {
     return new Promise((resolve, reject) => {
       req.onsuccess = () => resolve(req.result);
@@ -552,7 +571,7 @@ textarea.invoer { resize: vertical; }
     }
   };
 
-  // src/db/schema.js
+  // app/src/db/schema.js
   var DB_NAME = "klaskompas";
   var DB_VERSION = 2;
   var STORES = [
@@ -719,7 +738,7 @@ textarea.invoer { resize: vertical; }
     return Idb.open(DB_NAME, DB_VERSION, upgrade);
   }
 
-  // src/domain/model.js
+  // app/src/domain/model.js
   function uid() {
     if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
     return "id-" + Math.random().toString(36).slice(2) + "-" + performance.now().toString(36);
@@ -980,8 +999,21 @@ textarea.invoer { resize: vertical; }
     return { id: uid(), klasId, tekst, actief: !!actief2, aangemaakt: (/* @__PURE__ */ new Date()).toISOString() };
   }
 
-  // src/db/repo.js
+  // app/src/db/repo.js
   var _db = null;
+  var cryptoHooks = null;
+  function setCryptoHooks(h) {
+    cryptoHooks = h;
+  }
+  async function enc(store, value) {
+    return cryptoHooks ? cryptoHooks.enc(store, value) : value;
+  }
+  async function dec(store, value) {
+    return cryptoHooks && value ? cryptoHooks.dec(store, value) : value;
+  }
+  async function decList(store, rows) {
+    return cryptoHooks ? Promise.all(rows.map((r) => cryptoHooks.dec(store, r))) : rows;
+  }
   async function db() {
     if (!_db) {
       _db = await openDb();
@@ -1011,20 +1043,20 @@ textarea.invoer { resize: vertical; }
     return value;
   }
   async function all(store) {
-    return (await db()).getAll(store);
+    return decList(store, await (await db()).getAll(store));
   }
   async function get(store, id) {
-    return (await db()).get(store, id);
+    return dec(store, await (await db()).get(store, id));
   }
   async function put(store, value) {
-    await (await db()).put(store, value);
+    await (await db()).put(store, await enc(store, value));
     return value;
   }
   async function remove(store, id) {
     return (await db()).delete(store, id);
   }
   async function byIndex(store, index, value) {
-    return (await db()).getAllByIndex(store, index, value);
+    return decList(store, await (await db()).getAllByIndex(store, index, value));
   }
   async function leerlingenVanKlas(klasId) {
     const d = await db();
@@ -1096,7 +1128,7 @@ textarea.invoer { resize: vertical; }
     return out;
   }
 
-  // src/domain/klaspot.js
+  // app/src/domain/klaspot.js
   async function potStatus(klasId) {
     const pot = await getPot(klasId);
     const klas = await get("klassen", klasId);
@@ -1155,7 +1187,7 @@ textarea.invoer { resize: vertical; }
     return klas.config;
   }
 
-  // src/domain/beloningen.js
+  // app/src/domain/beloningen.js
   var START_MENU = [
     // klein / vaak
     { categorie: "voorrecht", niveau: "klein", naam: "Klas-DJ (muziek kiezen)", prijs: 10, talen: "Enkel Engels-/Spaanstalige nummers → luisterinput", omschrijving: "De klas kiest de muziek bij binnenkomst of stil werk." },
@@ -1203,7 +1235,7 @@ textarea.invoer { resize: vertical; }
     return { ok: true, saldo: status.saldo };
   }
 
-  // src/db/backup.js
+  // app/src/db/backup.js
   function parseCsv(text) {
     const rows = [];
     let veld6 = "";
@@ -1305,8 +1337,8 @@ textarea.invoer { resize: vertical; }
       res.rijen++;
       const email = cel(idx.email);
       const klasNaam = cel(idx.klas);
-      const sleutel = dedupSleutel(voornaam, naam);
-      let leerlingId = leerlingCache.get(sleutel);
+      const sleutel2 = dedupSleutel(voornaam, naam);
+      let leerlingId = leerlingCache.get(sleutel2);
       if (leerlingId) {
         res.hergebruikt++;
         if (email) {
@@ -1319,7 +1351,7 @@ textarea.invoer { resize: vertical; }
       } else {
         const l = maakLeerling({ voornaam, naam, email });
         await d.put("leerlingen", l);
-        leerlingCache.set(sleutel, l.id);
+        leerlingCache.set(sleutel2, l.id);
         leerlingId = l.id;
         res.nieuweLeerlingen++;
       }
@@ -1390,13 +1422,20 @@ textarea.invoer { resize: vertical; }
     return res;
   }
 
-  // src/domain/beveiliging.js
+  // app/src/domain/veldencryptie.js
+  var VELDEN = {
+    observaties: ["aanleiding", "gedrag", "gevolg"],
+    notities: ["tekst"],
+    consequenties: ["note"]
+  };
   var ITER = 15e4;
-  var enc = new TextEncoder();
+  var enc2 = new TextEncoder();
+  var dec2 = new TextDecoder();
+  var sleutel = null;
   function b64(buf) {
-    const bytes = new Uint8Array(buf);
+    const b = new Uint8Array(buf);
     let s = "";
-    for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768));
+    for (let i = 0; i < b.length; i += 32768) s += String.fromCharCode(...b.subarray(i, i + 32768));
     return btoa(s);
   }
   function unb64(str) {
@@ -1405,14 +1444,106 @@ textarea.invoer { resize: vertical; }
     for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
     return out;
   }
+  async function deriveKey(pin, salt) {
+    const mat = await crypto.subtle.importKey("raw", enc2.encode(pin), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, mat, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+  }
+  async function encStr(klaar) {
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const c = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, sleutel, enc2.encode(klaar));
+    const buf = new Uint8Array(iv.length + c.byteLength);
+    buf.set(iv, 0);
+    buf.set(new Uint8Array(c), iv.length);
+    return { __enc: b64(buf) };
+  }
+  async function decStr(obj) {
+    const buf = unb64(obj.__enc);
+    const iv = buf.slice(0, 12);
+    const data = buf.slice(12);
+    const p = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, sleutel, data);
+    return dec2.decode(p);
+  }
+  async function encRec(store, rec) {
+    const velden = VELDEN[store];
+    if (!sleutel || !velden || !rec) return rec;
+    const kopie = { ...rec };
+    for (const f of velden) {
+      const v = kopie[f];
+      if (typeof v === "string" && v.length) kopie[f] = await encStr(v);
+    }
+    return kopie;
+  }
+  async function decRec(store, rec) {
+    const velden = VELDEN[store];
+    if (!velden || !rec) return rec;
+    const kopie = { ...rec };
+    for (const f of velden) {
+      const v = kopie[f];
+      if (v && typeof v === "object" && v.__enc) {
+        if (sleutel) {
+          try {
+            kopie[f] = await decStr(v);
+          } catch (_) {
+            kopie[f] = "🔒";
+          }
+        } else kopie[f] = "🔒 vergrendeld";
+      }
+    }
+    return kopie;
+  }
+  function initEncryptie() {
+    setCryptoHooks({ enc: encRec, dec: decRec });
+  }
+  function heeftSleutel() {
+    return !!sleutel;
+  }
+  async function ontgrendelSleutel(pin) {
+    const e = await getSetting("enc", null);
+    if (!e?.salt) return false;
+    sleutel = await deriveKey(pin, unb64(e.salt));
+    return true;
+  }
+  async function versleutelAlles(pin) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    await setSetting("enc", { salt: b64(salt) });
+    sleutel = await deriveKey(pin, salt);
+    for (const store of Object.keys(VELDEN)) {
+      for (const rec of await all(store)) await put(store, rec);
+    }
+  }
+  async function ontsleutelAlles() {
+    if (sleutel) {
+      const snapshot = {};
+      for (const store of Object.keys(VELDEN)) snapshot[store] = await all(store);
+      sleutel = null;
+      for (const store of Object.keys(VELDEN)) for (const rec of snapshot[store]) await put(store, rec);
+    }
+    await setSetting("enc", null);
+  }
+
+  // app/src/domain/beveiliging.js
+  var ITER2 = 15e4;
+  var enc3 = new TextEncoder();
+  function b642(buf) {
+    const bytes = new Uint8Array(buf);
+    let s = "";
+    for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768));
+    return btoa(s);
+  }
+  function unb642(str) {
+    const bin = atob(str);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
   async function pbkdf2Bits(geheim, salt, lengte = 256) {
-    const mat = await crypto.subtle.importKey("raw", enc.encode(geheim), "PBKDF2", false, ["deriveBits"]);
-    return crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, mat, lengte);
+    const mat = await crypto.subtle.importKey("raw", enc3.encode(geheim), "PBKDF2", false, ["deriveBits"]);
+    return crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: ITER2, hash: "SHA-256" }, mat, lengte);
   }
   async function aesSleutel(passphrase, salt) {
-    const mat = await crypto.subtle.importKey("raw", enc.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
+    const mat = await crypto.subtle.importKey("raw", enc3.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
     return crypto.subtle.deriveKey(
-      { name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" },
+      { name: "PBKDF2", salt, iterations: ITER2, hash: "SHA-256" },
       mat,
       { name: "AES-GCM", length: 256 },
       false,
@@ -1424,17 +1555,19 @@ textarea.invoer { resize: vertical; }
   }
   async function stelPinIn(pin) {
     if (!pin || pin.length < 4) throw new Error("Kies een pincode van minstens 4 tekens.");
+    if (heeftSleutel()) await ontsleutelAlles();
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const hash = await pbkdf2Bits(pin, salt);
-    await setSetting("lock", { enabled: true, salt: b64(salt), hash: b64(hash), iter: ITER });
+    await setSetting("lock", { enabled: true, salt: b642(salt), hash: b642(hash), iter: ITER2 });
+    await versleutelAlles(pin);
     return true;
   }
   async function controleerPin(pin) {
     const lock = await getSetting("lock", null);
     if (!lock?.enabled) return true;
-    const salt = unb64(lock.salt);
+    const salt = unb642(lock.salt);
     const hash = new Uint8Array(await pbkdf2Bits(pin, salt));
-    const ref = unb64(lock.hash);
+    const ref = unb642(lock.hash);
     if (hash.length !== ref.length) return false;
     let diff = 0;
     for (let i = 0; i < hash.length; i++) diff |= hash[i] ^ ref[i];
@@ -1442,6 +1575,7 @@ textarea.invoer { resize: vertical; }
   }
   async function zetLockAf(pin) {
     if (!await controleerPin(pin)) throw new Error("Verkeerde pincode.");
+    await ontsleutelAlles();
     await setSetting("lock", { enabled: false });
     return true;
   }
@@ -1450,24 +1584,24 @@ textarea.invoer { resize: vertical; }
     const backup = await exporteerAlles();
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const sleutel = await aesSleutel(passphrase, salt);
-    const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, sleutel, enc.encode(JSON.stringify(backup)));
+    const sleutel2 = await aesSleutel(passphrase, salt);
+    const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, sleutel2, enc3.encode(JSON.stringify(backup)));
     return {
       formaat: "klaskompas-backup-versleuteld",
       versie: 1,
-      salt: b64(salt),
-      iv: b64(iv),
-      data: b64(cipher)
+      salt: b642(salt),
+      iv: b642(iv),
+      data: b642(cipher)
     };
   }
   async function ontsleutelBackup(obj, passphrase) {
     if (obj?.formaat !== "klaskompas-backup-versleuteld") throw new Error("Dit is geen versleutelde Klaskompas-backup.");
-    const salt = unb64(obj.salt);
-    const iv = unb64(obj.iv);
-    const sleutel = await aesSleutel(passphrase, salt);
+    const salt = unb642(obj.salt);
+    const iv = unb642(obj.iv);
+    const sleutel2 = await aesSleutel(passphrase, salt);
     let plat;
     try {
-      plat = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, sleutel, unb64(obj.data));
+      plat = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, sleutel2, unb642(obj.data));
     } catch (_) {
       throw new Error("Ontsleutelen mislukt — verkeerd wachtwoord?");
     }
@@ -1485,7 +1619,7 @@ textarea.invoer { resize: vertical; }
     setTimeout(() => URL.revokeObjectURL(url), 1e3);
   }
 
-  // src/ui/components.js
+  // app/src/ui/components.js
   function el(tag, props = {}, ...children) {
     const node = document.createElement(tag);
     for (const [k, v] of Object.entries(props || {})) {
@@ -1606,6 +1740,46 @@ textarea.invoer { resize: vertical; }
       minute: "2-digit"
     });
   }
+  function toastActie(bericht, actieLabel, onActie, ms = 6e3) {
+    let laag = document.querySelector(".toast-laag");
+    if (!laag) {
+      laag = el("div", { class: "toast-laag" });
+      document.body.append(laag);
+    }
+    let weg;
+    const knop = el("button", { class: "toast__actie", onClick: () => {
+      clearTimeout(weg);
+      onActie();
+      t.remove();
+    } }, actieLabel);
+    const t = el("div", { class: "toast toast--actie toast--in" }, el("span", {}, bericht), knop);
+    laag.append(t);
+    weg = setTimeout(() => {
+      t.classList.remove("toast--in");
+      setTimeout(() => t.remove(), 250);
+    }, ms);
+    return t;
+  }
+  async function verwijderMetUndo(store, record, opnieuw, label = "Verwijderd") {
+    await remove(store, record.id);
+    if (opnieuw) opnieuw();
+    toastActie(label, "Ongedaan maken", async () => {
+      await put(store, record);
+      if (opnieuw) opnieuw();
+    });
+  }
+  function markeerFout(input, boodschap) {
+    input.classList.add("invoer--fout");
+    input.setAttribute("aria-invalid", "true");
+    if (boodschap) input.title = boodschap;
+    input.addEventListener("input", () => wisFout(input), { once: true });
+    input.focus();
+    return false;
+  }
+  function wisFout(input) {
+    input.classList.remove("invoer--fout");
+    input.removeAttribute("aria-invalid");
+  }
   function stijl(id, css) {
     if (document.getElementById(id)) return;
     const s = document.createElement("style");
@@ -1643,7 +1817,7 @@ textarea.invoer { resize: vertical; }
     );
   }
 
-  // src/views/dashboard.js
+  // app/src/views/dashboard.js
   var dashboard_exports = {};
   __export(dashboard_exports, {
     render: () => render
@@ -1732,7 +1906,7 @@ textarea.invoer { resize: vertical; }
     return el("div", { class: "regel" }, el("span", { class: "regel__label" }, label), el("span", {}, waarde));
   }
 
-  // src/views/klassen.js
+  // app/src/views/klassen.js
   var klassen_exports = {};
   __export(klassen_exports, {
     render: () => render2
@@ -1804,11 +1978,8 @@ textarea.invoer { resize: vertical; }
             "td",
             { class: "rechts" },
             el("button", { class: "icoonknop", title: "Uit klas verwijderen", onClick: async () => {
-              if (await bevestig(`${l.voornaam} ${l.naam} uit ${klas.naam} verwijderen? (de leerling blijft bestaan)`)) {
-                await remove("inschrijvingen", l.inschrijvingId);
-                toast("Uit klas verwijderd");
-                toonKlas(root, ctx, klasId);
-              }
+              const inschr = await get("inschrijvingen", l.inschrijvingId);
+              if (inschr) await verwijderMetUndo("inschrijvingen", inschr, () => toonKlas(root, ctx, klasId), `${l.voornaam} uit ${klas.naam} verwijderd`);
             } }, "✕")
           )
         )
@@ -1998,13 +2169,13 @@ textarea.invoer { resize: vertical; }
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // src/views/schooljaar.js
+  // app/src/views/schooljaar.js
   var schooljaar_exports = {};
   __export(schooljaar_exports, {
     render: () => render3
   });
 
-  // src/domain/schooljaar.js
+  // app/src/domain/schooljaar.js
   function parseDatum(s) {
     const [j, m, d] = s.split("-").map(Number);
     return new Date(j, m - 1, d);
@@ -2056,7 +2227,7 @@ textarea.invoer { resize: vertical; }
     return `${startjaar}-${startjaar + 1}`;
   }
 
-  // src/views/schooljaar.js
+  // app/src/views/schooljaar.js
   async function render3(root, ctx) {
     const jaren = await all("schooljaren");
     jaren.sort((a, b) => (a.start || "").localeCompare(b.start || ""));
@@ -2075,8 +2246,8 @@ textarea.invoer { resize: vertical; }
     for (const sj of jaren) {
       const items = await byIndex("kalenderitems", "schooljaarId", sj.id);
       items.sort((a, b) => (a.van || "").localeCompare(b.van || ""));
-      const kaart2 = el("div", { class: "kaart" });
-      kaart2.append(
+      const kaart3 = el("div", { class: "kaart" });
+      kaart3.append(
         el(
           "div",
           { class: "kaart__kop" },
@@ -2112,7 +2283,7 @@ textarea.invoer { resize: vertical; }
           } }, "✕")
         ));
       }
-      kaart2.append(el(
+      kaart3.append(el(
         "div",
         { class: "kaart__sub" },
         el(
@@ -2127,14 +2298,14 @@ textarea.invoer { resize: vertical; }
         const slots = (await byIndex("roosterslots", "klasId", ctx.klasId)).filter((s2) => s2.schooljaarId === sj.id || !s2.schooljaarId);
         const lm = genereerLesmomenten(sj, slots, items);
         const s = samenvatting(lm);
-        kaart2.append(el(
+        kaart3.append(el(
           "div",
           { class: "genereer" },
           el("span", {}, "🧮 Genereer schooljaar (actieve klas): "),
           slots.length ? el("strong", {}, `${s.lesmomenten} lesmomenten over ${s.weken} weken`) : el("span", { class: "zacht" }, "nog geen rooster voor deze klas — vul het in onder “Rooster”.")
         ));
       }
-      root.append(kaart2);
+      root.append(kaart3);
     }
   }
   function jaarDialoog(root, ctx, bestaand) {
@@ -2205,11 +2376,16 @@ textarea.invoer { resize: vertical; }
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // src/views/rooster.js
+  // app/src/views/rooster.js
   var rooster_exports = {};
   __export(rooster_exports, {
     render: () => render4
   });
+  var IMPORT_VOORBEELD = '[\n  { "dag": 1, "start": "08:25", "eind": "09:15", "lokaal": "A102" },\n  { "dag": 3, "start": "10:20", "eind": "11:10" }\n]';
+  var TIJD_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+  function hertekenen(root, ctx) {
+    render4(leeg(root), ctx);
+  }
   async function render4(root, ctx) {
     if (!ctx.klasId) {
       root.append(leegKaart("Geen actieve klas", "Kies een klas om haar rooster in te vullen."));
@@ -2224,7 +2400,12 @@ textarea.invoer { resize: vertical; }
         "div",
         { class: "kaart__kop kaart__kop--los" },
         el("h2", {}, `Rooster — ${klas?.naam || ""}`),
-        el("button", { class: "knop knop--primair", onClick: () => slotDialoog(root, ctx, schooljaarId, null) }, "+ Lesmoment")
+        el(
+          "div",
+          { class: "kaart__kop-acties" },
+          el("button", { class: "knop", onClick: () => importDialoog2(root, ctx, schooljaarId) }, "📋 Rooster importeren"),
+          el("button", { class: "knop knop--primair", onClick: () => slotDialoog(root, ctx, schooljaarId, null) }, "+ Lesmoment")
+        )
       ),
       el("p", { class: "zacht" }, "Wekelijks terugkerende lesmomenten. Later te combineren met de schooljaarkalender voor concrete lesdatums.")
     );
@@ -2259,12 +2440,9 @@ textarea.invoer { resize: vertical; }
         el(
           "div",
           { class: "dialoog__acties" },
-          bestaand ? el("button", { class: "knop knop--gevaar-zacht", onClick: async () => {
-            if (await bevestig("Dit lesmoment verwijderen?")) {
-              await remove("roosterslots", bestaand.id);
-              sluit();
-              render4(leeg(root), ctx);
-            }
+          bestaand ? el("button", { class: "knop knop--gevaar-zacht", onClick: () => {
+            sluit();
+            verwijderMetUndo("roosterslots", bestaand, () => hertekenen(root, ctx), "Lesmoment verwijderd");
           } }, "🗑 Verwijderen") : null,
           el("span", { class: "spatie" }),
           el("button", { class: "knop", onClick: sluit }, "Annuleren"),
@@ -2274,8 +2452,66 @@ textarea.invoer { resize: vertical; }
             await put("roosterslots", rec);
             sluit();
             toast("Opgeslagen");
-            render4(leeg(root), ctx);
+            hertekenen(root, ctx);
           } }, "Opslaan")
+        )
+      );
+    });
+  }
+  function importDialoog2(root, ctx, schooljaarId) {
+    stijl("css-rooster", `
+    .rooster-import__voorbeeld { margin: .25rem 0 .75rem; padding: .5rem .75rem; background: var(--vlak-2, rgba(0,0,0,.05));
+      border-radius: .5rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8rem;
+      white-space: pre; overflow-x: auto; }
+    .rooster-import__vink { display: flex; align-items: center; gap: .5rem; margin: .5rem 0; }
+    .rooster-import__vink input { width: auto; }
+  `);
+    dialoog("Rooster importeren", (body, sluit) => {
+      const invoer = el("textarea", { class: "invoer", rows: 8, placeholder: "Plak hier de JSON van het rooster…" });
+      const wisVink = el("input", { type: "checkbox" });
+      body.append(
+        el("p", { class: "zacht" }, "Plak de lesmomenten als JSON-lijst. Dit is hetzelfde formaat dat later automatisch uit een roosterfoto komt. Dag 1..5 = maandag t/m vrijdag; het lokaal is optioneel."),
+        el("div", { class: "rooster-import__voorbeeld" }, IMPORT_VOORBEELD),
+        etiket4("JSON", invoer),
+        el("label", { class: "rooster-import__vink" }, wisVink, el("span", {}, "Bestaande roosterslots van deze klas eerst wissen")),
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("span", { class: "spatie" }),
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            let data;
+            try {
+              data = JSON.parse(invoer.value);
+            } catch (_) {
+              return markeerFout(invoer, "Ongeldige JSON");
+            }
+            if (!Array.isArray(data)) return markeerFout(invoer, "Verwacht een JSON-lijst");
+            let geldig = 0;
+            let overgeslagen = 0;
+            const teBewaren = [];
+            for (const item of data) {
+              const dag = Number(item?.dag);
+              const start = typeof item?.start === "string" ? item.start.trim() : "";
+              const eind = typeof item?.eind === "string" ? item.eind.trim() : "";
+              const lokaal = typeof item?.lokaal === "string" ? item.lokaal.trim() : "";
+              if (!(dag >= 1 && dag <= 5) || !TIJD_RE.test(start) || !TIJD_RE.test(eind)) {
+                overgeslagen++;
+                continue;
+              }
+              teBewaren.push({ id: uid(), klasId: ctx.klasId, schooljaarId, dag, start, eind, lokaal });
+              geldig++;
+            }
+            if (wisVink.checked) {
+              const bestaande = await byIndex("roosterslots", "klasId", ctx.klasId);
+              for (const s of bestaande) await remove("roosterslots", s.id);
+            }
+            for (const rec of teBewaren) await put("roosterslots", rec);
+            sluit();
+            const staart = overgeslagen ? ` (${overgeslagen} overgeslagen)` : "";
+            toast(`${geldig} lesmoment${geldig === 1 ? "" : "en"} geïmporteerd${staart}`);
+            hertekenen(root, ctx);
+          } }, "Importeren")
         )
       );
     });
@@ -2288,16 +2524,34 @@ textarea.invoer { resize: vertical; }
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // src/views/aanwezigheid.js
+  // app/src/views/aanwezigheid.js
   var aanwezigheid_exports = {};
   __export(aanwezigheid_exports, {
     render: () => render5
   });
+  function slotKey(slot) {
+    return (slot.start || "").replace(":", "") || "dag";
+  }
+  function slotLabel(slot) {
+    const tijd = `${slot.start || "?"}–${slot.eind || "?"}`;
+    return slot.lokaal ? `${tijd} (${slot.lokaal})` : tijd;
+  }
+  function hoortBij(rec, lesuurKey) {
+    if (lesuurKey === "dag") return rec.lesuur === "dag" || rec.lesuur == null;
+    return rec.lesuur === lesuurKey;
+  }
   async function render5(root, ctx) {
     if (!ctx.klasId) {
       root.append(leegKaart("Geen actieve klas", "Kies een klas om aanwezigheid te registreren."));
       return;
     }
+    stijl("css-aanwezigheid", `
+    .lesuur-kiezer { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
+    .lesuur-knop { font: inherit; padding: 7px 12px; border-radius: var(--radius-s); border: 1px solid var(--rand); background: var(--paneel-2); color: var(--tekst); cursor: pointer; }
+    .lesuur-knop:hover { border-color: var(--accent); }
+    .lesuur-knop--actief { background: var(--accent-zacht); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+    .aanw-samenvatting { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; align-items: center; }
+  `);
     const klas = await get("klassen", ctx.klasId);
     const vandaag = isoDatum(/* @__PURE__ */ new Date());
     const datum = el("input", { class: "invoer invoer--kort", type: "date", value: vandaag });
@@ -2311,9 +2565,9 @@ textarea.invoer { resize: vertical; }
     );
     const houder = el("div", { id: "aanw-houder" });
     root.append(houder);
-    datum.addEventListener("change", () => teken2());
-    await teken2();
-    async function teken2() {
+    datum.addEventListener("change", () => tekenDag());
+    await tekenDag();
+    async function tekenDag() {
       leeg(houder);
       const leerlingen = await leerlingenVanKlas(ctx.klasId);
       if (!leerlingen.length) {
@@ -2321,41 +2575,114 @@ textarea.invoer { resize: vertical; }
         return;
       }
       const dag = datum.value;
+      const alleSlots = await byIndex("roosterslots", "klasId", ctx.klasId);
+      const dagNr = weekdag(parseDatum(dag));
+      const slots = alleSlots.filter((s) => s.dag === dagNr).sort((a, b) => (a.start || "").localeCompare(b.start || ""));
+      const opties = [
+        ...slots.map((s) => ({ key: slotKey(s), label: slotLabel(s) })),
+        { key: "dag", label: "Hele dag" }
+      ];
+      let lesuurKey = opties[0].key;
       const bestaande = (await byIndex("aanwezigheid", "klasId", ctx.klasId)).filter((a) => a.datum === dag);
-      const perLeerling = new Map(bestaande.map((a) => [a.leerlingId, a]));
-      const tabel = el("table", { class: "tabel" }, el("thead", {}, el("tr", {}, el("th", {}, "Leerling"), el("th", {}, "Status"), el("th", {}, "Notitie"))));
-      const tbody = el("tbody", {});
-      const rijen = [];
-      for (const l of leerlingen) {
-        const huidig = perLeerling.get(l.id);
-        const sel = el("select", { class: "invoer invoer--kort" }, ...Object.entries(AANWEZIGHEID_STATUS).map(([v, lab]) => el("option", { value: v, selected: (huidig?.status || "aanwezig") === v }, lab)));
-        const note = el("input", { class: "invoer", value: huidig?.note || "", placeholder: "—" });
-        rijen.push({ leerlingId: l.id, sel, note });
-        tbody.append(el("tr", {}, el("td", {}, `${l.voornaam} ${l.naam}`.trim()), el("td", {}, sel), el("td", {}, note)));
+      const kiezer = el("div", { class: "lesuur-kiezer", role: "group", "aria-label": "Lesuur" });
+      const knoppen = /* @__PURE__ */ new Map();
+      for (const opt of opties) {
+        const knop = el("button", {
+          class: "lesuur-knop" + (opt.key === lesuurKey ? " lesuur-knop--actief" : ""),
+          onClick: () => {
+            if (opt.key === lesuurKey) return;
+            lesuurKey = opt.key;
+            for (const [k, b] of knoppen) b.classList.toggle("lesuur-knop--actief", k === lesuurKey);
+            tekenTabel();
+          }
+        }, opt.label);
+        knoppen.set(opt.key, knop);
+        kiezer.append(knop);
       }
-      tabel.append(tbody);
-      houder.append(
-        el(
-          "div",
-          { class: "kaart" },
+      if (opties.length > 1) houder.append(kiezer);
+      const kaart3 = el("div", { class: "kaart" });
+      houder.append(kaart3);
+      tekenTabel();
+      function tekenTabel() {
+        leeg(kaart3);
+        const lesuurLabel = opties.find((o) => o.key === lesuurKey)?.label || "Hele dag";
+        const perLeerling = new Map(
+          bestaande.filter((a) => hoortBij(a, lesuurKey)).map((a) => [a.leerlingId, a])
+        );
+        const tabel = el(
+          "table",
+          { class: "tabel" },
+          el("thead", {}, el("tr", {}, el("th", {}, "Leerling"), el("th", {}, "Status"), el("th", {}, "Notitie")))
+        );
+        const tbody = el("tbody", {});
+        const rijen = [];
+        const samenvatting2 = el("div", { class: "aanw-samenvatting" });
+        for (const l of leerlingen) {
+          const huidig = perLeerling.get(l.id);
+          const sel = el(
+            "select",
+            { class: "invoer invoer--kort", onChange: updateSamenvatting },
+            ...Object.entries(AANWEZIGHEID_STATUS).map(([v, lab]) => el("option", { value: v, selected: (huidig?.status || "aanwezig") === v }, lab))
+          );
+          const note = el("input", { class: "invoer", value: huidig?.note || "", placeholder: "—" });
+          rijen.push({ leerlingId: l.id, sel, note });
+          tbody.append(el("tr", {}, el("td", {}, `${l.voornaam} ${l.naam}`.trim()), el("td", {}, sel), el("td", {}, note)));
+        }
+        tabel.append(tbody);
+        kaart3.append(
           tabel,
           el(
             "div",
             { class: "knoprij knoprij--rechts" },
-            el("button", { class: "knop knop--primair", onClick: async () => {
-              for (const r of rijen) {
-                const id = `${ctx.klasId}:${dag}:${r.leerlingId}`;
-                await put("aanwezigheid", { id, klasId: ctx.klasId, leerlingId: r.leerlingId, datum: dag, status: r.sel.value, note: r.note.value.trim() });
+            el("button", {
+              class: "knop knop--primair",
+              onClick: async () => {
+                for (const r of rijen) {
+                  const id = lesuurKey === "dag" ? `${ctx.klasId}:${dag}:${r.leerlingId}` : `${ctx.klasId}:${dag}:${lesuurKey}:${r.leerlingId}`;
+                  const rec = {
+                    id,
+                    klasId: ctx.klasId,
+                    leerlingId: r.leerlingId,
+                    datum: dag,
+                    lesuur: lesuurKey,
+                    lesuurLabel,
+                    status: r.sel.value,
+                    note: r.note.value.trim()
+                  };
+                  await put("aanwezigheid", rec);
+                  perLeerling.set(r.leerlingId, rec);
+                  const idx = bestaande.findIndex((a) => a.id === id);
+                  if (idx >= 0) bestaande[idx] = rec;
+                  else bestaande.push(rec);
+                }
+                toast(`Aanwezigheid opgeslagen — ${lesuurLabel}`);
               }
-              toast("Aanwezigheid opgeslagen");
-            } }, "💾 Opslaan")
-          )
-        )
-      );
+            }, "💾 Opslaan")
+          ),
+          samenvatting2
+        );
+        updateSamenvatting();
+        function updateSamenvatting() {
+          let aanwezig = 0, telaat = 0, afwezig = 0;
+          for (const r of rijen) {
+            const v = r.sel.value;
+            if (v === "aanwezig") aanwezig++;
+            else if (v === "telaat") telaat++;
+            else if (v === "gewettigd" || v === "ongewettigd") afwezig++;
+          }
+          leeg(samenvatting2);
+          samenvatting2.append(
+            el("span", { class: "zacht" }, `${lesuurLabel}:`),
+            el("span", { class: "badge" }, `${aanwezig} aanwezig`),
+            el("span", { class: "badge badge--stil" }, `${telaat} te laat`),
+            el("span", { class: "badge badge--stil" }, `${afwezig} afwezig`)
+          );
+        }
+      }
     }
   }
 
-  // src/views/inhaalwerk.js
+  // app/src/views/inhaalwerk.js
   var inhaalwerk_exports = {};
   __export(inhaalwerk_exports, {
     render: () => render6
@@ -2588,13 +2915,13 @@ textarea.invoer { resize: vertical; }
     });
   }
 
-  // src/views/leerlingfiche.js
+  // app/src/views/leerlingfiche.js
   var leerlingfiche_exports = {};
   __export(leerlingfiche_exports, {
     render: () => render7
   });
 
-  // src/domain/individueel.js
+  // app/src/domain/individueel.js
   var huidigeMaand = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 7);
   async function verhoogQuota(quotaId) {
     const q = await get("quota", quotaId);
@@ -2640,7 +2967,55 @@ textarea.invoer { resize: vertical; }
     return { leerling, aanwezigheid: aanwStats, observaties, quota, consequenties, inhaalwerk, notities, seinen };
   }
 
-  // src/views/leerlingfiche.js
+  // app/src/domain/export.js
+  function exporteerCsv(bestandsnaam, matrix) {
+    const csv = matrix.map((rij) => rij.map((cel) => {
+      const s = String(cel ?? "");
+      return /[",;\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(";")).join("\r\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = bestandsnaam.endsWith(".csv") ? bestandsnaam : bestandsnaam + ".csv";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1e3);
+  }
+  var PRINT_CSS = `
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #182b20; margin: 24px; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  h2 { font-size: 15px; margin: 18px 0 6px; }
+  .meta { color: #667; font-size: 12px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 14px; }
+  th, td { border: 1px solid #cbd5cc; padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: #eef3ec; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  ul { margin: 4px 0 12px; padding-left: 18px; }
+  li { margin: 2px 0; }
+  .rij { display: flex; gap: 24px; flex-wrap: wrap; }
+  .voet { margin-top: 24px; color: #889; font-size: 11px; border-top: 1px solid #cbd5cc; padding-top: 8px; }
+  @media print { body { margin: 0; } @page { margin: 16mm; } }
+`;
+  function afdruk(titel, htmlBinnen) {
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, { position: "fixed", right: "0", bottom: "0", width: "0", height: "0", border: "0" });
+    document.body.append(iframe);
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(`<!doctype html><html lang="nl"><head><meta charset="utf-8"><title>${escapeHtml(titel)}</title><style>${PRINT_CSS}</style></head><body>${htmlBinnen}<div class="voet">Klaskompas · lokaal gegenereerd · ${(/* @__PURE__ */ new Date()).toLocaleDateString("nl-BE")}</div></body></html>`);
+    doc.close();
+    iframe.contentWindow.focus();
+    setTimeout(() => {
+      iframe.contentWindow.print();
+      setTimeout(() => iframe.remove(), 800);
+    }, 300);
+  }
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  }
+
+  // app/src/views/leerlingfiche.js
   async function render7(root, ctx) {
     stijl("css-leerlingfiche", CSS);
     root.append(el("div", { class: "kaart__kop kaart__kop--los" }, el("h2", {}, "Leerlingfiche")));
@@ -2665,14 +3040,27 @@ textarea.invoer { resize: vertical; }
     const zoekResultaat = el("div", { class: "lf-zoekresultaat" });
     const zoekVeld = el("label", { class: "veld" }, el("span", {}, "Zoeken over alle leerlingen"), zoek, zoekResultaat);
     const detail = el("div", { class: "lf-detail" });
+    const printKnop = el("button", {
+      class: "knop lf-printknop",
+      type: "button",
+      disabled: true,
+      onClick: () => {
+        if (huidigeData?.leerling) afdruk(`Rapport — ${naamVan(huidigeData.leerling)}`, rapportHtml(huidigeData, naamVan, ctx));
+      }
+    }, "🖨️ Rapport afdrukken");
+    let huidigeData = null;
     const toon = async (leerlingId) => {
       leeg(detail);
+      huidigeData = null;
+      printKnop.disabled = true;
       if (!leerlingId) return;
       const data = await ficheData(leerlingId);
       if (!data?.leerling) {
         detail.append(el("p", { class: "zacht" }, "Leerling niet gevonden."));
         return;
       }
+      huidigeData = data;
+      printKnop.disabled = false;
       toonFiche(detail, data, naamVan);
     };
     kies.select.addEventListener("change", () => {
@@ -2713,7 +3101,8 @@ textarea.invoer { resize: vertical; }
       el(
         "div",
         { class: "kaart" },
-        el("div", { class: "lf-kiezer" }, kies.wrap, zoekVeld)
+        el("div", { class: "lf-kiezer" }, kies.wrap, zoekVeld),
+        el("div", { class: "lf-kiezer__acties" }, printKnop)
       ),
       detail
     );
@@ -2750,12 +3139,12 @@ textarea.invoer { resize: vertical; }
       )
     );
     const diag = el("div", { class: "diag" });
-    for (const [sleutel, label] of Object.entries(AANWEZIGHEID_STATUS)) {
+    for (const [sleutel2, label] of Object.entries(AANWEZIGHEID_STATUS)) {
       diag.append(
         el(
           "div",
           { class: "diag__item" },
-          el("strong", {}, String(aanwezigheid[sleutel] ?? 0)),
+          el("strong", {}, String(aanwezigheid[sleutel2] ?? 0)),
           el("span", { class: "zacht" }, label)
         )
       );
@@ -2861,6 +3250,32 @@ textarea.invoer { resize: vertical; }
       ) : nogNiets("Nog geen communicatie geregistreerd.")
     ));
   }
+  function rapportHtml(data, naamVan, ctx) {
+    const { leerling, aanwezigheid, observaties, quota, consequenties, inhaalwerk, notities } = data;
+    const e = escapeHtml;
+    const klasNaam = (ctx?.klassen || []).find((k) => k.id === ctx?.klasId)?.naam || "";
+    const metaDelen = [];
+    if (leerling.email) metaDelen.push(e(leerling.email));
+    if (klasNaam) metaDelen.push("Klas: " + e(klasNaam));
+    const meta = metaDelen.length ? metaDelen.join(" · ") : "Geen bijkomende gegevens";
+    const deel = (titel, binnen) => `<h2>${e(titel)}</h2>${binnen}`;
+    const aanwRijen = Object.entries(AANWEZIGHEID_STATUS).map(([sleutel2, label]) => `<tr><td>${e(label)}</td><td class="num">${e(aanwezigheid[sleutel2] ?? 0)}</td></tr>`).join("");
+    const aanwHtml = `<table><thead><tr><th>Status</th><th class="num">Aantal</th></tr></thead><tbody>${aanwRijen}</tbody></table>`;
+    const obsHtml = observaties.length ? `<table><thead><tr><th>Datum</th><th>Categorie</th><th>A — Aanleiding</th><th>B — Gedrag</th><th>C — Gevolg</th></tr></thead><tbody>${observaties.map(
+      (o) => `<tr><td>${e(datumKort(o.datum))}</td><td>${e(OBSERVATIE_CATEGORIE[o.categorie] || o.categorie)}</td><td>${e(o.aanleiding || "—")}</td><td>${e(o.gedrag || "—")}</td><td>${e(o.gevolg || "—")}</td></tr>`
+    ).join("")}</tbody></table>` : "<p>Geen</p>";
+    const quotaHtml = quota.length ? `<table><thead><tr><th>Type</th><th class="num">Aantal</th><th class="num">Drempel</th></tr></thead><tbody>${quota.map(
+      (q) => `<tr><td>${e(QUOTA_TYPES[q.type] || q.type)}</td><td class="num">${e(q.aantal)}</td><td class="num">${e(q.drempel)}</td></tr>`
+    ).join("")}</tbody></table>` : "<p>Geen</p>";
+    const consHtml = consequenties.length ? `<ul>${consequenties.map((c) => `<li>${e(datumKort(c.datum))} — ${e(c.stap || "—")}</li>`).join("")}</ul>` : "<p>Geen</p>";
+    const inhaalHtml = inhaalwerk.length ? `<table><thead><tr><th>Type</th><th>Titel</th><th>Status</th></tr></thead><tbody>${inhaalwerk.map(
+      (i) => `<tr><td>${e(INHAALWERK_TYPE[i.type] || i.type)}</td><td>${e(i.titel || "(zonder titel)")}</td><td>${e(INHAALWERK_STATUS[i.status] || i.status)}</td></tr>`
+    ).join("")}</tbody></table>` : "<p>Geen</p>";
+    const notitieHtml = notities.length ? `<table><thead><tr><th>Kanaal</th><th>Datum</th><th>Tekst</th></tr></thead><tbody>${notities.map(
+      (n) => `<tr><td>${e(NOTITIE_KANAAL[n.kanaal] || n.kanaal)}</td><td>${e(datumKort(n.datum))}</td><td>${e(n.tekst || "—")}</td></tr>`
+    ).join("")}</tbody></table>` : "<p>Geen</p>";
+    return `<h1>${e(naamVan(leerling))}</h1><div class="meta">${meta}</div>` + deel("Aanwezigheid", aanwHtml) + deel("Observaties", obsHtml) + deel("Quota", quotaHtml) + deel("Consequenties", consHtml) + deel("Inhaalwerk", inhaalHtml) + deel("Communicatie-notities", notitieHtml);
+  }
   function kaart(titel, inhoud) {
     return el("div", { class: "kaart" }, el("h3", { class: "sectiekop" }, titel), inhoud);
   }
@@ -2879,6 +3294,8 @@ textarea.invoer { resize: vertical; }
   var CSS = `
 .lf-kiezer { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 16px; }
 .lf-kiezer .veld { margin-bottom: 0; }
+.lf-kiezer__acties { margin-top: 12px; }
+.lf-printknop[disabled] { opacity: 0.55; cursor: not-allowed; }
 .lf-zoekresultaat { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
 .lf-treffer {
   text-align: left; display: flex; flex-direction: column; gap: 1px; cursor: pointer;
@@ -2918,7 +3335,7 @@ textarea.invoer { resize: vertical; }
 .lf-nogniets { margin: 0; font-style: italic; }
 `;
 
-  // src/views/individueel.js
+  // app/src/views/individueel.js
   var individueel_exports = {};
   __export(individueel_exports, {
     render: () => render8
@@ -2974,15 +3391,15 @@ textarea.invoer { resize: vertical; }
     const lijst = el("div", { class: "ind-lijst" });
     root.append(lijst);
     for (const l of leerlingen) {
-      const kaart2 = el("div", { class: "kaart ind-kaart" });
-      lijst.append(kaart2);
-      await vulKaart(kaart2, l, ctx);
+      const kaart3 = el("div", { class: "kaart ind-kaart" });
+      lijst.append(kaart3);
+      await vulKaart(kaart3, l, ctx);
     }
   }
-  async function vulKaart(kaart2, leerling, ctx) {
-    leeg(kaart2);
+  async function vulKaart(kaart3, leerling, ctx) {
+    leeg(kaart3);
     const naam = `${leerling.voornaam} ${leerling.naam}`.trim();
-    const hertekenen = () => vulKaart(kaart2, leerling, ctx);
+    const hertekenen2 = () => vulKaart(kaart3, leerling, ctx);
     const [tellers, observaties] = await Promise.all([
       byIndex("quota", "leerlingId", leerling.id),
       byIndex("observaties", "leerlingId", leerling.id)
@@ -2995,7 +3412,7 @@ textarea.invoer { resize: vertical; }
       seinenAantal ? el("span", { class: "ind-sein", title: "Teller(s) boven de drempel" }, `🔔 ${seinenAantal} seint${seinenAantal > 1 ? "en" : ""}`) : null,
       el("span", { class: "badge badge--stil" }, `${observaties.length} observatie${observaties.length === 1 ? "" : "s"}`)
     );
-    kaart2.append(kop);
+    kaart3.append(kop);
     if (tellers.length) {
       const box = el("div", { class: "ind-quota" });
       tellers.sort((a, b) => (QUOTA_TYPES[a.type] || a.type).localeCompare(QUOTA_TYPES[b.type] || b.type, "nl"));
@@ -3017,27 +3434,27 @@ textarea.invoer { resize: vertical; }
               { class: "ind-teller__knoppen" },
               el("button", { class: "icoonknop", title: "Teller verlagen (correctie)", disabled: q.aantal <= 0, onClick: async () => {
                 await verlaagQuota(q.id);
-                hertekenen();
+                hertekenen2();
               } }, "−"),
               el("button", { class: "icoonknop", title: "Teller verhogen", onClick: async () => {
                 const res = await verhoogQuota(q.id);
                 if (res?.sein) toast(`${naam} — ${QUOTA_TYPES[q.type] || q.type} seint (${res.quota.aantal}/${res.quota.drempel}) 🔔`, "waarschuwing");
-                hertekenen();
+                hertekenen2();
               } }, "+")
             )
           )
         );
       }
-      kaart2.append(box);
+      kaart3.append(box);
     } else {
-      kaart2.append(el("p", { class: "ind-quota--leeg" }, "Nog geen tellers voor deze leerling."));
+      kaart3.append(el("p", { class: "ind-quota--leeg" }, "Nog geen tellers voor deze leerling."));
     }
-    kaart2.append(
+    kaart3.append(
       el(
         "div",
         { class: "knoprij" },
-        el("button", { class: "knop", onClick: () => tellerDialoog(leerling, ctx, hertekenen) }, "＋ teller"),
-        el("button", { class: "knop", onClick: () => observatieDialoog(leerling, ctx, hertekenen) }, "📝 Observatie"),
+        el("button", { class: "knop", onClick: () => tellerDialoog(leerling, ctx, hertekenen2) }, "＋ teller"),
+        el("button", { class: "knop", onClick: () => observatieDialoog(leerling, ctx, hertekenen2) }, "📝 Observatie"),
         el("button", { class: "knop", onClick: () => ladderDialoog(leerling, ctx) }, "🪜 Herstel/consequentie")
       )
     );
@@ -3146,13 +3563,13 @@ textarea.invoer { resize: vertical; }
     });
   }
 
-  // src/views/puntenboek.js
+  // app/src/views/puntenboek.js
   var puntenboek_exports = {};
   __export(puntenboek_exports, {
     render: () => render9
   });
 
-  // src/domain/evaluaties.js
+  // app/src/domain/evaluaties.js
   async function puntenboek(klasId) {
     const [evaluaties, resultaten, leerlingen] = await Promise.all([
       byIndex("evaluaties", "klasId", klasId),
@@ -3184,7 +3601,7 @@ textarea.invoer { resize: vertical; }
     };
   }
 
-  // src/views/puntenboek.js
+  // app/src/views/puntenboek.js
   stijl("css-puntenboek", `
   .pb-schuif { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .pb-tabel { min-width: 100%; border-collapse: collapse; }
@@ -3226,6 +3643,8 @@ textarea.invoer { resize: vertical; }
       "div",
       { class: "kaart__kop kaart__kop--los" },
       el("h2", {}, `Evaluaties & puntenboek — ${klas?.naam || ""}`),
+      el("button", { class: "knop", onClick: () => exporteerPuntenboek(ctx, klas) }, "⬇️ CSV"),
+      el("button", { class: "knop", onClick: () => afdrukPuntenboek(ctx, klas) }, "🖨️ Afdrukken"),
       el("button", { class: "knop knop--primair", onClick: () => evaluatieDialoog(root, ctx, null) }, "+ Evaluatie")
     );
     root.append(kop);
@@ -3351,6 +3770,33 @@ textarea.invoer { resize: vertical; }
       }
     }
   }
+  async function bouwExportData(ctx) {
+    const pb = await puntenboek(ctx.klasId);
+    const evalTitel = (e) => e.titel || (EVALUATIE_TYPE[e.type] || "Evaluatie");
+    const koppen = ["Leerling", ...pb.evaluaties.map((e) => `${evalTitel(e)} (${e.maxPunten})`), "Gemiddelde"];
+    const rijen = pb.leerlingen.map((l) => {
+      const naam = `${l.voornaam} ${l.naam}`.trim();
+      const punten = pb.evaluaties.map((e) => {
+        const r = pb.resultaat(l.id, e.id);
+        return r && !r.afwezig && r.punten != null ? r.punten : "";
+      });
+      const gem = pb.gemiddelde.get(l.id);
+      return { naam, punten, gem: gem == null ? "" : `${Math.round(gem)}%` };
+    });
+    return { koppen, rijen, aantalEval: pb.evaluaties.length };
+  }
+  async function exporteerPuntenboek(ctx, klas) {
+    const { koppen, rijen } = await bouwExportData(ctx);
+    const matrix = [koppen, ...rijen.map((r) => [r.naam, ...r.punten, r.gem])];
+    exporteerCsv(`puntenboek-${klas?.naam || "klas"}.csv`, matrix);
+  }
+  async function afdrukPuntenboek(ctx, klas) {
+    const { koppen, rijen } = await bouwExportData(ctx);
+    const thead = "<tr>" + koppen.map((k, i) => `<th${i === 0 ? "" : ' class="num"'}>${escapeHtml(k)}</th>`).join("") + "</tr>";
+    const tbody = rijen.map((r) => `<tr><td>${escapeHtml(r.naam)}</td>` + r.punten.map((p) => `<td class="num">${escapeHtml(p)}</td>`).join("") + `<td class="num">${escapeHtml(r.gem)}</td></tr>`).join("");
+    const html = `<h1>${escapeHtml(klas?.naam || "")} — Puntenboek</h1><table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
+    afdruk(`Puntenboek — ${klas?.naam || ""}`, html);
+  }
   function evaluatieDialoog(root, ctx, bestaand) {
     dialoog(bestaand ? "Evaluatie bewerken" : "Nieuwe evaluatie", (body, sluit) => {
       const titel = veld("Titel", { value: bestaand?.titel || "" });
@@ -3366,17 +3812,15 @@ textarea.invoer { resize: vertical; }
           if (!await bevestig(`"${bestaand.titel || "deze evaluatie"}" verwijderen? Alle bijhorende punten gaan mee.`, { gevaar: true, jaLabel: "Verwijderen" })) return;
           const res = await byIndex("evalresultaten", "evaluatieId", bestaand.id);
           for (const r of res) await remove("evalresultaten", r.id);
-          await remove("evaluaties", bestaand.id);
           sluit();
-          toast("Evaluatie verwijderd");
-          hertekenRoot(root, ctx);
+          await verwijderMetUndo("evaluaties", bestaand, () => hertekenRoot(root, ctx), "Evaluatie verwijderd");
         } }, "🗑 Verwijderen"));
       }
       acties.append(
         el("button", { class: "knop", onClick: sluit }, "Annuleren"),
         el("button", { class: "knop knop--primair", onClick: async () => {
           if (!titel.input.value.trim()) {
-            toast("Geef een titel", "fout");
+            markeerFout(titel.input, "Geef een titel");
             return;
           }
           const velden = {
@@ -3402,7 +3846,7 @@ textarea.invoer { resize: vertical; }
     if (root) render9(leeg(root), ctx);
   }
 
-  // src/views/acties.js
+  // app/src/views/acties.js
   var acties_exports = {};
   __export(acties_exports, {
     render: () => render10
@@ -3445,12 +3889,12 @@ textarea.invoer { resize: vertical; }
     return k ? k.naam : "";
   }
   async function tekenTaken(root, ctx) {
-    const kaart2 = el("div", { class: "kaart" });
-    root.append(kaart2);
-    await hertekenTaken(kaart2, ctx);
+    const kaart3 = el("div", { class: "kaart" });
+    root.append(kaart3);
+    await hertekenTaken(kaart3, ctx);
   }
-  async function hertekenTaken(kaart2, ctx) {
-    leeg(kaart2);
+  async function hertekenTaken(kaart3, ctx) {
+    leeg(kaart3);
     const tekstIn = el("input", { class: "invoer", type: "text", placeholder: "Nieuwe taak…" });
     const datumIn = el("input", { class: "invoer invoer--kort", type: "date" });
     const voegToe = async () => {
@@ -3461,22 +3905,22 @@ textarea.invoer { resize: vertical; }
       }
       await put("acties", maakActie({ tekst, klasId: ctx.klasId || null, datum: datumIn.value || "" }));
       toast("Taak toegevoegd");
-      await hertekenTaken(kaart2, ctx);
+      await hertekenTaken(kaart3, ctx);
     };
     tekstIn.addEventListener("keydown", (e) => {
       if (e.key === "Enter") voegToe();
     });
-    const toonGedaan = kaart2._toonGedaan ?? false;
+    const toonGedaan = kaart3._toonGedaan ?? false;
     const gedaanSchakel = el(
       "label",
       { class: "schakel" },
       el("input", { type: "checkbox", checked: toonGedaan, onChange: async (e) => {
-        kaart2._toonGedaan = e.target.checked;
-        await hertekenTaken(kaart2, ctx);
+        kaart3._toonGedaan = e.target.checked;
+        await hertekenTaken(kaart3, ctx);
       } }),
       el("span", {}, "Toon gedaan")
     );
-    kaart2.append(
+    kaart3.append(
       el(
         "div",
         { class: "kaart__kop kaart__kop--los" },
@@ -3498,7 +3942,7 @@ textarea.invoer { resize: vertical; }
     });
     if (!toonGedaan) acties = acties.filter((a) => a.status !== "gedaan");
     if (!acties.length) {
-      kaart2.append(leegKaart("Geen taken", toonGedaan ? "Voeg hierboven een taak toe." : "Alles is afgewerkt — of voeg een nieuwe taak toe."));
+      kaart3.append(leegKaart("Geen taken", toonGedaan ? "Voeg hierboven een taak toe." : "Alles is afgewerkt — of voeg een nieuwe taak toe."));
       return;
     }
     const lijst = el("ul", { class: "actie-lijst" });
@@ -3516,7 +3960,7 @@ textarea.invoer { resize: vertical; }
             onChange: async () => {
               a.status = gedaan ? "open" : "gedaan";
               await put("acties", a);
-              await hertekenTaken(kaart2, ctx);
+              await hertekenTaken(kaart3, ctx);
             }
           }),
           el("span", { class: "actie-item__tekst" }, a.tekst),
@@ -3528,34 +3972,34 @@ textarea.invoer { resize: vertical; }
             el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
               await remove("acties", a.id);
               toast("Taak verwijderd");
-              await hertekenTaken(kaart2, ctx);
+              await hertekenTaken(kaart3, ctx);
             } }, "🗑")
           )
         )
       );
     }
-    kaart2.append(lijst);
+    kaart3.append(lijst);
   }
   async function tekenNotities(root, ctx) {
-    const kaart2 = el("div", { class: "kaart" });
-    root.append(kaart2);
-    await hertekenNotities(kaart2, ctx);
+    const kaart3 = el("div", { class: "kaart" });
+    root.append(kaart3);
+    await hertekenNotities(kaart3, ctx);
   }
-  async function hertekenNotities(kaart2, ctx) {
-    leeg(kaart2);
-    kaart2.append(
+  async function hertekenNotities(kaart3, ctx) {
+    leeg(kaart3);
+    kaart3.append(
       el(
         "div",
         { class: "kaart__kop kaart__kop--los" },
         el("h3", {}, "Communicatie-notities"),
-        el("button", { class: "knop knop--primair", onClick: () => notitieDialoog(kaart2, ctx, null) }, "+ Notitie")
+        el("button", { class: "knop knop--primair", onClick: () => notitieDialoog(kaart3, ctx, null) }, "+ Notitie")
       ),
       el("p", { class: "zacht" }, "Deze notities blijven lokaal; Klaskompas verstuurt niets.")
     );
     const notities = await all("notities");
     notities.sort((a, b) => (b.datum || "").localeCompare(a.datum || ""));
     if (!notities.length) {
-      kaart2.append(leegKaart("Nog geen notities", "Noteer een gesprek of afspraak met ouder, mentor, zorg of directie."));
+      kaart3.append(leegKaart("Nog geen notities", "Noteer een gesprek of afspraak met ouder, mentor, zorg of directie."));
       return;
     }
     const namen = await leerlingNamenMap(notities);
@@ -3579,19 +4023,19 @@ textarea.invoer { resize: vertical; }
             "div",
             { class: "notitie-item__voet" },
             el("span", { class: "spatie" }),
-            el("button", { class: "icoonknop", title: "Bewerken", onClick: () => notitieDialoog(kaart2, ctx, n) }, "✏️"),
+            el("button", { class: "icoonknop", title: "Bewerken", onClick: () => notitieDialoog(kaart3, ctx, n) }, "✏️"),
             el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
               if (await bevestig("Deze notitie verwijderen?", { gevaar: true, jaLabel: "Verwijderen" })) {
                 await remove("notities", n.id);
                 toast("Notitie verwijderd");
-                await hertekenNotities(kaart2, ctx);
+                await hertekenNotities(kaart3, ctx);
               }
             } }, "🗑")
           )
         )
       );
     }
-    kaart2.append(lijst);
+    kaart3.append(lijst);
   }
   async function leerlingNamenMap(notities) {
     const map = /* @__PURE__ */ new Map();
@@ -3602,7 +4046,7 @@ textarea.invoer { resize: vertical; }
     }
     return map;
   }
-  async function notitieDialoog(kaart2, ctx, bestaand) {
+  async function notitieDialoog(kaart3, ctx, bestaand) {
     const leerlingen = ctx.klasId ? await leerlingenVanKlas(ctx.klasId) : [];
     dialoog(bestaand ? "Notitie bewerken" : "Nieuwe notitie", (body, sluit) => {
       const kanaal = keuze("Kanaal", NOTITIE_KANAAL, bestaand?.kanaal || "ouder");
@@ -3649,20 +4093,20 @@ textarea.invoer { resize: vertical; }
             }
             sluit();
             toast("Notitie opgeslagen");
-            await hertekenNotities(kaart2, ctx);
+            await hertekenNotities(kaart3, ctx);
           } }, "Opslaan")
         )
       );
     });
   }
 
-  // src/views/zitplan.js
+  // app/src/views/zitplan.js
   var zitplan_exports = {};
   __export(zitplan_exports, {
     render: () => render11
   });
 
-  // src/domain/zitplan.js
+  // app/src/domain/zitplan.js
   function rasterAfmeting(n, kolommen = 4) {
     const cols = Math.min(kolommen, Math.max(1, n));
     const rijen = Math.max(1, Math.ceil(n / cols));
@@ -3766,7 +4210,7 @@ textarea.invoer { resize: vertical; }
     return { plaatsen, rijen, kolommen: cols, onopgelost };
   }
 
-  // src/views/zitplan.js
+  // app/src/views/zitplan.js
   var KOLOMMEN = 4;
   var ZITSTIJL = `
 .zp-kop { align-items: flex-start; }
@@ -3831,6 +4275,22 @@ textarea.invoer { resize: vertical; }
 }
 .zp-seat--leeg::before { opacity: 0.3; }
 .zp-seat--slot { border-color: var(--goud); }
+.zp-seat[draggable="true"] { cursor: grab; }
+.zp-seat[draggable="true"]:active { cursor: grabbing; }
+.zp-seat--sleep { opacity: 0.45; }
+.zp-seat--over {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--paneel));
+}
+.zp-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 0.74rem;
+  color: var(--tekst-zacht);
+}
 .zp-naam {
   font-size: 0.84rem;
   font-weight: 800;
@@ -3904,6 +4364,71 @@ textarea.invoer { resize: vertical; }
       }
       return m;
     }
+    let sleepBron = null;
+    async function wisselPlaatsen(bronRij, bronKol, doelRij, doelKol) {
+      if (!plan?.plaatsen?.length) return;
+      if (bronRij === doelRij && bronKol === doelKol) return;
+      const pBron = plan.plaatsen.find((p) => p.rij === bronRij && p.kol === bronKol);
+      if (!pBron) return;
+      const pDoel = plan.plaatsen.find((p) => p.rij === doelRij && p.kol === doelKol);
+      if (pDoel) {
+        pDoel.rij = bronRij;
+        pDoel.kol = bronKol;
+        pBron.rij = doelRij;
+        pBron.kol = doelKol;
+      } else {
+        pBron.rij = doelRij;
+        pBron.kol = doelKol;
+      }
+      plan.aangemaakt = (/* @__PURE__ */ new Date()).toISOString();
+      await put("zitplannen", {
+        klasId: ctx.klasId,
+        naam: plan.naam || "Zitplan",
+        plaatsen: plan.plaatsen,
+        rijen: plan.rijen,
+        kolommen: plan.kolommen,
+        onopgelost: plan.onopgelost || [],
+        aangemaakt: plan.aangemaakt
+      });
+      bewaard = true;
+      toast("Plaatsen gewisseld");
+      await teken2();
+    }
+    function maakSleepbaar(seat, rij, kol, leegSeat) {
+      if (!leegSeat) {
+        seat.addEventListener("dragstart", (e) => {
+          sleepBron = { rij, kol };
+          seat.classList.add("zp-seat--sleep");
+          if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = "move";
+            try {
+              e.dataTransfer.setData("text/plain", `${rij},${kol}`);
+            } catch (_) {
+            }
+          }
+        });
+        seat.addEventListener("dragend", () => {
+          seat.classList.remove("zp-seat--sleep");
+        });
+      }
+      seat.addEventListener("dragover", (e) => {
+        if (!sleepBron) return;
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+        seat.classList.add("zp-seat--over");
+      });
+      seat.addEventListener("dragleave", () => {
+        seat.classList.remove("zp-seat--over");
+      });
+      seat.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        seat.classList.remove("zp-seat--over");
+        const bron = sleepBron;
+        sleepBron = null;
+        if (!bron) return;
+        await wisselPlaatsen(bron.rij, bron.kol, rij, kol);
+      });
+    }
     async function teken2() {
       leeg(root);
       const regels = await laadRegels();
@@ -3931,9 +4456,9 @@ textarea.invoer { resize: vertical; }
           )
         )
       );
-      const kaart2 = el("div", { class: "kaart" });
+      const kaart3 = el("div", { class: "kaart" });
       if (!leerlingen.length) {
-        kaart2.append(
+        kaart3.append(
           el(
             "div",
             { class: "leeg" },
@@ -3942,12 +4467,12 @@ textarea.invoer { resize: vertical; }
             el("p", {}, "Voeg eerst leerlingen toe aan deze klas via Klassen & leerlingen.")
           )
         );
-        root.append(kaart2);
+        root.append(kaart3);
         restNota();
         return;
       }
       if (!plan || !plan.plaatsen?.length) {
-        kaart2.append(
+        kaart3.append(
           el(
             "div",
             { class: "leeg" },
@@ -3957,11 +4482,11 @@ textarea.invoer { resize: vertical; }
             el("button", { class: "knop knop--primair", onClick: () => genereer() }, "⤨ Genereer plaatsen")
           )
         );
-        root.append(kaart2);
+        root.append(kaart3);
         restNota();
         return;
       }
-      kaart2.append(
+      kaart3.append(
         el(
           "div",
           { class: "knoprij", style: { marginBottom: "10px" } },
@@ -3982,27 +4507,30 @@ textarea.invoer { resize: vertical; }
       for (let rij = 0; rij < plan.rijen; rij++) {
         for (let kol = 0; kol < plan.kolommen; kol++) {
           const lid = cellen.get(`${rij},${kol}`);
-          if (!lid) {
-            seats.append(el(
-              "div",
-              { class: "zp-seat zp-seat--leeg" },
-              el("span", { class: "zp-leegtekst" }, "leeg")
-            ));
-            continue;
-          }
-          const l = naamVan.get(lid);
-          const slot = slots.get(lid);
-          seats.append(
-            el(
-              "div",
-              { class: "zp-seat" + (slot ? " zp-seat--slot" : "") },
-              el("div", { class: "zp-naam" }, l?.voornaam || "", l ? el("br") : null, l?.naam || (!l ? "(onbekend)" : "")),
-              slot ? el("div", { class: "zp-slot" }, `🔒 ${slot}`) : null
-            )
+          const leegSeat = !lid;
+          const l = leegSeat ? null : naamVan.get(lid);
+          const slot = leegSeat ? null : slots.get(lid);
+          const seat = el(
+            "div",
+            {
+              class: "zp-seat" + (leegSeat ? " zp-seat--leeg" : "") + (slot ? " zp-seat--slot" : ""),
+              draggable: !leegSeat,
+              dataset: { rij: String(rij), kol: String(kol) }
+            },
+            leegSeat ? el("span", { class: "zp-leegtekst" }, "leeg") : el("div", { class: "zp-naam" }, l?.voornaam || "", l ? el("br") : null, l?.naam || (!l ? "(onbekend)" : "")),
+            slot ? el("div", { class: "zp-slot" }, `🔒 ${slot}`) : null
           );
+          maakSleepbaar(seat, rij, kol, leegSeat);
+          seats.append(seat);
         }
       }
-      kaart2.append(
+      kaart3.append(
+        el(
+          "p",
+          { class: "zp-hint" },
+          el("span", {}, "🖐"),
+          el("span", {}, "Sleep een leerling op een andere om te wisselen.")
+        ),
         el(
           "div",
           { class: "zp-room" },
@@ -4011,7 +4539,7 @@ textarea.invoer { resize: vertical; }
         )
       );
       if (plan.onopgelost?.length) {
-        kaart2.append(
+        kaart3.append(
           el(
             "div",
             { class: "zp-onopgelost" },
@@ -4020,7 +4548,7 @@ textarea.invoer { resize: vertical; }
           )
         );
       }
-      root.append(kaart2);
+      root.append(kaart3);
       restNota();
     }
     function restNota() {
@@ -4098,10 +4626,10 @@ textarea.invoer { resize: vertical; }
                     regelBetrokkenen(r)
                   ),
                   el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
-                    await remove("zitregels", r.id);
-                    toast("Randvoorwaarde verwijderd");
-                    await vul();
-                    await teken2();
+                    await verwijderMetUndo("zitregels", r, async () => {
+                      await vul();
+                      await teken2();
+                    }, "Regel verwijderd");
                   } }, "✕")
                 )
               );
@@ -4210,7 +4738,7 @@ textarea.invoer { resize: vertical; }
     await teken2();
   }
 
-  // src/views/afspraken.js
+  // app/src/views/afspraken.js
   var afspraken_exports = {};
   __export(afspraken_exports, {
     projecteer: () => projecteer,
@@ -4324,7 +4852,7 @@ textarea.invoer { resize: vertical; }
     document.body.append(overlay);
   }
 
-  // src/views/beloningen.js
+  // app/src/views/beloningen.js
   var beloningen_exports = {};
   __export(beloningen_exports, {
     render: () => render13
@@ -4356,8 +4884,8 @@ textarea.invoer { resize: vertical; }
       root.append(leegKaart("Nog geen beloningen", "Klik “Startmenu” voor de aanbevolen set, of voeg er zelf een toe."));
       return;
     }
-    for (const [sleutel, label] of Object.entries(BELONING_CATEGORIE)) {
-      const items = lijst.filter((b) => b.categorie === sleutel);
+    for (const [sleutel2, label] of Object.entries(BELONING_CATEGORIE)) {
+      const items = lijst.filter((b) => b.categorie === sleutel2);
       if (!items.length) continue;
       const grid = el("div", { class: "menu-grid" });
       for (const b of items) {
@@ -4380,13 +4908,7 @@ textarea.invoer { resize: vertical; }
               el("span", { class: "badge badge--stil" }, BELONING_NIVEAU[b.niveau] || b.niveau),
               el("span", { class: "spatie" }),
               el("button", { class: "icoonknop", title: "Bewerken", onClick: () => bewerkDialoog2(root, ctx, b) }, "✏️"),
-              el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
-                if (await bevestig(`"${b.naam}" verwijderen?`, { gevaar: true, jaLabel: "Verwijderen" })) {
-                  await remove("beloningen", b.id);
-                  toast("Verwijderd");
-                  render13(leeg(root), ctx);
-                }
-              } }, "🗑")
+              el("button", { class: "icoonknop", title: "Verwijderen", onClick: () => verwijderMetUndo("beloningen", b, () => render13(leeg(root), ctx), "Beloning verwijderd") }, "🗑")
             )
           )
         );
@@ -4471,12 +4993,158 @@ textarea.invoer { resize: vertical; }
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // src/views/instellingen.js
-  var instellingen_exports = {};
-  __export(instellingen_exports, {
+  // app/src/views/handleiding.js
+  var handleiding_exports = {};
+  __export(handleiding_exports, {
     render: () => render14
   });
+  function kaart2(titel, ...inhoud) {
+    return el(
+      "div",
+      { class: "kaart" },
+      el("h3", { class: "sectiekop" }, titel),
+      ...inhoud
+    );
+  }
   async function render14(root, ctx) {
+    stijl("css-handleiding", `
+    .handleiding { display: grid; gap: 16px; }
+    .handleiding .kaart { display: grid; gap: 8px; }
+    .handleiding .kaart p { margin: 0; line-height: 1.5; }
+    .handleiding ul { margin: 4px 0 0; padding-left: 20px; line-height: 1.5; }
+    .handleiding ul li { margin: 3px 0; }
+    .handleiding .weergaves { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .handleiding .weergave { border: 1px solid var(--rand); border-radius: var(--radius-s); padding: 10px 12px; background: var(--paneel); }
+    .handleiding .weergave h4 { margin: 0 0 4px; font-size: 0.95rem; }
+    .handleiding .weergave p { color: var(--tekst-zacht); font-size: 0.9rem; }
+    .handleiding .meer { border-left: 3px solid var(--accent); }
+    .handleiding code { background: var(--paneel); border: 1px solid var(--rand); border-radius: var(--radius-s); padding: 1px 6px; font-size: 0.9em; }
+  `);
+    const wrap2 = el("div", { class: "handleiding" });
+    wrap2.append(
+      el(
+        "div",
+        { class: "kaart__kop kaart__kop--los" },
+        el("h2", {}, "Handleiding"),
+        el("span", { class: "badge badge--stil" }, "lokaal-eerst")
+      ),
+      el("p", { class: "zacht" }, "Een korte rondleiding door Klaskompas: wat het is, hoe je aan de slag gaat en waar de grenzen liggen.")
+    );
+    wrap2.append(
+      kaart2(
+        "🧭 Wat is Klaskompas?",
+        el("p", {}, "Klaskompas is een lokaal-eerst hulpmiddel voor de leerkracht. Alle gegevens blijven op dit toestel; er wordt niets naar buiten verstuurd."),
+        el("p", { class: "zacht" }, "Het ondersteunt jouw klasbeheer, maar vervangt geen schoolprocedures, zorgbeleid of tucht­reglement.")
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "🖥️ Twee weergaves",
+        el(
+          "div",
+          { class: "weergaves" },
+          el(
+            "div",
+            { class: "weergave" },
+            el("h4", {}, "Administratie"),
+            el("p", {}, "De rustige modules die je na de les gebruikt: afspraken, observaties, beloningen, backups en instellingen.")
+          ),
+          el(
+            "div",
+            { class: "weergave" },
+            el("h4", {}, "Lesmodus / Klasscherm"),
+            el("p", {}, "Projecteerbaar op het bord: geldkoker, geluidsmeter, lesdrill en zitplan. Groot en klasklaar.")
+          )
+        )
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "🚀 Aan de slag",
+        el(
+          "ul",
+          {},
+          el("li", {}, "Kies of maak een klas — of ", el("strong", {}, "importeer een CSV"), " met leerlingen."),
+          el("li", {}, "Stel bovenaan de ", el("strong", {}, "actieve klas"), " in."),
+          el("li", {}, "Start daarna de ", el("strong", {}, "Lesmodus"), " om op het bord te projecteren.")
+        )
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "💶 De klaspot (klaskapitaal)",
+        el(
+          "ul",
+          {},
+          el("li", {}, el("strong", {}, "Samen sparen. "), "De pot stijgt bij collectief positief gedrag."),
+          el("li", {}, el("strong", {}, "Samen dragen. "), "Bij collectief storend gedrag kan de pot dalen — met een bodem, altijd terug te verdienen."),
+          el("li", {}, el("strong", {}, "Een beloning kiezen. "), "Vanaf een afgesproken drempel kiest de klas samen een beloning."),
+          el("li", {}, el("strong", {}, "Individueel staat los. "), "Individueel gedrag raakt de pot niet (behalve bij optie C).")
+        ),
+        el("p", { class: "zacht" }, "Alles is teacher-triggered: de tool meet, telt en seint — jij beslist elk gevolg. Niets gebeurt automatisch.")
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "👤 Individueel spoor",
+        el(
+          "ul",
+          {},
+          el("li", {}, el("strong", {}, "Observaties. "), "Feitelijk genoteerd volgens ABC (aanleiding, gedrag, gevolg)."),
+          el("li", {}, el("strong", {}, "Quota-tellers. "), "Geven een seintje bij een grens — geen automatische straf."),
+          el("li", {}, el("strong", {}, "Herstel- en consequentieladder. "), "Duidelijke, voorspelbare stappen, herstel eerst.")
+        ),
+        el("p", { class: "zacht" }, "Dit spoor is privaat en alleen voor jou zichtbaar.")
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "🎁 Beloningen",
+        el("p", {}, "Een gecategoriseerd menu van beloningen waaruit de klas kan kiezen. Je past de lijst per klas aan naar wat bij jouw groep past.")
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "🛟 Backup & veiligheid",
+        el(
+          "ul",
+          {},
+          el("li", {}, "Maak regelmatig een ", el("strong", {}, "backup"), " via Instellingen."),
+          el("li", {}, "Optioneel: een ", el("strong", {}, "app-lock"), " met pincode en een ", el("strong", {}, "versleutelde backup"), "."),
+          el("li", {}, "Alles blijft lokaal op dit toestel.")
+        )
+      )
+    );
+    wrap2.append(
+      kaart2(
+        "🔒 Privacy-grenzen",
+        el(
+          "ul",
+          {},
+          el("li", {}, "Geen scores of labels per leerling."),
+          el("li", {}, "Geen biometrie."),
+          el("li", {}, "Herstel gaat boven straf.")
+        ),
+        el("p", { class: "zacht" }, "Stem het gebruik af met het schoolreglement en, waar nodig, met de DPO.")
+      )
+    );
+    wrap2.append(
+      el(
+        "div",
+        { class: "kaart meer" },
+        el("h3", { class: "sectiekop" }, "📚 Meer weten?"),
+        el("p", {}, "De achtergrond en ontwerpkeuzes staan in de map ", el("code", {}, "docs/"), " van het project (de ADR’s). Daar lees je waarom Klaskompas werkt zoals het werkt.")
+      )
+    );
+    root.append(wrap2);
+  }
+
+  // app/src/views/instellingen.js
+  var instellingen_exports = {};
+  __export(instellingen_exports, {
+    render: () => render15
+  });
+  async function render15(root, ctx) {
     root.append(el("h2", { class: "sectiekop" }, "Instellingen & backup"));
     if (ctx.klasId) {
       const klas = await get("klassen", ctx.klasId);
@@ -4536,7 +5204,7 @@ textarea.invoer { resize: vertical; }
           ),
           el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
             await remove("optiecvoorwaarden", v.id);
-            render14(leeg(root), ctx);
+            render15(leeg(root), ctx);
           } }, "✕")
         ));
       }
@@ -4557,7 +5225,7 @@ textarea.invoer { resize: vertical; }
               return;
             }
             await put("optiecvoorwaarden", maakOptieCVoorwaarde({ klasId: ctx.klasId, tekst: nieuw.input.value.trim() }));
-            render14(leeg(root), ctx);
+            render15(leeg(root), ctx);
           } }, "+ Toevoegen")
         )
       ));
@@ -4696,7 +5364,7 @@ textarea.invoer { resize: vertical; }
               await zetLockAf(pin.input.value);
               sluit();
               toast("App-lock uitgeschakeld");
-              render14(leeg(root), ctx);
+              render15(leeg(root), ctx);
             } catch (e) {
               toast(e.message, "fout");
             }
@@ -4718,7 +5386,7 @@ textarea.invoer { resize: vertical; }
               await stelPinIn(pin.input.value);
               sluit();
               toast("Pincode ingesteld");
-              render14(leeg(root), ctx);
+              render15(leeg(root), ctx);
             } catch (e) {
               toast(e.message, "fout");
             }
@@ -4742,11 +5410,11 @@ textarea.invoer { resize: vertical; }
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // src/views/klasscherm.js
+  // app/src/views/klasscherm.js
   var klasscherm_exports = {};
   __export(klasscherm_exports, {
     cleanup: () => cleanup,
-    render: () => render15
+    render: () => render16
   });
   var actief = { stream: null, ctx: null, raf: 0, tick: 0 };
   function stopAlles() {
@@ -4760,7 +5428,7 @@ textarea.invoer { resize: vertical; }
   function cleanup() {
     stopAlles();
   }
-  async function render15(root, ctx) {
+  async function render16(root, ctx) {
     stopAlles();
     if (!ctx.klasId) {
       root.append(el(
@@ -4927,7 +5595,7 @@ textarea.invoer { resize: vertical; }
     const meter = el("div", { class: "kb-meter" }, mask, tooloud, current);
     const status = el("div", { class: "kb-status" }, "▥ METER UIT");
     const knop = el("button", { class: "knop knop--primair kb-sound-btn", onClick: () => toggle() }, "▶ Meten aan");
-    const kaart2 = el(
+    const kaart3 = el(
       "article",
       { class: "kb-card kb-sound" },
       el("div", { class: "kb-card-h" }, el("div", {}, el("h2", { class: "kb-card-t" }, "Stilte verdient"), el("p", { class: "kb-card-s" }, "We meten, jij ziet."))),
@@ -5007,11 +5675,11 @@ textarea.invoer { resize: vertical; }
         toast("Geen toegang tot de microfoon", "fout");
       }
     }
-    return kaart2;
+    return kaart3;
   }
   async function bouwDrill(klasId, drillTeller, dots) {
-    const sleutel = "drill:" + klasId;
-    const status = new Set(await getSetting(sleutel, []) || []);
+    const sleutel2 = "drill:" + klasId;
+    const status = new Set(await getSetting(sleutel2, []) || []);
     const steps = el("ol", { class: "kb-steps" });
     const items = [];
     function ververs() {
@@ -5029,13 +5697,13 @@ textarea.invoer { resize: vertical; }
       const li = el("button", { class: "kb-step", onClick: async () => {
         if (status.has(i)) status.delete(i);
         else status.add(i);
-        await setSetting(sleutel, [...status]);
+        await setSetting(sleutel2, [...status]);
         ververs();
       } }, el("span", { class: "kb-nr" }, String(i + 1)), el("span", { class: "kb-step-label" }, tekst.split(" — ")[0]), el("span", { class: "kb-check" }, "•"));
       items.push(li);
       steps.append(li);
     });
-    const kaart2 = el(
+    const kaart3 = el(
       "article",
       { class: "kb-card kb-drill" },
       el(
@@ -5044,7 +5712,7 @@ textarea.invoer { resize: vertical; }
         el("div", {}, el("h2", { class: "kb-card-t" }, "Lesstart-drill")),
         el("button", { class: "kb-mini", onClick: async () => {
           status.clear();
-          await setSetting(sleutel, []);
+          await setSetting(sleutel2, []);
           ververs();
         } }, "Nieuwe les")
       ),
@@ -5052,7 +5720,7 @@ textarea.invoer { resize: vertical; }
       el("div", { class: "kb-privacy-note" }, el("span", {}, "🔒"), el("span", {}, "Individuele correcties worden niet geprojecteerd. Ze blijven privé."))
     );
     ververs();
-    return kaart2;
+    return kaart3;
   }
   async function bouwZitplan(klasId) {
     const [plan, regels, leerlingen, aanwVandaag] = await Promise.all([
@@ -5063,10 +5731,12 @@ textarea.invoer { resize: vertical; }
     ]);
     const naam = new Map(leerlingen.map((l) => [l.id, `${l.voornaam || ""} ${l.naam || ""}`.trim()]));
     const vandaag = isoDatum(/* @__PURE__ */ new Date());
+    const statusPerLeerling = /* @__PURE__ */ new Map();
+    for (const a of aanwVandaag.filter((x) => x.datum === vandaag)) statusPerLeerling.set(a.leerlingId, a.status);
     const teller = { aanwezig: 0, telaat: 0, afwezig: 0 };
-    for (const a of aanwVandaag.filter((x) => x.datum === vandaag)) {
-      if (a.status === "aanwezig") teller.aanwezig++;
-      else if (a.status === "telaat") teller.telaat++;
+    for (const status of statusPerLeerling.values()) {
+      if (status === "aanwezig") teller.aanwezig++;
+      else if (status === "telaat") teller.telaat++;
       else teller.afwezig++;
     }
     const chipTeller = {};
@@ -5144,7 +5814,7 @@ textarea.invoer { resize: vertical; }
     });
   }
 
-  // src/main.js
+  // app/src/main.js
   var ROUTES = {
     dashboard: { titel: "Dashboard", icoon: "🏠", view: dashboard_exports, groep: "admin" },
     klassen: { titel: "Klassen & leerlingen", icoon: "👥", view: klassen_exports, groep: "admin" },
@@ -5159,6 +5829,7 @@ textarea.invoer { resize: vertical; }
     afspraken: { titel: "Afspraken & instructie", icoon: "🤝", view: afspraken_exports, groep: "admin" },
     schooljaar: { titel: "Schooljaar & kalender", icoon: "📅", view: schooljaar_exports, groep: "admin" },
     rooster: { titel: "Rooster", icoon: "🗓️", view: rooster_exports, groep: "admin" },
+    handleiding: { titel: "Handleiding", icoon: "❓", view: handleiding_exports, groep: "admin" },
     instellingen: { titel: "Instellingen & backup", icoon: "⚙️", view: instellingen_exports, groep: "admin" },
     klasscherm: { titel: "Klasscherm", icoon: "📺", view: klasscherm_exports, groep: "les" }
   };
@@ -5170,6 +5841,7 @@ textarea.invoer { resize: vertical; }
     klaskiezer: null
   };
   async function init() {
+    initEncryptie();
     try {
       await db();
     } catch (e) {
@@ -5197,6 +5869,7 @@ textarea.invoer { resize: vertical; }
     const fout = el("div", { class: "slot__fout" });
     const probeer = async () => {
       if (await controleerPin(invoer.value)) {
+        await ontgrendelSleutel(invoer.value);
         scherm.remove();
         onOk();
       } else {
@@ -5265,9 +5938,9 @@ textarea.invoer { resize: vertical; }
   function bouwShell() {
     const root = el("div", { class: "shell" });
     const navLinks = Object.entries(ROUTES).filter(([, r]) => r.groep === "admin").map(
-      ([sleutel, r]) => el(
+      ([sleutel2, r]) => el(
         "a",
-        { class: "nav__link", href: `#/${sleutel}`, dataset: { route: sleutel } },
+        { class: "nav__link", href: `#/${sleutel2}`, dataset: { route: sleutel2 } },
         el("span", { class: "nav__icoon" }, r.icoon),
         el("span", {}, r.titel)
       )
@@ -5300,12 +5973,12 @@ textarea.invoer { resize: vertical; }
   }
   function huidigeRoute() {
     const h = (location.hash || "#/dashboard").replace(/^#\//, "");
-    const sleutel = h.split("/")[0];
-    return ROUTES[sleutel] ? sleutel : "dashboard";
+    const sleutel2 = h.split("/")[0];
+    return ROUTES[sleutel2] ? sleutel2 : "dashboard";
   }
   async function route() {
-    const sleutel = huidigeRoute();
-    const r = ROUTES[sleutel];
+    const sleutel2 = huidigeRoute();
+    const r = ROUTES[sleutel2];
     const lesmodus = r.groep === "les";
     app.root.classList.toggle("shell--lesmodus", lesmodus);
     app.root.classList.remove("shell--open");
@@ -5317,7 +5990,7 @@ textarea.invoer { resize: vertical; }
     }
     app.huidigeView = r.view;
     document.querySelectorAll(".nav__link").forEach(
-      (a) => a.classList.toggle("nav__link--actief", a.dataset.route === sleutel)
+      (a) => a.classList.toggle("nav__link--actief", a.dataset.route === sleutel2)
     );
     const titelEl = document.getElementById("paginatitel");
     if (titelEl) titelEl.textContent = r.titel;

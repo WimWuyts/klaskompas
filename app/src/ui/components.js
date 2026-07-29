@@ -1,4 +1,6 @@
-// Kleine, afhankelijkheidsvrije UI-helpers: element-fabriek, toast, dialoog, formatters.
+// Kleine UI-helpers: element-fabriek, toast, dialoog, ongedaan-maken, validatie, formatters.
+
+import { remove as _remove, put as _put } from '../db/repo.js';
 
 /**
  * Element-fabriek. `props` mag class/id/attrs/events/dataset bevatten.
@@ -127,6 +129,41 @@ export function datumTijd(iso) {
     day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
   });
 }
+
+/** Toast met een actieknop (bv. "Ongedaan maken"). Blijft langer staan. */
+export function toastActie(bericht, actieLabel, onActie, ms = 6000) {
+  let laag = document.querySelector('.toast-laag');
+  if (!laag) { laag = el('div', { class: 'toast-laag' }); document.body.append(laag); }
+  let weg;
+  const knop = el('button', { class: 'toast__actie', onClick: () => { clearTimeout(weg); onActie(); t.remove(); } }, actieLabel);
+  const t = el('div', { class: 'toast toast--actie toast--in' }, el('span', {}, bericht), knop);
+  laag.append(t);
+  weg = setTimeout(() => { t.classList.remove('toast--in'); setTimeout(() => t.remove(), 250); }, ms);
+  return t;
+}
+
+/**
+ * Verwijder een record met een "ongedaan maken"-mogelijkheid.
+ * @param {string} store  storenaam
+ * @param {object} record  het volledige record (om te kunnen herstellen)
+ * @param {() => void} opnieuw  hertekent de lijst
+ */
+export async function verwijderMetUndo(store, record, opnieuw, label = 'Verwijderd') {
+  await _remove(store, record.id);
+  if (opnieuw) opnieuw();
+  toastActie(label, 'Ongedaan maken', async () => { await _put(store, record); if (opnieuw) opnieuw(); });
+}
+
+/** Markeer een invoerveld als fout (rood + melding). Retourneert false (handig in checks). */
+export function markeerFout(input, boodschap) {
+  input.classList.add('invoer--fout');
+  input.setAttribute('aria-invalid', 'true');
+  if (boodschap) input.title = boodschap;
+  input.addEventListener('input', () => wisFout(input), { once: true });
+  input.focus();
+  return false;
+}
+export function wisFout(input) { input.classList.remove('invoer--fout'); input.removeAttribute('aria-invalid'); }
 
 /** Injecteer een <style> één keer (per id). Zo brengt elke view haar eigen CSS mee. */
 export function stijl(id, css) {

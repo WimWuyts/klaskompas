@@ -3,7 +3,7 @@
 import { all, get, put, remove, leerlingenVanKlas, verwijderKlas, byIndex } from '../db/repo.js';
 import { maakKlas, maakLeerling, maakInschrijving } from '../domain/model.js';
 import { importeerCsv } from '../db/backup.js';
-import { el, leeg, toast, dialoog, bevestig, leegKaart } from '../ui/components.js';
+import { el, leeg, toast, dialoog, bevestig, leegKaart, verwijderMetUndo } from '../ui/components.js';
 
 export async function render(root, ctx) {
   const klassen = await all('klassen');
@@ -66,11 +66,8 @@ async function toonKlas(root, ctx, klasId) {
         el('td', { class: 'zacht' }, l.email || '—'),
         el('td', { class: 'rechts' },
           el('button', { class: 'icoonknop', title: 'Uit klas verwijderen', onClick: async () => {
-            if (await bevestig(`${l.voornaam} ${l.naam} uit ${klas.naam} verwijderen? (de leerling blijft bestaan)`)) {
-              await remove('inschrijvingen', l.inschrijvingId);
-              toast('Uit klas verwijderd');
-              toonKlas(root, ctx, klasId);
-            }
+            const inschr = await get('inschrijvingen', l.inschrijvingId);
+            if (inschr) await verwijderMetUndo('inschrijvingen', inschr, () => toonKlas(root, ctx, klasId), `${l.voornaam} uit ${klas.naam} verwijderd`);
           } }, '✕'),
         ),
       ),

@@ -3,7 +3,7 @@
 import { all, get, put, remove, beloningenVoorKlas } from '../db/repo.js';
 import { maakBeloning, BELONING_CATEGORIE, BELONING_NIVEAU } from '../domain/model.js';
 import { zaaiStartMenu } from '../domain/beloningen.js';
-import { el, leeg, toast, dialoog, bevestig, euro, leegKaart } from '../ui/components.js';
+import { el, leeg, toast, dialoog, bevestig, euro, leegKaart, verwijderMetUndo } from '../ui/components.js';
 
 export async function render(root, ctx) {
   const klas = ctx.klasId ? await get('klassen', ctx.klasId) : null;
@@ -46,11 +46,8 @@ export async function render(root, ctx) {
             el('span', { class: 'badge badge--stil' }, BELONING_NIVEAU[b.niveau] || b.niveau),
             el('span', { class: 'spatie' }),
             el('button', { class: 'icoonknop', title: 'Bewerken', onClick: () => bewerkDialoog(root, ctx, b) }, '✏️'),
-            el('button', { class: 'icoonknop', title: 'Verwijderen', onClick: async () => {
-              if (await bevestig(`"${b.naam}" verwijderen?`, { gevaar: true, jaLabel: 'Verwijderen' })) {
-                await remove('beloningen', b.id); toast('Verwijderd'); render(leeg(root), ctx);
-              }
-            } }, '🗑'),
+            el('button', { class: 'icoonknop', title: 'Verwijderen', onClick: () =>
+              verwijderMetUndo('beloningen', b, () => render(leeg(root), ctx), 'Beloning verwijderd') }, '🗑'),
           ),
         ),
       );

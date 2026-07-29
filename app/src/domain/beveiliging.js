@@ -4,6 +4,7 @@
 
 import { getSetting, setSetting } from '../db/repo.js';
 import { exporteerAlles } from '../db/backup.js';
+import { versleutelAlles, ontsleutelAlles, heeftSleutel } from './veldencryptie.js';
 
 const ITER = 150000;
 const enc = new TextEncoder();
@@ -44,12 +45,15 @@ export async function lockStatus() {
   return (await getSetting('lock', null)) || { enabled: false };
 }
 
-/** Stel een pincode in (of wijzig ze). */
+/** Stel een pincode in (of wijzig ze). Versleutelt meteen de gevoelige velden. */
 export async function stelPinIn(pin) {
   if (!pin || pin.length < 4) throw new Error('Kies een pincode van minstens 4 tekens.');
+  // Bij het WIJZIGEN van een bestaande pincode eerst ontsleutelen met de huidige sleutel.
+  if (heeftSleutel()) await ontsleutelAlles();
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const hash = await pbkdf2Bits(pin, salt);
   await setSetting('lock', { enabled: true, salt: b64(salt), hash: b64(hash), iter: ITER });
+  await versleutelAlles(pin);
   return true;
 }
 
@@ -66,9 +70,10 @@ export async function controleerPin(pin) {
   return diff === 0;
 }
 
-/** Schakel de app-lock uit (vereist de juiste pincode). */
+/** Schakel de app-lock uit (vereist de juiste pincode). Ontsleutelt de data terug. */
 export async function zetLockAf(pin) {
   if (!(await controleerPin(pin))) throw new Error('Verkeerde pincode.');
+  await ontsleutelAlles();
   await setSetting('lock', { enabled: false });
   return true;
 }

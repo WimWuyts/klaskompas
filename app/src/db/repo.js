@@ -6,6 +6,14 @@ import { uid, defaultKlasConfig } from '../domain/model.js';
 
 let _db = null;
 
+// Optionele crypto-hooks (veld-encryptie at rest). Zonder hooks: alles plein-tekst.
+// enc/dec krijgen (store, record) en geven een KLOON terug (muteren het origineel niet).
+let cryptoHooks = null;
+export function setCryptoHooks(h) { cryptoHooks = h; }
+async function enc(store, value) { return cryptoHooks ? cryptoHooks.enc(store, value) : value; }
+async function dec(store, value) { return cryptoHooks && value ? cryptoHooks.dec(store, value) : value; }
+async function decList(store, rows) { return cryptoHooks ? Promise.all(rows.map((r) => cryptoHooks.dec(store, r))) : rows; }
+
 /** Open (eenmalig) en cache de database. */
 export async function db() {
   if (!_db) {
@@ -44,23 +52,24 @@ export async function setSetting(key, value) {
 // — Generieke CRUD —
 
 export async function all(store) {
-  return (await db()).getAll(store);
+  return decList(store, await (await db()).getAll(store));
 }
 export async function get(store, id) {
-  return (await db()).get(store, id);
+  return dec(store, await (await db()).get(store, id));
 }
 export async function put(store, value) {
-  await (await db()).put(store, value);
+  await (await db()).put(store, await enc(store, value));
   return value;
 }
 export async function putAll(store, values) {
-  return (await db()).putAll(store, values);
+  const versleuteld = cryptoHooks ? await Promise.all(values.map((v) => enc(store, v))) : values;
+  return (await db()).putAll(store, versleuteld);
 }
 export async function remove(store, id) {
   return (await db()).delete(store, id);
 }
 export async function byIndex(store, index, value) {
-  return (await db()).getAllByIndex(store, index, value);
+  return decList(store, await (await db()).getAllByIndex(store, index, value));
 }
 
 // — Klassen & leerlingen —
