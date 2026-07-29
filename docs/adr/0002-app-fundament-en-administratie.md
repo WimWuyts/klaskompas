@@ -90,6 +90,30 @@ de structuur staat klaar zodat september-gegevens enkel ingevuld hoeven te worde
 
 ## 5. Open punten
 
-Zie het register: OD-5 (versleuteling/app-lock), OD-6 (afstemming school),
-OD-7 (zitplan/Klasscherm-mockup), OD-8 (plaatsengenerator). OD-9 wordt door deze ADR
-gesloten.
+Zie het register: OD-6 (afstemming school). OD-9 wordt door deze ADR gesloten;
+OD-2, OD-5, OD-7 en OD-8 zijn in de uitbreiding v0.2 (§6) gebouwd.
+
+## 6. Uitbreiding v0.2 (gebouwd)
+
+Bovenop het fundament zijn de volgende modules toegevoegd, telkens generiek en
+invulbaar (framework-first):
+
+- **Individueel spoor** (ADR-0001 §2.2/§2.4) — feitelijke **observaties** (ABC),
+  **quota-tellers met seinen** (maandelijkse reset; een seintje is nooit een
+  automatische straf) en de **consequentieladder** (5 herstelvragen → herstelopdracht
+  → notitie → tijdelijk privilegeverlies). Los van de klaspot; privaat en feitelijk.
+- **Optie C concreet (OD-2)** — per klas een lijst expliciet, vooraf gedefinieerde
+  voorwaarden waaronder de leerkracht een daling van de pot mag triggeren.
+- **Leerlingfiche** — één read-only overzicht per leerling (aanwezigheid, observaties,
+  quota, consequenties, inhaalwerk, notities).
+- **Afwezigheden & inhaalwerk**, **evaluaties & puntenboek** (gewogen gemiddelde),
+  **acties/taken** en **lokale communicatie-notities** (geen verzending).
+- **Zitplan (OD-7/OD-8)** — plaatsengenerator met randvoorwaarden ("slotjes"), best-effort
+  met terugmelding; bewaarbaar en zichtbaar op het Klasscherm.
+- **Beveiliging (rest van OD-5)** — **app-lock** met pincode (PBKDF2, enkel een hash
+  bewaard) en een **versleutelde backup** (AES-GCM, Web Crypto). Alles lokaal.
+- **Klasscherm herontworpen (OD-7)** — het definitieve ontwerp: topbalk + focus-strip +
+  drie panelen (realistische geldkoker met biljetten, verticale geluidsmeter, lesdrill met
+  voortgang) en de zitplan-weergave met aanwezigheidssamenvatting. Alles teacher-triggered.
+
+De datastores hiervoor zijn in schema v2 aangelegd; bestaande data migreert zonder verlies.

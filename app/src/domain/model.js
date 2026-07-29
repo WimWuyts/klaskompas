@@ -185,3 +185,131 @@ export function maakAankoop({ klasId, beloningId, naam, prijs, note = '' }) {
     ts: new Date().toISOString(),
   };
 }
+
+// ————————————————————————————— Individueel spoor (ADR-0001 §2.2/§2.4) —————
+
+export const OBSERVATIE_CATEGORIE = {
+  werkhouding: 'Werkhouding',
+  gedrag: 'Gedrag',
+  sociaal: 'Sociale vaardigheden',
+  motivatie: 'Motivatie',
+  participatie: 'Klasparticipatie',
+  positief: 'Positief',
+  andere: 'Andere',
+};
+
+/** De 5 vaste herstelvragen (kort na de les). */
+export const HERSTELVRAGEN = [
+  'Wat gebeurde er precies? (feiten)',
+  'Wie is erdoor geraakt, en hoe?',
+  'Wat had je anders kunnen doen?',
+  'Hoe maken we het weer goed?',
+  'Wat spreken we af voor de volgende keer?',
+];
+
+/** Individuele consequentie-ladder (van licht naar zwaar; §2.2.11). */
+export const CONSEQUENTIE_LADDER = [
+  { sleutel: 'herstelgesprek', label: 'Herstelgesprek', hint: '5 herstelvragen, kort na de les.' },
+  { sleutel: 'herstelopdracht', label: 'Logische herstelopdracht', hint: '"You break it, you fix it" — evt. kort in de doeltaal.' },
+  { sleutel: 'notitie', label: 'Feitelijke notitie + opschalen', hint: 'ABC-notitie; bij een patroon een signaal naar mentor/ouders/zorg.' },
+  { sleutel: 'privilege', label: 'Tijdelijk privilegeverlies', hint: 'Bv. even geen vrije partner-/plaatskeuze. Nooit de leerstof of een basisbehoefte.' },
+];
+
+/** Types feitelijke tellers (uitbreidbaar). */
+export const QUOTA_TYPES = {
+  boek: 'Boek vergeten',
+  materiaal: 'Materiaal vergeten',
+  taak: 'Taak niet gemaakt',
+  telaat: 'Te laat',
+  gsm: 'Gsm-afspraak',
+  andere: 'Andere',
+};
+
+export function maakObservatie({ leerlingId, klasId, categorie = 'gedrag', aanleiding = '', gedrag = '', gevolg = '', opvolgen = false }) {
+  return {
+    id: uid(),
+    leerlingId,
+    klasId,
+    categorie,
+    aanleiding, // A — antecedent
+    gedrag, // B — behavior (het feitelijke gedrag)
+    gevolg, // C — consequence
+    opvolgen: !!opvolgen,
+    datum: new Date().toISOString(),
+  };
+}
+
+export function maakQuota({ leerlingId, klasId, type = 'boek', drempel = 3 }) {
+  return {
+    id: uid(),
+    leerlingId,
+    klasId,
+    type,
+    aantal: 0,
+    drempel: Number(drempel) || 3,
+    maand: new Date().toISOString().slice(0, 7), // JJJJ-MM
+    laatst: null,
+  };
+}
+
+export function maakConsequentie({ leerlingId, klasId, stap, note = '', observatieId = null }) {
+  return {
+    id: uid(),
+    leerlingId,
+    klasId,
+    stap, // sleutel uit CONSEQUENTIE_LADDER
+    note,
+    observatieId,
+    datum: new Date().toISOString(),
+  };
+}
+
+// ————————————————————————————— Administratie v0.2 —————
+
+export const INHAALWERK_TYPE = { toets: 'Toets', taak: 'Taak', mondeling: 'Mondeling', lesinhoud: 'Lesinhoud', andere: 'Andere' };
+export const INHAALWERK_STATUS = { open: 'Open', afspraak: 'Afspraak te maken', ingepland: 'Ingepland', afgelegd: 'Afgelegd', afgesloten: 'Afgesloten' };
+
+export function maakInhaalwerk({ leerlingId, klasId, type = 'toets', titel = '', status = 'open', missedDatum = '', scheduledDatum = '', note = '' }) {
+  return { id: uid(), leerlingId, klasId, type, titel, status, missedDatum, scheduledDatum, note, aangemaakt: new Date().toISOString() };
+}
+
+export const EVALUATIE_TYPE = { toets: 'Toets', taak: 'Taak', mondeling: 'Mondeling', oefening: 'Oefening', observatie: 'Observatie', andere: 'Andere' };
+
+export function maakEvaluatie({ klasId, datum = '', titel = '', type = 'toets', maxPunten = 10, gewicht = 100, thema = '', note = '' }) {
+  return { id: uid(), klasId, datum, titel, type, maxPunten: Number(maxPunten) || 10, gewicht: Number(gewicht) || 100, thema, note, aangemaakt: new Date().toISOString() };
+}
+
+export function maakEvalResultaat({ evaluatieId, leerlingId, klasId, punten = null, afwezig = false, note = '' }) {
+  return { id: uid(), evaluatieId, leerlingId, klasId, punten: punten === '' || punten == null ? null : Number(punten), afwezig: !!afwezig, note };
+}
+
+export const ACTIE_STATUS = { open: 'Open', gedaan: 'Gedaan' };
+
+export function maakActie({ tekst, klasId = null, leerlingId = null, datum = '' }) {
+  return { id: uid(), tekst, klasId, leerlingId, datum, status: 'open', aangemaakt: new Date().toISOString() };
+}
+
+export const NOTITIE_KANAAL = { ouder: 'Ouder', mentor: 'Mentor', zorg: 'Zorg', directie: 'Directie', andere: 'Andere' };
+
+export function maakNotitie({ leerlingId = null, klasId = null, kanaal = 'ouder', tekst = '', opvolgen = false }) {
+  return { id: uid(), leerlingId, klasId, kanaal, tekst, opvolgen: !!opvolgen, datum: new Date().toISOString() };
+}
+
+// ————————————————————————————— Zitplan (OD-7/OD-8) —————
+
+export const ZITREGEL_TYPE = {
+  nietnaast: 'Niet naast elkaar',
+  vastvooraan: 'Vast vooraan',
+  vastachteraan: 'Vast achteraan',
+  vasteplaats: 'Vaste plaats',
+};
+
+export function maakZitregel({ klasId, type, leerlingId = null, leerlingId2 = null, rij = null, kol = null }) {
+  return { id: uid(), klasId, type, leerlingId, leerlingId2, rij, kol };
+}
+
+// ————————————————————————————— Optie C-voorwaarden (OD-2) —————
+
+export function maakOptieCVoorwaarde({ klasId, tekst, actief = true }) {
+  return { id: uid(), klasId, tekst, actief: !!actief, aangemaakt: new Date().toISOString() };
+}

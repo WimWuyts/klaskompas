@@ -128,6 +128,40 @@ export function datumTijd(iso) {
   });
 }
 
+/** Injecteer een <style> één keer (per id). Zo brengt elke view haar eigen CSS mee. */
+export function stijl(id, css) {
+  if (document.getElementById(id)) return;
+  const s = document.createElement('style');
+  s.id = id;
+  s.textContent = css;
+  document.head.append(s);
+}
+
+// — Herbruikbare formuliervelden (import in views i.p.v. lokaal herdefiniëren) —
+
+export function etiket(label, control) {
+  return el('label', { class: 'veld' }, el('span', {}, label), control);
+}
+
+export function veld(label, { type = 'text', value = '', placeholder = '' } = {}) {
+  const input = el('input', { class: 'invoer', type, value: value ?? '', placeholder });
+  return { input, wrap: etiket(label, input) };
+}
+
+export function tekstveld(label, { value = '', rows = 3, placeholder = '' } = {}) {
+  const input = el('textarea', { class: 'invoer', rows, placeholder }, value || '');
+  return { input, wrap: etiket(label, input) };
+}
+
+export function keuze(label, opties, gekozen) {
+  const select = el(
+    'select',
+    { class: 'invoer' },
+    ...Object.entries(opties).map(([v, l]) => el('option', { value: v, selected: v === gekozen }, l)),
+  );
+  return { select, wrap: etiket(label, select) };
+}
+
 /** Toont een lege-toestand met titel + hint. */
 export function leegKaart(titel, hint, actie) {
   return el(

@@ -5,7 +5,7 @@
 import { Idb } from './idb.js';
 
 export const DB_NAME = 'klaskompas';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
 /**
  * Storedefinities. `key` = keyPath. `indexes` = [naam, keyPath, opties?].
@@ -97,6 +97,56 @@ export const STORES = [
     name: 'quota', // feitelijke tellers (bv. "boek vergeten")
     key: 'id',
     indexes: [['leerlingId', 'leerlingId'], ['klasId', 'klasId']],
+  },
+  {
+    name: 'consequenties', // stappen op de herstel-/consequentieladder (§2.2.11)
+    key: 'id',
+    indexes: [['leerlingId', 'leerlingId'], ['klasId', 'klasId']],
+  },
+
+  // — administratie v0.2: inhaalwerk, evaluaties, acties, communicatie —
+  {
+    name: 'inhaalwerk', // gemiste toetsen/taken en hun opvolging
+    key: 'id',
+    indexes: [['leerlingId', 'leerlingId'], ['klasId', 'klasId']],
+  },
+  {
+    name: 'evaluaties',
+    key: 'id',
+    indexes: [['klasId', 'klasId']],
+  },
+  {
+    name: 'evalresultaten',
+    key: 'id',
+    indexes: [['evaluatieId', 'evaluatieId'], ['leerlingId', 'leerlingId'], ['klasId', 'klasId']],
+  },
+  {
+    name: 'acties', // eenvoudige to-do's
+    key: 'id',
+    indexes: [['klasId', 'klasId']],
+  },
+  {
+    name: 'notities', // lokale communicatie-notities (ouder/mentor/zorg)
+    key: 'id',
+    indexes: [['leerlingId', 'leerlingId'], ['klasId', 'klasId']],
+  },
+
+  // — zitplan (OD-7/OD-8) —
+  {
+    name: 'zitplannen', // opgeslagen plaatsing per klas
+    key: 'klasId',
+  },
+  {
+    name: 'zitregels', // randvoorwaarden ("slotjes")
+    key: 'id',
+    indexes: [['klasId', 'klasId']],
+  },
+
+  // — optie C: expliciet vooraf gedefinieerde voorwaarden (OD-2) —
+  {
+    name: 'optiecvoorwaarden',
+    key: 'id',
+    indexes: [['klasId', 'klasId']],
   },
 ];
 

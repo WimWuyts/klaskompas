@@ -48,8 +48,14 @@ De losse `app/` blijft de bron; `dist/klaskompas.html` is een build-artefact.
   en uitleg over de klaspot; groot **projecteerbaar** op het bord (ook vanuit de Lesmodus).
 - **Beloningen** — het startmenu uit [het onderzoek](../research/beloningssysteem-onderzoek.md)
   staat als sjabloon klaar; per klas aan te passen.
-- **Instellingen** — per-klas configuratie van de klaspot (ADR-0001 §2.1.8) +
-  backup/herstel + diagnostiek.
+- **Individueel spoor** — observaties (ABC), quota-tellers met seinen, en de
+  consequentieladder (5 herstelvragen → … → privilegeverlies). Privaat, feitelijk, los van de pot.
+- **Leerlingfiche** — één overzicht per leerling (aanwezigheid, observaties, quota, …).
+- **Afwezigheden & inhaalwerk**, **evaluaties & puntenboek** (gewogen gemiddelde),
+  **acties & notities**.
+- **Zitplan** — plaatsengenerator met randvoorwaarden ("slotjes"); zichtbaar op het Klasscherm.
+- **Instellingen** — per-klas klaspot-configuratie (ADR-0001 §2.1.8), **optie C**-voorwaarden,
+  **app-lock (pincode)** + **versleutelde backup**, gewone backup/herstel en diagnostiek.
 
 ## Architectuur
 

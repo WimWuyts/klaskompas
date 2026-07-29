@@ -2,6 +2,7 @@
 
 import { db, all, getSetting, setSetting } from './db/repo.js';
 import { zaaiStartMenu } from './domain/beloningen.js';
+import { lockStatus, controleerPin } from './domain/beveiliging.js';
 import { el, leeg, toast } from './ui/components.js';
 
 import * as dashboard from './views/dashboard.js';
@@ -9,6 +10,12 @@ import * as klassen from './views/klassen.js';
 import * as schooljaar from './views/schooljaar.js';
 import * as rooster from './views/rooster.js';
 import * as aanwezigheid from './views/aanwezigheid.js';
+import * as inhaalwerk from './views/inhaalwerk.js';
+import * as leerlingfiche from './views/leerlingfiche.js';
+import * as individueel from './views/individueel.js';
+import * as puntenboek from './views/puntenboek.js';
+import * as acties from './views/acties.js';
+import * as zitplan from './views/zitplan.js';
 import * as afspraken from './views/afspraken.js';
 import * as beloningen from './views/beloningen.js';
 import * as instellingen from './views/instellingen.js';
@@ -17,11 +24,17 @@ import * as klasscherm from './views/klasscherm.js';
 const ROUTES = {
   dashboard: { titel: 'Dashboard', icoon: '🏠', view: dashboard, groep: 'admin' },
   klassen: { titel: 'Klassen & leerlingen', icoon: '👥', view: klassen, groep: 'admin' },
+  leerlingfiche: { titel: 'Leerlingfiche', icoon: '🪪', view: leerlingfiche, groep: 'admin' },
+  aanwezigheid: { titel: 'Aanwezigheid', icoon: '✅', view: aanwezigheid, groep: 'admin' },
+  inhaalwerk: { titel: 'Afwezigheden & inhaalwerk', icoon: '🔁', view: inhaalwerk, groep: 'admin' },
+  puntenboek: { titel: 'Evaluaties & puntenboek', icoon: '📊', view: puntenboek, groep: 'admin' },
+  individueel: { titel: 'Individueel spoor', icoon: '🙋', view: individueel, groep: 'admin' },
+  beloningen: { titel: 'Beloningen', icoon: '🎁', view: beloningen, groep: 'admin' },
+  zitplan: { titel: 'Zitplan', icoon: '🪑', view: zitplan, groep: 'admin' },
+  acties: { titel: 'Acties & notities', icoon: '🗒️', view: acties, groep: 'admin' },
+  afspraken: { titel: 'Afspraken & instructie', icoon: '🤝', view: afspraken, groep: 'admin' },
   schooljaar: { titel: 'Schooljaar & kalender', icoon: '📅', view: schooljaar, groep: 'admin' },
   rooster: { titel: 'Rooster', icoon: '🗓️', view: rooster, groep: 'admin' },
-  aanwezigheid: { titel: 'Aanwezigheid', icoon: '✅', view: aanwezigheid, groep: 'admin' },
-  afspraken: { titel: 'Afspraken & instructie', icoon: '🤝', view: afspraken, groep: 'admin' },
-  beloningen: { titel: 'Beloningen', icoon: '🎁', view: beloningen, groep: 'admin' },
   instellingen: { titel: 'Instellingen & backup', icoon: '⚙️', view: instellingen, groep: 'admin' },
   klasscherm: { titel: 'Klasscherm', icoon: '📺', view: klasscherm, groep: 'les' },
 };
@@ -35,19 +48,51 @@ const app = {
 };
 
 async function init() {
-  document.body.append(bouwShell());
   try {
     await db();
-    await zaaiStartMenu();
   } catch (e) {
-    app.inhoud.append(
-      el('div', { class: 'kaart kaart--fout' },
-        el('h2', {}, 'Kan de lokale opslag niet openen'),
-        el('p', {}, String(e.message || e)),
-        el('p', { class: 'hint' }, 'Klaskompas heeft IndexedDB nodig. Werk je in een privévenster of met opslag geblokkeerd, sta dan lokale opslag toe.')),
+    document.body.append(
+      el('div', { class: 'opstartfout' },
+        el('div', { class: 'kaart kaart--fout' },
+          el('h2', {}, 'Kan de lokale opslag niet openen'),
+          el('p', {}, String(e.message || e)),
+          el('p', { class: 'zacht' }, 'Klaskompas heeft IndexedDB nodig. Werk je in een privévenster of met opslag geblokkeerd, sta dan lokale opslag toe.'))),
     );
     return;
   }
+  const lock = await lockStatus();
+  if (lock.enabled) toonSlot(boot);
+  else await boot();
+}
+
+/** App-lock: toon een pincodescherm vóór de app laadt (OD-5). */
+function toonSlot(onOk) {
+  const invoer = el('input', { class: 'slot__invoer', type: 'password', inputmode: 'numeric', autocomplete: 'off', placeholder: '••••', 'aria-label': 'Pincode' });
+  const fout = el('div', { class: 'slot__fout' });
+  const probeer = async () => {
+    if (await controleerPin(invoer.value)) { scherm.remove(); onOk(); }
+    else { fout.textContent = 'Verkeerde pincode.'; invoer.value = ''; invoer.focus(); scherm.querySelector('.slot__kaart').classList.remove('slot--shake'); void scherm.offsetWidth; scherm.querySelector('.slot__kaart').classList.add('slot--shake'); }
+  };
+  invoer.addEventListener('keydown', (e) => { if (e.key === 'Enter') probeer(); });
+  const scherm = el('div', { class: 'slot' },
+    el('div', { class: 'slot__kaart' },
+      el('div', { class: 'slot__logo' }, '🧭'),
+      el('h1', {}, 'Klaskompas'),
+      el('p', { class: 'zacht' }, 'Voer je pincode in om verder te gaan.'),
+      invoer,
+      fout,
+      el('button', { class: 'knop knop--primair slot__knop', onClick: probeer }, 'Ontgrendelen'),
+    ),
+  );
+  document.body.append(scherm);
+  setTimeout(() => invoer.focus(), 50);
+}
+
+async function boot() {
+  document.body.append(bouwShell());
+  try {
+    await zaaiStartMenu();
+  } catch (_) { /* niet fataal */ }
   app.actieveKlasId = await getSetting('actieveKlasId', null);
   await herlaadKlassen();
   window.addEventListener('hashchange', route);

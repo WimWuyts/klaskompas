@@ -233,6 +233,25 @@ textarea.invoer { resize: vertical; }
 .menu-item__voet { display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 4px; }
 .menu-saldo { margin-bottom: 12px; font-size: 1.05rem; }
 
+/* ————————————————————————————————— app-lock ————— */
+.opstartfout { max-width: 520px; margin: 60px auto; padding: 20px; }
+.slot { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px;
+  background: radial-gradient(circle at 50% 0%, #14304a, #0b1622 60%, #070d15); }
+.slot__kaart { width: min(360px, 100%); text-align: center; background: var(--paneel); border: 1px solid var(--rand); border-radius: var(--radius); padding: 30px 26px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.slot__logo { font-size: 2.4rem; }
+.slot__kaart h1 { margin: 6px 0 2px; }
+.slot__invoer { width: 100%; margin: 14px 0 6px; padding: 12px; font-size: 1.6rem; text-align: center; letter-spacing: 0.4em; border-radius: var(--radius-s); border: 1px solid var(--rand); background: var(--paneel-2); color: var(--tekst); }
+.slot__invoer:focus { outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); border-color: var(--accent); }
+.slot__fout { min-height: 18px; color: var(--rood); font-size: 0.82rem; font-weight: 600; }
+.slot__knop { width: 100%; margin-top: 8px; }
+.slot--shake { animation: shake 0.35s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+
+.voorwaarden { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.voorwaarde { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--paneel-2); }
+.voorwaarde .schakel { flex: 1; }
+.voorwaarde--uit { opacity: 0.55; }
+
 /* ————————————————————————————————— afspraken ————— */
 .afspraken-edit { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .afspraken-edit__rij { display: flex; align-items: center; gap: 10px; }
@@ -257,78 +276,155 @@ textarea.invoer { resize: vertical; }
 .projectie__lijst li::before { content: counter(reg); position: absolute; left: clamp(14px, 2.5vw, 22px); top: 50%; transform: translateY(-50%); width: clamp(34px, 5vw, 48px); height: clamp(34px, 5vw, 48px); display: grid; place-items: center; border-radius: 50%; background: var(--goud); color: #1b1405; font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.5rem); }
 .projectie__routine { margin-top: clamp(18px, 4vh, 40px); font-size: clamp(0.9rem, 2vw, 1.3rem); color: #cfe0ec; }
 
-/* ————————————————————————————————— PODIUM / Klasscherm ————— */
-.podium {
-  min-height: 100vh; background: radial-gradient(circle at 50% 0%, #14304a 0%, #0b1622 55%, #070d15 100%);
-  color: #f2f6f9; padding: 18px 22px 30px; display: flex; flex-direction: column; gap: 14px;
+/* ————————————————————————————————— KLASBORD / Klasscherm (Lesmodus) ————— */
+/* Licht-groen "papier"-thema (mockup), met donkere variant. Zelfstandige tokens. */
+.klasbord {
+  --kb-bg: #dce7dc; --kb-bg2: #cdddcf; --kb-panel: #fbfcf8; --kb-panel-2: #edf2ea;
+  --kb-line: #c8d4c7; --kb-line2: #aebead; --kb-text: #183120; --kb-soft: #536157; --kb-faint: #758077;
+  --kb-g900: #163f25; --kb-g800: #1f5631; --kb-g700: #2f7042; --kb-g600: #4c8a5a; --kb-g300: #c5dcc8; --kb-g200: #dceadd;
+  --kb-amber: #b8751d; --kb-red: #b85240; --kb-desk: #e9c995; --kb-desk-l: #f8e4bd; --kb-desk-d: #b98d52;
+  --kb-shadow: 0 1px 2px rgba(23,48,31,.05), 0 12px 28px rgba(23,48,31,.10);
+  min-height: 100vh; color: var(--kb-text); font-family: var(--sans, system-ui);
+  padding: clamp(12px,1.4vw,22px); display: grid; grid-template-rows: auto auto minmax(0,1fr); gap: clamp(10px,1.1vw,16px);
+  background:
+    radial-gradient(circle at 10% 6%, rgba(255,255,255,.5), transparent 30rem),
+    radial-gradient(circle at 92% 92%, rgba(67,115,76,.16), transparent 32rem),
+    linear-gradient(135deg, var(--kb-bg), var(--kb-bg2));
 }
-.podium__kop { display: flex; align-items: center; justify-content: space-between; }
-.podium__klas { font-size: 1.6rem; font-weight: 800; letter-spacing: 0.01em; }
-.podium .knop--stil { color: #cfe0ec; border-color: rgba(255,255,255,0.18); }
-.reminder { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-s); padding: 10px 16px; font-size: 1.1rem; cursor: pointer; }
-.reminder:hover { background: rgba(255,255,255,0.1); }
+@media (prefers-color-scheme: dark) {
+  .klasbord {
+    --kb-bg: #101711; --kb-bg2: #17221a; --kb-panel: #1b281f; --kb-panel-2: #213126;
+    --kb-line: #34493a; --kb-line2: #4b6250; --kb-text: #eef5ef; --kb-soft: #bdc9bf; --kb-faint: #8f9d92;
+    --kb-g900: #d9f0de; --kb-g800: #a9d9b6; --kb-g700: #80c392; --kb-g600: #5daa73; --kb-g300: #365340; --kb-g200: #263f2f;
+    --kb-amber: #efb55b; --kb-red: #ee8b79; --kb-desk: #725331; --kb-desk-l: #9b754a; --kb-desk-d: #392c1d;
+    --kb-shadow: 0 1px 2px rgba(0,0,0,.24), 0 16px 34px rgba(0,0,0,.30);
+  }
+}
+.kb-card, .kb-top, .kb-focus { background: var(--kb-panel); border: 1px solid var(--kb-line); box-shadow: var(--kb-shadow); border-radius: var(--radius-xl, 22px); }
 
-.podium__rooster { display: grid; grid-template-columns: 320px 1fr; gap: 22px; flex: 1; align-items: start; }
-@media (max-width: 820px) { .podium__rooster { grid-template-columns: 1fr; } }
+/* topbar */
+.kb-top { padding: 12px 18px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
+.kb-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.kb-crest { width: 40px; height: 46px; flex: none; display: grid; place-items: center; color: #fff; background: var(--kb-g800); clip-path: polygon(50% 0,92% 13%,88% 76%,50% 100%,12% 76%,8% 13%); font-size: 1.1rem; }
+.kb-title { margin: 0; font-size: clamp(1.2rem,1.9vw,1.9rem); letter-spacing: -.02em; }
+.kb-grade { color: var(--kb-soft); font-size: .82rem; margin-left: 10px; }
+.kb-modes { justify-self: center; display: inline-flex; padding: 4px; border: 1px solid var(--kb-line); border-radius: 999px; background: var(--kb-panel-2); }
+.kb-mode { min-height: 38px; padding: 0 22px; border: 0; border-radius: 999px; background: transparent; color: var(--kb-soft); font-weight: 750; font-size: .85rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+.kb-mode.active { color: #fff; background: var(--kb-g800); }
+.kb-privacy { justify-self: end; display: inline-flex; gap: 8px; align-items: center; color: var(--kb-soft); font-size: .8rem; white-space: nowrap; }
+
+/* focus strip */
+.kb-focus { padding: 10px 16px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; border-radius: var(--radius-lg, 16px); }
+.kb-focus-icon { width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid var(--kb-g600); border-radius: 50%; color: var(--kb-g800); }
+.kb-focus-text { min-width: 0; font-weight: 700; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kb-progress { display: flex; align-items: center; gap: 14px; padding-left: 16px; border-left: 1px solid var(--kb-line); }
+.kb-progress strong { font-family: var(--mono, monospace); font-size: .78rem; white-space: nowrap; }
+.kb-dots { display: flex; gap: 10px; }
+.kb-dots span { position: relative; width: 10px; height: 10px; border: 1px solid var(--kb-g600); border-radius: 50%; }
+.kb-dots span.done { background: var(--kb-g700); }
+.kb-dots span:not(:last-child)::after { content: ""; position: absolute; top: 50%; left: 9px; width: 11px; height: 2px; transform: translateY(-50%); background: var(--kb-g300); }
+
+/* dashboard grid */
+.kb-grid { min-height: 0; display: grid; grid-template-columns: minmax(300px,.95fr) minmax(290px,.75fr) minmax(560px,1.7fr); gap: clamp(10px,1.1vw,16px); }
+.kb-card { min-width: 0; padding: 18px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+.kb-card-h { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.kb-card-t { margin: 0; font-size: clamp(1rem,1.3vw,1.3rem); letter-spacing: -.02em; }
+.kb-card-s { margin: 3px 0 0; color: var(--kb-soft); font-size: .72rem; }
 
 /* geldkoker */
-.koker-kolom { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.koker__saldo { font-size: 3.4rem; font-weight: 900; color: var(--goud-fel); text-shadow: 0 2px 14px rgba(240,192,74,0.35); }
-.koker {
-  position: relative; width: 190px; height: 60vh; min-height: 340px; border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-  border: 3px solid rgba(255,255,255,0.16); overflow: hidden;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 10px 40px rgba(0,0,0,0.4);
-}
-.koker__vulling {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 0;
-  background: linear-gradient(180deg, #f0c04a, #c9922f); transition: height 0.6s cubic-bezier(0.2,0.8,0.2,1);
-  display: flex; flex-direction: column-reverse; align-items: center; padding: 8px 0; gap: 3px; overflow: hidden;
-}
-.koker--vol .koker__vulling { background: linear-gradient(180deg, #ffd75e, #e0a83a); box-shadow: 0 0 40px rgba(240,192,74,0.6); }
-.briefje { width: 78%; height: 15px; border-radius: 3px; background: linear-gradient(90deg, #b5852a, #e9bd52); border: 1px solid rgba(0,0,0,0.15); display: grid; place-items: center; font-size: 9px; color: rgba(0,0,0,0.5); font-weight: 800; flex: none; }
-.koker__doel { position: absolute; left: 0; right: 0; top: 0; border-top: 2px dashed rgba(255,255,255,0.35); text-align: right; }
-.koker__doel span { display: inline-block; background: rgba(0,0,0,0.35); padding: 2px 8px; border-radius: 0 0 0 8px; font-size: 0.8rem; }
-.koker__onder { font-size: 0.8rem; }
-.podium__banner { min-height: 30px; display: flex; align-items: center; gap: 12px; font-size: 1.15rem; font-weight: 700; }
-.podium__banner--feest { color: var(--goud-fel); }
-.podium__banner--waarschuwing { color: #ffb27a; }
+.kb-amount-label { color: var(--kb-faint); font-family: var(--mono,monospace); font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.kb-amount { font-family: var(--mono,monospace); font-size: clamp(1.9rem,3.4vw,3.6rem); font-weight: 500; line-height: 1; letter-spacing: -.05em; }
+.kb-tube-zone { position: relative; flex: 1; min-height: 300px; display: grid; place-items: center; padding: 6px 44px 4px 8px; }
+.kb-tube { position: relative; width: min(210px,74%); height: 100%; min-height: 320px; border: 4px solid rgba(44,57,45,.55); border-top-width: 8px; border-bottom-width: 10px; border-radius: 32px 32px 26px 26px; overflow: hidden;
+  background: linear-gradient(90deg, rgba(255,255,255,.5) 0 8%, rgba(255,255,255,.08) 15%, transparent 28% 66%, rgba(255,255,255,.16) 76%, rgba(255,255,255,.34) 88%, rgba(255,255,255,.05) 100%), rgba(229,236,228,.14);
+  box-shadow: inset 0 0 25px rgba(255,255,255,.2), inset 0 -18px 30px rgba(21,39,25,.12), 0 16px 24px rgba(22,48,30,.18); }
+.kb-tube::before, .kb-tube::after { content: ""; position: absolute; left: 50%; z-index: 12; transform: translateX(-50%); width: 108%; height: 24px; border: 4px solid rgba(40,51,42,.6); border-radius: 50%; background: linear-gradient(180deg, rgba(255,255,255,.34), transparent 45%), var(--kb-g900); }
+.kb-tube::before { top: -10px; } .kb-tube::after { bottom: -10px; }
+.kb-notes { position: absolute; right: 10px; top: 16px; bottom: 12px; left: 10px; z-index: 3; }
+.kb-note { position: absolute; left: 50%; width: 90%; height: 30px; border: 1px solid rgba(54,53,39,.28); border-radius: 5px; box-shadow: 0 3px 5px rgba(35,39,31,.18), inset 0 0 0 1px rgba(255,255,255,.2); overflow: hidden; transition: bottom .5s cubic-bezier(.2,.8,.2,1); display: grid; place-items: center; }
+.kb-note .val { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 800; opacity: .8; }
+.kb-note-50 { background: linear-gradient(100deg,#d9a44e,#f0c578 42%,#c98a3d); color: #7b4b14; }
+.kb-note-20 { background: linear-gradient(100deg,#6e9fbd,#a8c7d9 45%,#5d8eaa); color: #214a61; }
+.kb-threshold { position: absolute; left: 8px; right: 8px; z-index: 20; display: flex; align-items: center; gap: 6px; transition: top .5s; }
+.kb-threshold-line { flex: 1; border-top: 1.5px dashed var(--kb-g700); }
+.kb-threshold-label { font-family: var(--mono,monospace); font-size: .58rem; font-weight: 800; line-height: 1.15; white-space: nowrap; text-align: right; padding: 1px 5px; border-radius: 5px; background: color-mix(in srgb, var(--kb-panel) 82%, transparent); }
+.kb-bottom { position: absolute; left: 8px; right: 8px; bottom: 9%; z-index: 20; display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-family: var(--mono,monospace); font-size: .54rem; font-weight: 800; text-transform: uppercase; color: var(--kb-soft); }
+.kb-bottom::before { content: ""; flex: 1; border-top: 1.5px dashed var(--kb-g700); }
+.kb-cap-footer { padding-top: 10px; border-top: 1px solid var(--kb-line); display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--kb-soft); font-size: .8rem; }
+.kb-cap-footer strong { color: var(--kb-text); font-family: var(--mono,monospace); font-size: 1.1rem; }
+.kb-cap-footer.feest strong, .kb-cap-footer.feest { color: var(--kb-amber); }
 
-/* bedieningspaneel */
-.podium__paneel { display: flex; flex-direction: column; gap: 16px; }
-.knoppen-groot { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.grootknop { border: none; border-radius: var(--radius); padding: 22px; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 800; }
-.grootknop span { font-size: 1.8rem; }
-.grootknop small { font-weight: 600; opacity: 0.85; }
-.grootknop--plus { background: linear-gradient(135deg, #2fa06a, #1f7a5a); }
-.grootknop--min { background: linear-gradient(135deg, #b8524a, #8f3a34); }
-.grootknop:active { transform: translateY(2px); }
-.podium .knop { background: rgba(255,255,255,0.08); color: #eef4f8; border-color: rgba(255,255,255,0.16); }
-.podium .knop--primair { background: var(--accent); border-color: var(--accent); }
+/* bediening */
+.kb-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kb-big { border: 0; border-radius: var(--radius-md,12px); padding: 14px; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 1px; font-weight: 800; }
+.kb-big span { font-size: 1.35rem; } .kb-big small { font-weight: 600; opacity: .85; font-size: .68rem; }
+.kb-big.plus { background: linear-gradient(135deg,#2fa06a,#1f7a5a); } .kb-big.min { background: linear-gradient(135deg,#b8524a,#8f3a34); }
+.kb-big:active { transform: translateY(2px); }
+.kb-minirij { display: flex; flex-wrap: wrap; gap: 6px; }
+.kb-mini { flex: 1; min-width: 52px; padding: 8px 6px; border: 1px solid var(--kb-line); border-radius: var(--radius-sm,8px); background: var(--kb-panel-2); color: var(--kb-text); font-weight: 700; font-size: .74rem; cursor: pointer; }
+.kb-mini:hover { border-color: var(--kb-g600); }
 
-/* decibel */
-.decibel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 14px 16px; }
-.decibel__kop { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 10px; }
-.decibel__kop .zacht { color: #9fb4c2; }
-.decibel__balk { position: relative; height: 22px; background: rgba(0,0,0,0.3); border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
-.decibel__vul { height: 100%; width: 0; transition: width 0.1s linear; border-radius: 999px; }
-.decibel__vul--groen { background: #3aa06a; }
-.decibel__vul--oranje { background: #d98a2b; }
-.decibel__vul--rood { background: #d0453a; }
-.decibel__drempel { position: absolute; top: -3px; bottom: -3px; width: 3px; background: #fff; box-shadow: 0 0 6px rgba(255,255,255,0.6); }
-.decibel__uitleg { margin: 6px 0 0; color: #9fb4c2; font-size: 0.78rem; }
+/* geluidsmeter */
+.kb-sound { display: grid; grid-template-rows: auto 1fr auto; }
+.kb-meter-area { min-height: 0; display: grid; grid-template-columns: auto 62px 1fr; align-items: center; gap: 12px; }
+.kb-scale { height: 80%; display: flex; flex-direction: column; justify-content: space-between; color: var(--kb-soft); font-family: var(--mono,monospace); font-size: .62rem; text-align: right; }
+.kb-meter { position: relative; width: 52px; height: 88%; min-height: 190px; justify-self: center; border: 2px solid var(--kb-line2); border-radius: 999px; overflow: hidden;
+  background: linear-gradient(to top,#3f7d4a 0 25%,#82b95f 25% 48%,#e4cf58 48% 62%,#dc8d37 62% 78%,#b85340 78% 100%); box-shadow: inset 0 0 0 6px rgba(255,255,255,.18); }
+.kb-meter-mask { position: absolute; left: 0; right: 0; top: 0; background: var(--kb-panel); opacity: .82; transition: height .12s linear; }
+.kb-current { position: absolute; z-index: 5; left: 50px; min-width: 76px; padding: 6px 11px; border-radius: 8px; color: #fff; background: var(--kb-g800); font-family: var(--mono,monospace); font-weight: 800; text-align: center; transition: bottom .12s linear; }
+.kb-current::before { content: ""; position: absolute; top: 50%; left: -9px; transform: translateY(-50%); border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 9px solid var(--kb-g800); }
+.kb-tooloud { position: absolute; left: -14px; width: 200px; border-top: 1.5px dashed var(--kb-red); z-index: 4; }
+.kb-tooloud span { position: absolute; left: 108px; top: -11px; color: var(--kb-red); font-family: var(--mono,monospace); font-size: .62rem; font-weight: 800; white-space: nowrap; }
+.kb-status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--kb-g600); border-radius: 9px; color: var(--kb-g800); background: var(--kb-g200); font-family: var(--mono,monospace); font-weight: 850; font-size: .76rem; }
+.kb-status.luid { border-color: var(--kb-red); color: var(--kb-red); background: color-mix(in srgb, var(--kb-red) 15%, transparent); }
+.kb-sound-copy p { margin: 12px 0 0; color: var(--kb-soft); font-size: .74rem; line-height: 1.5; }
+.kb-sound-btn { margin-top: 8px; }
 
 /* lesdrill */
-.drill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 14px 16px; }
-.drill__kop { font-weight: 700; margin-bottom: 10px; }
-.drill__lijst { display: flex; flex-direction: column; gap: 6px; }
-.drill__stap { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-s); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #eef4f8; cursor: pointer; text-align: left; font-size: 1rem; }
-.drill__stap--klaar { background: rgba(47,160,106,0.25); border-color: rgba(47,160,106,0.5); text-decoration: line-through; opacity: 0.8; }
-.drill__vink { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.12); font-weight: 700; flex: none; }
-.drill__stap--klaar .drill__vink { background: var(--groen); color: #fff; }
-.drill__reset { margin-top: 10px; }
+.kb-drill { display: grid; grid-template-rows: auto 1fr auto; }
+.kb-steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; align-content: start; }
+.kb-step { min-height: 38px; padding: 6px 8px; display: grid; grid-template-columns: 26px 1fr 22px; align-items: center; gap: 8px; border: 1px solid transparent; border-radius: 10px; color: var(--kb-soft); cursor: pointer; text-align: left; background: transparent; font: inherit; }
+.kb-step.done { color: var(--kb-text); } .kb-step.current { border-color: var(--kb-g300); color: var(--kb-text); background: var(--kb-g200); }
+.kb-nr { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--kb-g700); font-family: var(--mono,monospace); font-weight: 850; font-size: .64rem; }
+.kb-step.pending .kb-nr { color: var(--kb-soft); background: var(--kb-line); }
+.kb-step-label { font-size: .8rem; font-weight: 700; }
+.kb-check { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--kb-g700); font-size: .72rem; font-weight: 900; }
+.kb-step.pending .kb-check { background: transparent; color: transparent; }
+.kb-privacy-note { padding-top: 10px; border-top: 1px solid var(--kb-line); display: flex; gap: 8px; color: var(--kb-soft); font-size: .68rem; line-height: 1.45; }
 
-/* logboek */
+/* zitplan */
+.kb-seating { display: grid; grid-template-rows: auto auto 1fr auto; }
+.kb-summary { display: grid; grid-template-columns: 1fr 1.1fr; gap: 10px; }
+.kb-sum { min-height: 66px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--kb-line); border-radius: 12px; background: var(--kb-panel-2); font-size: .74rem; }
+.kb-sum strong { color: var(--kb-g800); font-family: var(--mono,monospace); }
+.kb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.kb-chip { min-height: 24px; padding: 0 8px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--kb-line); border-radius: 7px; background: var(--kb-panel-2); color: var(--kb-soft); font-size: .62rem; font-weight: 700; }
+.kb-room { min-height: 0; overflow: auto; border: 1px solid var(--kb-line); border-radius: 14px; background: var(--kb-panel); }
+.kb-board { min-height: 40px; margin-bottom: 12px; display: grid; place-items: center; border-bottom: 1px solid var(--kb-line); border-radius: 13px 13px 0 0; color: var(--kb-g900); background: linear-gradient(180deg,var(--kb-g200),var(--kb-g300)); font-size: .72rem; font-weight: 800; }
+.kb-seats { padding: 0 12px 12px; display: grid; gap: 12px; }
+.kb-seat { position: relative; min-height: 76px; padding: 14px 8px 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; border: 1px solid var(--kb-desk-d); border-radius: 12px;
+  background: repeating-linear-gradient(3deg, transparent 0 7px, rgba(110,74,35,.06) 7px 8px), linear-gradient(145deg, var(--kb-desk-l), var(--kb-desk)); box-shadow: 0 5px 9px rgba(58,44,26,.16), inset 0 1px 0 rgba(255,255,255,.35); }
+.kb-seat::before { content: ""; position: absolute; top: -12px; left: 50%; width: 50%; height: 15px; transform: translateX(-50%); border: 1px solid var(--kb-g900); border-bottom: 0; border-radius: 9px 9px 0 0; background: var(--kb-g800); z-index: -1; }
+.kb-student { color: #241c12; font-size: .8rem; font-weight: 850; line-height: 1.08; text-align: center; }
+@media (prefers-color-scheme: dark) { .kb-student { color: #f7ead8; } }
+.kb-seat-meta { min-height: 12px; color: var(--kb-g900); font-size: .55rem; font-weight: 750; text-align: center; }
+.kb-room-leeg { padding: 30px 16px; text-align: center; color: var(--kb-soft); }
+.kb-seating-foot { display: flex; gap: 8px; color: var(--kb-soft); font-size: .63rem; line-height: 1.45; }
+
+@media (max-width: 1240px) {
+  .kb-grid { grid-template-columns: minmax(280px,.85fr) minmax(0,1.8fr); grid-template-rows: auto auto; }
+  .kb-capital { grid-row: 1 / span 2; }
+  .kb-middle { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px,1.1vw,16px); }
+  .kb-seating { grid-column: 2; grid-row: 2; min-height: 520px; }
+}
+@media (max-width: 900px) {
+  .kb-top { grid-template-columns: 1fr; } .kb-modes, .kb-privacy { justify-self: start; }
+  .kb-grid { display: flex; flex-direction: column; }
+  .kb-middle { grid-template-columns: 1fr; }
+}
+.kb-middle { display: grid; gap: clamp(10px,1.1vw,16px); }
+
+/* logboek (dialoog) */
 .log { display: flex; flex-direction: column; gap: 4px; }
 .log__regel { display: grid; grid-template-columns: 70px 1fr auto auto; gap: 10px; align-items: center; padding: 6px 4px; border-bottom: 1px solid var(--rand); font-size: 0.88rem; }
 .log__delta { font-weight: 800; }
@@ -356,7 +452,7 @@ textarea.invoer { resize: vertical; }
       __defProp(target, name, { get: all2[name], enumerable: true });
   };
 
-  // app/src/db/idb.js
+  // src/db/idb.js
   function wrap(req) {
     return new Promise((resolve, reject) => {
       req.onsuccess = () => resolve(req.result);
@@ -456,9 +552,9 @@ textarea.invoer { resize: vertical; }
     }
   };
 
-  // app/src/db/schema.js
+  // src/db/schema.js
   var DB_NAME = "klaskompas";
-  var DB_VERSION = 1;
+  var DB_VERSION = 2;
   var STORES = [
     // — sleutel/waarde —
     { name: "meta", key: "key" },
@@ -549,6 +645,59 @@ textarea.invoer { resize: vertical; }
       // feitelijke tellers (bv. "boek vergeten")
       key: "id",
       indexes: [["leerlingId", "leerlingId"], ["klasId", "klasId"]]
+    },
+    {
+      name: "consequenties",
+      // stappen op de herstel-/consequentieladder (§2.2.11)
+      key: "id",
+      indexes: [["leerlingId", "leerlingId"], ["klasId", "klasId"]]
+    },
+    // — administratie v0.2: inhaalwerk, evaluaties, acties, communicatie —
+    {
+      name: "inhaalwerk",
+      // gemiste toetsen/taken en hun opvolging
+      key: "id",
+      indexes: [["leerlingId", "leerlingId"], ["klasId", "klasId"]]
+    },
+    {
+      name: "evaluaties",
+      key: "id",
+      indexes: [["klasId", "klasId"]]
+    },
+    {
+      name: "evalresultaten",
+      key: "id",
+      indexes: [["evaluatieId", "evaluatieId"], ["leerlingId", "leerlingId"], ["klasId", "klasId"]]
+    },
+    {
+      name: "acties",
+      // eenvoudige to-do's
+      key: "id",
+      indexes: [["klasId", "klasId"]]
+    },
+    {
+      name: "notities",
+      // lokale communicatie-notities (ouder/mentor/zorg)
+      key: "id",
+      indexes: [["leerlingId", "leerlingId"], ["klasId", "klasId"]]
+    },
+    // — zitplan (OD-7/OD-8) —
+    {
+      name: "zitplannen",
+      // opgeslagen plaatsing per klas
+      key: "klasId"
+    },
+    {
+      name: "zitregels",
+      // randvoorwaarden ("slotjes")
+      key: "id",
+      indexes: [["klasId", "klasId"]]
+    },
+    // — optie C: expliciet vooraf gedefinieerde voorwaarden (OD-2) —
+    {
+      name: "optiecvoorwaarden",
+      key: "id",
+      indexes: [["klasId", "klasId"]]
     }
   ];
   function upgrade(db2, oldVersion, tx) {
@@ -570,7 +719,7 @@ textarea.invoer { resize: vertical; }
     return Idb.open(DB_NAME, DB_VERSION, upgrade);
   }
 
-  // app/src/domain/model.js
+  // src/domain/model.js
   function uid() {
     if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
     return "id-" + Math.random().toString(36).slice(2) + "-" + performance.now().toString(36);
@@ -728,8 +877,110 @@ textarea.invoer { resize: vertical; }
       ts: (/* @__PURE__ */ new Date()).toISOString()
     };
   }
+  var OBSERVATIE_CATEGORIE = {
+    werkhouding: "Werkhouding",
+    gedrag: "Gedrag",
+    sociaal: "Sociale vaardigheden",
+    motivatie: "Motivatie",
+    participatie: "Klasparticipatie",
+    positief: "Positief",
+    andere: "Andere"
+  };
+  var HERSTELVRAGEN = [
+    "Wat gebeurde er precies? (feiten)",
+    "Wie is erdoor geraakt, en hoe?",
+    "Wat had je anders kunnen doen?",
+    "Hoe maken we het weer goed?",
+    "Wat spreken we af voor de volgende keer?"
+  ];
+  var CONSEQUENTIE_LADDER = [
+    { sleutel: "herstelgesprek", label: "Herstelgesprek", hint: "5 herstelvragen, kort na de les." },
+    { sleutel: "herstelopdracht", label: "Logische herstelopdracht", hint: '"You break it, you fix it" — evt. kort in de doeltaal.' },
+    { sleutel: "notitie", label: "Feitelijke notitie + opschalen", hint: "ABC-notitie; bij een patroon een signaal naar mentor/ouders/zorg." },
+    { sleutel: "privilege", label: "Tijdelijk privilegeverlies", hint: "Bv. even geen vrije partner-/plaatskeuze. Nooit de leerstof of een basisbehoefte." }
+  ];
+  var QUOTA_TYPES = {
+    boek: "Boek vergeten",
+    materiaal: "Materiaal vergeten",
+    taak: "Taak niet gemaakt",
+    telaat: "Te laat",
+    gsm: "Gsm-afspraak",
+    andere: "Andere"
+  };
+  function maakObservatie({ leerlingId, klasId, categorie = "gedrag", aanleiding = "", gedrag = "", gevolg = "", opvolgen = false }) {
+    return {
+      id: uid(),
+      leerlingId,
+      klasId,
+      categorie,
+      aanleiding,
+      // A — antecedent
+      gedrag,
+      // B — behavior (het feitelijke gedrag)
+      gevolg,
+      // C — consequence
+      opvolgen: !!opvolgen,
+      datum: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+  function maakQuota({ leerlingId, klasId, type = "boek", drempel = 3 }) {
+    return {
+      id: uid(),
+      leerlingId,
+      klasId,
+      type,
+      aantal: 0,
+      drempel: Number(drempel) || 3,
+      maand: (/* @__PURE__ */ new Date()).toISOString().slice(0, 7),
+      // JJJJ-MM
+      laatst: null
+    };
+  }
+  function maakConsequentie({ leerlingId, klasId, stap: stap2, note = "", observatieId = null }) {
+    return {
+      id: uid(),
+      leerlingId,
+      klasId,
+      stap: stap2,
+      // sleutel uit CONSEQUENTIE_LADDER
+      note,
+      observatieId,
+      datum: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+  var INHAALWERK_TYPE = { toets: "Toets", taak: "Taak", mondeling: "Mondeling", lesinhoud: "Lesinhoud", andere: "Andere" };
+  var INHAALWERK_STATUS = { open: "Open", afspraak: "Afspraak te maken", ingepland: "Ingepland", afgelegd: "Afgelegd", afgesloten: "Afgesloten" };
+  function maakInhaalwerk({ leerlingId, klasId, type = "toets", titel = "", status = "open", missedDatum = "", scheduledDatum = "", note = "" }) {
+    return { id: uid(), leerlingId, klasId, type, titel, status, missedDatum, scheduledDatum, note, aangemaakt: (/* @__PURE__ */ new Date()).toISOString() };
+  }
+  var EVALUATIE_TYPE = { toets: "Toets", taak: "Taak", mondeling: "Mondeling", oefening: "Oefening", observatie: "Observatie", andere: "Andere" };
+  function maakEvaluatie({ klasId, datum = "", titel = "", type = "toets", maxPunten = 10, gewicht = 100, thema = "", note = "" }) {
+    return { id: uid(), klasId, datum, titel, type, maxPunten: Number(maxPunten) || 10, gewicht: Number(gewicht) || 100, thema, note, aangemaakt: (/* @__PURE__ */ new Date()).toISOString() };
+  }
+  function maakEvalResultaat({ evaluatieId, leerlingId, klasId, punten = null, afwezig = false, note = "" }) {
+    return { id: uid(), evaluatieId, leerlingId, klasId, punten: punten === "" || punten == null ? null : Number(punten), afwezig: !!afwezig, note };
+  }
+  function maakActie({ tekst, klasId = null, leerlingId = null, datum = "" }) {
+    return { id: uid(), tekst, klasId, leerlingId, datum, status: "open", aangemaakt: (/* @__PURE__ */ new Date()).toISOString() };
+  }
+  var NOTITIE_KANAAL = { ouder: "Ouder", mentor: "Mentor", zorg: "Zorg", directie: "Directie", andere: "Andere" };
+  function maakNotitie({ leerlingId = null, klasId = null, kanaal = "ouder", tekst = "", opvolgen = false }) {
+    return { id: uid(), leerlingId, klasId, kanaal, tekst, opvolgen: !!opvolgen, datum: (/* @__PURE__ */ new Date()).toISOString() };
+  }
+  var ZITREGEL_TYPE = {
+    nietnaast: "Niet naast elkaar",
+    vastvooraan: "Vast vooraan",
+    vastachteraan: "Vast achteraan",
+    vasteplaats: "Vaste plaats"
+  };
+  function maakZitregel({ klasId, type, leerlingId = null, leerlingId2 = null, rij = null, kol = null }) {
+    return { id: uid(), klasId, type, leerlingId, leerlingId2, rij, kol };
+  }
+  function maakOptieCVoorwaarde({ klasId, tekst, actief: actief2 = true }) {
+    return { id: uid(), klasId, tekst, actief: !!actief2, aangemaakt: (/* @__PURE__ */ new Date()).toISOString() };
+  }
 
-  // app/src/db/repo.js
+  // src/db/repo.js
   var _db = null;
   async function db() {
     if (!_db) {
@@ -845,7 +1096,7 @@ textarea.invoer { resize: vertical; }
     return out;
   }
 
-  // app/src/domain/klaspot.js
+  // src/domain/klaspot.js
   async function potStatus(klasId) {
     const pot = await getPot(klasId);
     const klas = await get("klassen", klasId);
@@ -904,7 +1155,7 @@ textarea.invoer { resize: vertical; }
     return klas.config;
   }
 
-  // app/src/domain/beloningen.js
+  // src/domain/beloningen.js
   var START_MENU = [
     // klein / vaak
     { categorie: "voorrecht", niveau: "klein", naam: "Klas-DJ (muziek kiezen)", prijs: 10, talen: "Enkel Engels-/Spaanstalige nummers → luisterinput", omschrijving: "De klas kiest de muziek bij binnenkomst of stil werk." },
@@ -952,237 +1203,10 @@ textarea.invoer { resize: vertical; }
     return { ok: true, saldo: status.saldo };
   }
 
-  // app/src/ui/components.js
-  function el(tag, props = {}, ...children) {
-    const node = document.createElement(tag);
-    for (const [k, v] of Object.entries(props || {})) {
-      if (v == null || v === false) continue;
-      if (k === "class") node.className = v;
-      else if (k === "html") node.innerHTML = v;
-      else if (k === "dataset") Object.assign(node.dataset, v);
-      else if (k === "style" && typeof v === "object") Object.assign(node.style, v);
-      else if (k.startsWith("on") && typeof v === "function") {
-        node.addEventListener(k.slice(2).toLowerCase(), v);
-      } else if (k in node && k !== "list") {
-        try {
-          node[k] = v;
-        } catch (_) {
-          node.setAttribute(k, v);
-        }
-      } else node.setAttribute(k, v);
-    }
-    for (const c of children.flat()) {
-      if (c == null || c === false) continue;
-      node.append(c.nodeType ? c : document.createTextNode(String(c)));
-    }
-    return node;
-  }
-  function leeg(node) {
-    while (node.firstChild) node.removeChild(node.firstChild);
-    return node;
-  }
-  function toast(bericht, soort = "info") {
-    let laag = document.querySelector(".toast-laag");
-    if (!laag) {
-      laag = el("div", { class: "toast-laag" });
-      document.body.append(laag);
-    }
-    const t = el("div", { class: `toast toast--${soort}` }, bericht);
-    laag.append(t);
-    requestAnimationFrame(() => t.classList.add("toast--in"));
-    setTimeout(() => {
-      t.classList.remove("toast--in");
-      setTimeout(() => t.remove(), 250);
-    }, 3200);
-  }
-  function dialoog(titel, bouw) {
-    const overlay = el("div", { class: "overlay" });
-    const sluit = () => {
-      overlay.classList.remove("overlay--in");
-      setTimeout(() => overlay.remove(), 200);
-      document.removeEventListener("keydown", esc);
-    };
-    const esc = (e) => {
-      if (e.key === "Escape") sluit();
-    };
-    const paneel = el(
-      "div",
-      { class: "dialoog", role: "dialog", "aria-modal": "true" },
-      el(
-        "div",
-        { class: "dialoog__kop" },
-        el("h2", {}, titel),
-        el("button", { class: "icoonknop", title: "Sluiten", onClick: sluit }, "✕")
-      )
-    );
-    const body = el("div", { class: "dialoog__body" });
-    paneel.append(body);
-    overlay.append(paneel);
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) sluit();
-    });
-    document.addEventListener("keydown", esc);
-    document.body.append(overlay);
-    requestAnimationFrame(() => overlay.classList.add("overlay--in"));
-    bouw(body, sluit);
-    return { sluit, root: paneel };
-  }
-  function bevestig(vraag, { jaLabel = "Ja", neeLabel = "Annuleren", gevaar = false } = {}) {
-    return new Promise((resolve) => {
-      dialoog("Bevestigen", (body, sluit) => {
-        body.append(
-          el("p", {}, vraag),
-          el(
-            "div",
-            { class: "dialoog__acties" },
-            el("button", { class: "knop", onClick: () => {
-              sluit();
-              resolve(false);
-            } }, neeLabel),
-            el(
-              "button",
-              { class: gevaar ? "knop knop--gevaar" : "knop knop--primair", onClick: () => {
-                sluit();
-                resolve(true);
-              } },
-              jaLabel
-            )
-          )
-        );
-      });
-    });
-  }
-  function euro(bedrag) {
-    const n = Number(bedrag) || 0;
-    return "€" + (Number.isInteger(n) ? n : n.toFixed(2));
-  }
-  function datumKort(iso) {
-    if (!iso) return "";
-    const d = iso.length > 10 ? new Date(iso) : (() => {
-      const [j, m, dd] = iso.split("-");
-      return new Date(j, m - 1, dd);
-    })();
-    return d.toLocaleDateString("nl-BE", { day: "2-digit", month: "short" });
-  }
-  function datumTijd(iso) {
-    if (!iso) return "";
-    return new Date(iso).toLocaleString("nl-BE", {
-      day: "2-digit",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  }
-  function leegKaart(titel, hint, actie) {
-    return el(
-      "div",
-      { class: "leeg" },
-      el("div", { class: "leeg__icoon" }, "🧭"),
-      el("h3", {}, titel),
-      hint ? el("p", {}, hint) : null,
-      actie || null
-    );
-  }
-
-  // app/src/views/dashboard.js
-  var dashboard_exports = {};
-  __export(dashboard_exports, {
-    render: () => render
-  });
-  async function render(root, ctx) {
-    const tellingen = await telAlles();
-    const geenData = tellingen.klassen === 0;
-    if (geenData) {
-      root.append(
-        el(
-          "div",
-          { class: "kaart onboarding" },
-          el("h2", {}, "Welkom bij Klaskompas 🧭"),
-          el("p", {}, "Er zijn nog geen klassen. Zet de structuur nu op — concrete gegevens kun je later invullen of importeren."),
-          el(
-            "div",
-            { class: "onboarding__stappen" },
-            stap("1", "Schooljaar", "Leg een schooljaar met kalender vast.", () => ctx.navigate("schooljaar")),
-            stap("2", "Klassen & leerlingen", "Importeer een klaslijst (CSV) of voeg handmatig toe.", () => ctx.navigate("klassen")),
-            stap("3", "Lesmodus", "Projecteer het Klasscherm met de geldkoker.", () => ctx.navigate("klasscherm"))
-          )
-        )
-      );
-      return;
-    }
-    root.append(
-      el(
-        "div",
-        { class: "tegels" },
-        tegel("👥", tellingen.klassen, "klassen", () => ctx.navigate("klassen")),
-        tegel("🧑‍🎓", tellingen.leerlingen, "leerlingen", () => ctx.navigate("klassen")),
-        tegel("📅", tellingen.schooljaren, "schooljaren", () => ctx.navigate("schooljaar")),
-        tegel("🎁", tellingen.beloningen, "beloningen", () => ctx.navigate("beloningen"))
-      )
-    );
-    if (ctx.klasId) {
-      const klas = await get("klassen", ctx.klasId);
-      const status = await potStatus(ctx.klasId);
-      root.append(
-        el(
-          "div",
-          { class: "kaart" },
-          el(
-            "div",
-            { class: "kaart__kop" },
-            el("h2", {}, `Actieve klas — ${klas?.naam || ""}`),
-            el("a", { class: "knop knop--primair", href: "#/klasscherm" }, "📺 Lesmodus")
-          ),
-          el(
-            "div",
-            { class: "potsamenvatting" },
-            el("div", { class: "potsamenvatting__saldo" }, euro(status.saldo)),
-            el(
-              "div",
-              { class: "potsamenvatting__meta" },
-              regel("Prijsdrempel", euro(status.config.prijsdrempel)),
-              regel("Startkapitaal", euro(status.config.startkapitaal)),
-              regel("Status", status.prijsBereikt ? "🎉 prijs beschikbaar" : status.onderHerstart ? "⚠️ herstart-zone" : "op koers")
-            )
-          )
-        )
-      );
-    } else {
-      root.append(leegKaart("Geen actieve klas", "Kies rechtsboven een klas of maak er een aan."));
-    }
-  }
-  function tegel(icoon, getal2, label, onClick) {
-    return el(
-      "button",
-      { class: "tegel", onClick },
-      el("span", { class: "tegel__icoon" }, icoon),
-      el("span", { class: "tegel__getal" }, String(getal2)),
-      el("span", { class: "tegel__label" }, label)
-    );
-  }
-  function stap(nr, titel, tekst, onClick) {
-    return el(
-      "button",
-      { class: "stap", onClick },
-      el("span", { class: "stap__nr" }, nr),
-      el("span", { class: "stap__titel" }, titel),
-      el("span", { class: "stap__tekst" }, tekst)
-    );
-  }
-  function regel(label, waarde) {
-    return el("div", { class: "regel" }, el("span", { class: "regel__label" }, label), el("span", {}, waarde));
-  }
-
-  // app/src/views/klassen.js
-  var klassen_exports = {};
-  __export(klassen_exports, {
-    render: () => render2
-  });
-
-  // app/src/db/backup.js
+  // src/db/backup.js
   function parseCsv(text) {
     const rows = [];
-    let veld5 = "";
+    let veld6 = "";
     let rij = [];
     let inQuote = false;
     const sep = kiesScheidingsteken(text);
@@ -1191,25 +1215,25 @@ textarea.invoer { resize: vertical; }
       if (inQuote) {
         if (c === '"') {
           if (text[i + 1] === '"') {
-            veld5 += '"';
+            veld6 += '"';
             i++;
           } else inQuote = false;
-        } else veld5 += c;
+        } else veld6 += c;
       } else if (c === '"') {
         inQuote = true;
       } else if (c === sep) {
-        rij.push(veld5);
-        veld5 = "";
+        rij.push(veld6);
+        veld6 = "";
       } else if (c === "\n" || c === "\r") {
         if (c === "\r" && text[i + 1] === "\n") i++;
-        rij.push(veld5);
-        veld5 = "";
+        rij.push(veld6);
+        veld6 = "";
         if (rij.some((v) => v.trim() !== "")) rows.push(rij);
         rij = [];
-      } else veld5 += c;
+      } else veld6 += c;
     }
-    if (veld5 !== "" || rij.length) {
-      rij.push(veld5);
+    if (veld6 !== "" || rij.length) {
+      rij.push(veld6);
       if (rij.some((v) => v.trim() !== "")) rows.push(rij);
     }
     return rows;
@@ -1228,8 +1252,8 @@ textarea.invoer { resize: vertical; }
   function mapKoppen(koppen) {
     const norm = koppen.map((k) => k.trim().toLowerCase());
     const idx = {};
-    for (const [veld5, aliassen] of Object.entries(KOLOM_ALIASSEN)) {
-      idx[veld5] = norm.findIndex((k) => aliassen.includes(k));
+    for (const [veld6, aliassen] of Object.entries(KOLOM_ALIASSEN)) {
+      idx[veld6] = norm.findIndex((k) => aliassen.includes(k));
     }
     return idx;
   }
@@ -1366,7 +1390,353 @@ textarea.invoer { resize: vertical; }
     return res;
   }
 
-  // app/src/views/klassen.js
+  // src/domain/beveiliging.js
+  var ITER = 15e4;
+  var enc = new TextEncoder();
+  function b64(buf) {
+    const bytes = new Uint8Array(buf);
+    let s = "";
+    for (let i = 0; i < bytes.length; i += 32768) s += String.fromCharCode(...bytes.subarray(i, i + 32768));
+    return btoa(s);
+  }
+  function unb64(str) {
+    const bin = atob(str);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  async function pbkdf2Bits(geheim, salt, lengte = 256) {
+    const mat = await crypto.subtle.importKey("raw", enc.encode(geheim), "PBKDF2", false, ["deriveBits"]);
+    return crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, mat, lengte);
+  }
+  async function aesSleutel(passphrase, salt) {
+    const mat = await crypto.subtle.importKey("raw", enc.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey(
+      { name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" },
+      mat,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+  }
+  async function lockStatus() {
+    return await getSetting("lock", null) || { enabled: false };
+  }
+  async function stelPinIn(pin) {
+    if (!pin || pin.length < 4) throw new Error("Kies een pincode van minstens 4 tekens.");
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const hash = await pbkdf2Bits(pin, salt);
+    await setSetting("lock", { enabled: true, salt: b64(salt), hash: b64(hash), iter: ITER });
+    return true;
+  }
+  async function controleerPin(pin) {
+    const lock = await getSetting("lock", null);
+    if (!lock?.enabled) return true;
+    const salt = unb64(lock.salt);
+    const hash = new Uint8Array(await pbkdf2Bits(pin, salt));
+    const ref = unb64(lock.hash);
+    if (hash.length !== ref.length) return false;
+    let diff = 0;
+    for (let i = 0; i < hash.length; i++) diff |= hash[i] ^ ref[i];
+    return diff === 0;
+  }
+  async function zetLockAf(pin) {
+    if (!await controleerPin(pin)) throw new Error("Verkeerde pincode.");
+    await setSetting("lock", { enabled: false });
+    return true;
+  }
+  async function exporteerVersleuteld(passphrase) {
+    if (!passphrase || passphrase.length < 6) throw new Error("Kies een wachtwoord van minstens 6 tekens.");
+    const backup = await exporteerAlles();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const sleutel = await aesSleutel(passphrase, salt);
+    const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, sleutel, enc.encode(JSON.stringify(backup)));
+    return {
+      formaat: "klaskompas-backup-versleuteld",
+      versie: 1,
+      salt: b64(salt),
+      iv: b64(iv),
+      data: b64(cipher)
+    };
+  }
+  async function ontsleutelBackup(obj, passphrase) {
+    if (obj?.formaat !== "klaskompas-backup-versleuteld") throw new Error("Dit is geen versleutelde Klaskompas-backup.");
+    const salt = unb64(obj.salt);
+    const iv = unb64(obj.iv);
+    const sleutel = await aesSleutel(passphrase, salt);
+    let plat;
+    try {
+      plat = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, sleutel, unb64(obj.data));
+    } catch (_) {
+      throw new Error("Ontsleutelen mislukt — verkeerd wachtwoord?");
+    }
+    return JSON.parse(new TextDecoder().decode(plat));
+  }
+  async function downloadVersleuteldeBackup(passphrase) {
+    const obj = await exporteerVersleuteld(passphrase);
+    const datum = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+    const blob = new Blob([JSON.stringify(obj)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `klaskompas-backup-versleuteld-${datum}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1e3);
+  }
+
+  // src/ui/components.js
+  function el(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(props || {})) {
+      if (v == null || v === false) continue;
+      if (k === "class") node.className = v;
+      else if (k === "html") node.innerHTML = v;
+      else if (k === "dataset") Object.assign(node.dataset, v);
+      else if (k === "style" && typeof v === "object") Object.assign(node.style, v);
+      else if (k.startsWith("on") && typeof v === "function") {
+        node.addEventListener(k.slice(2).toLowerCase(), v);
+      } else if (k in node && k !== "list") {
+        try {
+          node[k] = v;
+        } catch (_) {
+          node.setAttribute(k, v);
+        }
+      } else node.setAttribute(k, v);
+    }
+    for (const c of children.flat()) {
+      if (c == null || c === false) continue;
+      node.append(c.nodeType ? c : document.createTextNode(String(c)));
+    }
+    return node;
+  }
+  function leeg(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+    return node;
+  }
+  function toast(bericht, soort = "info") {
+    let laag = document.querySelector(".toast-laag");
+    if (!laag) {
+      laag = el("div", { class: "toast-laag" });
+      document.body.append(laag);
+    }
+    const t = el("div", { class: `toast toast--${soort}` }, bericht);
+    laag.append(t);
+    requestAnimationFrame(() => t.classList.add("toast--in"));
+    setTimeout(() => {
+      t.classList.remove("toast--in");
+      setTimeout(() => t.remove(), 250);
+    }, 3200);
+  }
+  function dialoog(titel, bouw) {
+    const overlay = el("div", { class: "overlay" });
+    const sluit = () => {
+      overlay.classList.remove("overlay--in");
+      setTimeout(() => overlay.remove(), 200);
+      document.removeEventListener("keydown", esc);
+    };
+    const esc = (e) => {
+      if (e.key === "Escape") sluit();
+    };
+    const paneel = el(
+      "div",
+      { class: "dialoog", role: "dialog", "aria-modal": "true" },
+      el(
+        "div",
+        { class: "dialoog__kop" },
+        el("h2", {}, titel),
+        el("button", { class: "icoonknop", title: "Sluiten", onClick: sluit }, "✕")
+      )
+    );
+    const body = el("div", { class: "dialoog__body" });
+    paneel.append(body);
+    overlay.append(paneel);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) sluit();
+    });
+    document.addEventListener("keydown", esc);
+    document.body.append(overlay);
+    requestAnimationFrame(() => overlay.classList.add("overlay--in"));
+    bouw(body, sluit);
+    return { sluit, root: paneel };
+  }
+  function bevestig(vraag, { jaLabel = "Ja", neeLabel = "Annuleren", gevaar = false } = {}) {
+    return new Promise((resolve) => {
+      dialoog("Bevestigen", (body, sluit) => {
+        body.append(
+          el("p", {}, vraag),
+          el(
+            "div",
+            { class: "dialoog__acties" },
+            el("button", { class: "knop", onClick: () => {
+              sluit();
+              resolve(false);
+            } }, neeLabel),
+            el(
+              "button",
+              { class: gevaar ? "knop knop--gevaar" : "knop knop--primair", onClick: () => {
+                sluit();
+                resolve(true);
+              } },
+              jaLabel
+            )
+          )
+        );
+      });
+    });
+  }
+  function euro(bedrag) {
+    const n = Number(bedrag) || 0;
+    return "€" + (Number.isInteger(n) ? n : n.toFixed(2));
+  }
+  function datumKort(iso) {
+    if (!iso) return "";
+    const d = iso.length > 10 ? new Date(iso) : (() => {
+      const [j, m, dd] = iso.split("-");
+      return new Date(j, m - 1, dd);
+    })();
+    return d.toLocaleDateString("nl-BE", { day: "2-digit", month: "short" });
+  }
+  function datumTijd(iso) {
+    if (!iso) return "";
+    return new Date(iso).toLocaleString("nl-BE", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+  function stijl(id, css) {
+    if (document.getElementById(id)) return;
+    const s = document.createElement("style");
+    s.id = id;
+    s.textContent = css;
+    document.head.append(s);
+  }
+  function etiket(label, control) {
+    return el("label", { class: "veld" }, el("span", {}, label), control);
+  }
+  function veld(label, { type = "text", value = "", placeholder = "" } = {}) {
+    const input = el("input", { class: "invoer", type, value: value ?? "", placeholder });
+    return { input, wrap: etiket(label, input) };
+  }
+  function tekstveld(label, { value = "", rows = 3, placeholder = "" } = {}) {
+    const input = el("textarea", { class: "invoer", rows, placeholder }, value || "");
+    return { input, wrap: etiket(label, input) };
+  }
+  function keuze(label, opties, gekozen) {
+    const select = el(
+      "select",
+      { class: "invoer" },
+      ...Object.entries(opties).map(([v, l]) => el("option", { value: v, selected: v === gekozen }, l))
+    );
+    return { select, wrap: etiket(label, select) };
+  }
+  function leegKaart(titel, hint, actie) {
+    return el(
+      "div",
+      { class: "leeg" },
+      el("div", { class: "leeg__icoon" }, "🧭"),
+      el("h3", {}, titel),
+      hint ? el("p", {}, hint) : null,
+      actie || null
+    );
+  }
+
+  // src/views/dashboard.js
+  var dashboard_exports = {};
+  __export(dashboard_exports, {
+    render: () => render
+  });
+  async function render(root, ctx) {
+    const tellingen = await telAlles();
+    const geenData = tellingen.klassen === 0;
+    if (geenData) {
+      root.append(
+        el(
+          "div",
+          { class: "kaart onboarding" },
+          el("h2", {}, "Welkom bij Klaskompas 🧭"),
+          el("p", {}, "Er zijn nog geen klassen. Zet de structuur nu op — concrete gegevens kun je later invullen of importeren."),
+          el(
+            "div",
+            { class: "onboarding__stappen" },
+            stap("1", "Schooljaar", "Leg een schooljaar met kalender vast.", () => ctx.navigate("schooljaar")),
+            stap("2", "Klassen & leerlingen", "Importeer een klaslijst (CSV) of voeg handmatig toe.", () => ctx.navigate("klassen")),
+            stap("3", "Lesmodus", "Projecteer het Klasscherm met de geldkoker.", () => ctx.navigate("klasscherm"))
+          )
+        )
+      );
+      return;
+    }
+    root.append(
+      el(
+        "div",
+        { class: "tegels" },
+        tegel("👥", tellingen.klassen, "klassen", () => ctx.navigate("klassen")),
+        tegel("🧑‍🎓", tellingen.leerlingen, "leerlingen", () => ctx.navigate("klassen")),
+        tegel("📅", tellingen.schooljaren, "schooljaren", () => ctx.navigate("schooljaar")),
+        tegel("🎁", tellingen.beloningen, "beloningen", () => ctx.navigate("beloningen"))
+      )
+    );
+    if (ctx.klasId) {
+      const klas = await get("klassen", ctx.klasId);
+      const status = await potStatus(ctx.klasId);
+      root.append(
+        el(
+          "div",
+          { class: "kaart" },
+          el(
+            "div",
+            { class: "kaart__kop" },
+            el("h2", {}, `Actieve klas — ${klas?.naam || ""}`),
+            el("a", { class: "knop knop--primair", href: "#/klasscherm" }, "📺 Lesmodus")
+          ),
+          el(
+            "div",
+            { class: "potsamenvatting" },
+            el("div", { class: "potsamenvatting__saldo" }, euro(status.saldo)),
+            el(
+              "div",
+              { class: "potsamenvatting__meta" },
+              regel("Prijsdrempel", euro(status.config.prijsdrempel)),
+              regel("Startkapitaal", euro(status.config.startkapitaal)),
+              regel("Status", status.prijsBereikt ? "🎉 prijs beschikbaar" : status.onderHerstart ? "⚠️ herstart-zone" : "op koers")
+            )
+          )
+        )
+      );
+    } else {
+      root.append(leegKaart("Geen actieve klas", "Kies rechtsboven een klas of maak er een aan."));
+    }
+  }
+  function tegel(icoon, getal2, label, onClick) {
+    return el(
+      "button",
+      { class: "tegel", onClick },
+      el("span", { class: "tegel__icoon" }, icoon),
+      el("span", { class: "tegel__getal" }, String(getal2)),
+      el("span", { class: "tegel__label" }, label)
+    );
+  }
+  function stap(nr, titel, tekst, onClick) {
+    return el(
+      "button",
+      { class: "stap", onClick },
+      el("span", { class: "stap__nr" }, nr),
+      el("span", { class: "stap__titel" }, titel),
+      el("span", { class: "stap__tekst" }, tekst)
+    );
+  }
+  function regel(label, waarde) {
+    return el("div", { class: "regel" }, el("span", { class: "regel__label" }, label), el("span", {}, waarde));
+  }
+
+  // src/views/klassen.js
+  var klassen_exports = {};
+  __export(klassen_exports, {
+    render: () => render2
+  });
   async function render2(root, ctx) {
     const klassen = await all("klassen");
     klassen.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
@@ -1475,9 +1845,9 @@ textarea.invoer { resize: vertical; }
   }
   function nieuweKlasDialoog(ctx) {
     dialoog("Nieuwe klas", (body, sluit) => {
-      const naam = veld("Naam", "bv. 4-ENG-A");
-      const vak = veld("Vak", "bv. Engels");
-      const niveau = veld("Niveau", "bv. 2e graad");
+      const naam = veld2("Naam", "bv. 4-ENG-A");
+      const vak = veld2("Vak", "bv. Engels");
+      const niveau = veld2("Niveau", "bv. 2e graad");
       body.append(
         naam.wrap,
         vak.wrap,
@@ -1504,9 +1874,9 @@ textarea.invoer { resize: vertical; }
   }
   function klasBewerkenDialoog(ctx, klas) {
     dialoog("Klas bewerken", (body, sluit) => {
-      const naam = veld("Naam", "", klas.naam);
-      const vak = veld("Vak", "", klas.vak);
-      const niveau = veld("Niveau", "", klas.niveau);
+      const naam = veld2("Naam", "", klas.naam);
+      const vak = veld2("Vak", "", klas.vak);
+      const niveau = veld2("Niveau", "", klas.niveau);
       body.append(
         naam.wrap,
         vak.wrap,
@@ -1531,9 +1901,9 @@ textarea.invoer { resize: vertical; }
   }
   function leerlingDialoog(root, ctx, klasId) {
     dialoog("Leerling toevoegen", (body, sluit) => {
-      const voornaam = veld("Voornaam", "");
-      const naam = veld("Naam", "");
-      const email = veld("E-mail (optioneel)", "");
+      const voornaam = veld2("Voornaam", "");
+      const naam = veld2("Naam", "");
+      const email = veld2("E-mail (optioneel)", "");
       body.append(
         voornaam.wrap,
         naam.wrap,
@@ -1577,9 +1947,9 @@ textarea.invoer { resize: vertical; }
       });
       body.append(
         el("p", { class: "zacht" }, "Kolommen worden herkend (voornaam, naam, klas, email). Bestaande leerlingen en klassen worden samengevoegd, niet gedupliceerd."),
-        etiket("Schooljaar koppelen", sjSelect),
-        etiket("Bestand", bestand),
-        etiket("… of plak hier", plak),
+        etiket2("Schooljaar koppelen", sjSelect),
+        etiket2("Bestand", bestand),
+        etiket2("… of plak hier", plak),
         uitslag,
         el(
           "div",
@@ -1620,21 +1990,21 @@ textarea.invoer { resize: vertical; }
     const sj = await all("schooljaren");
     return sj.length ? sj[sj.length - 1].id : null;
   }
-  function veld(label, placeholder, waarde = "") {
+  function veld2(label, placeholder, waarde = "") {
     const input = el("input", { class: "invoer", placeholder: placeholder || "", value: waarde });
-    return { input, wrap: etiket(label, input) };
+    return { input, wrap: etiket2(label, input) };
   }
-  function etiket(label, control) {
+  function etiket2(label, control) {
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // app/src/views/schooljaar.js
+  // src/views/schooljaar.js
   var schooljaar_exports = {};
   __export(schooljaar_exports, {
     render: () => render3
   });
 
-  // app/src/domain/schooljaar.js
+  // src/domain/schooljaar.js
   function parseDatum(s) {
     const [j, m, d] = s.split("-").map(Number);
     return new Date(j, m - 1, d);
@@ -1686,7 +2056,7 @@ textarea.invoer { resize: vertical; }
     return `${startjaar}-${startjaar + 1}`;
   }
 
-  // app/src/views/schooljaar.js
+  // src/views/schooljaar.js
   async function render3(root, ctx) {
     const jaren = await all("schooljaren");
     jaren.sort((a, b) => (a.start || "").localeCompare(b.start || ""));
@@ -1705,8 +2075,8 @@ textarea.invoer { resize: vertical; }
     for (const sj of jaren) {
       const items = await byIndex("kalenderitems", "schooljaarId", sj.id);
       items.sort((a, b) => (a.van || "").localeCompare(b.van || ""));
-      const kaart = el("div", { class: "kaart" });
-      kaart.append(
+      const kaart2 = el("div", { class: "kaart" });
+      kaart2.append(
         el(
           "div",
           { class: "kaart__kop" },
@@ -1742,7 +2112,7 @@ textarea.invoer { resize: vertical; }
           } }, "✕")
         ));
       }
-      kaart.append(el(
+      kaart2.append(el(
         "div",
         { class: "kaart__sub" },
         el(
@@ -1757,22 +2127,22 @@ textarea.invoer { resize: vertical; }
         const slots = (await byIndex("roosterslots", "klasId", ctx.klasId)).filter((s2) => s2.schooljaarId === sj.id || !s2.schooljaarId);
         const lm = genereerLesmomenten(sj, slots, items);
         const s = samenvatting(lm);
-        kaart.append(el(
+        kaart2.append(el(
           "div",
           { class: "genereer" },
           el("span", {}, "🧮 Genereer schooljaar (actieve klas): "),
           slots.length ? el("strong", {}, `${s.lesmomenten} lesmomenten over ${s.weken} weken`) : el("span", { class: "zacht" }, "nog geen rooster voor deze klas — vul het in onder “Rooster”.")
         ));
       }
-      root.append(kaart);
+      root.append(kaart2);
     }
   }
   function jaarDialoog(root, ctx, bestaand) {
     dialoog(bestaand ? "Schooljaar bewerken" : "Nieuw schooljaar", (body, sluit) => {
       const nu = bestaand ? null : (/* @__PURE__ */ new Date()).getFullYear();
-      const label = veld2("Label", bestaand?.label || (nu ? defaultLabel(nu) : ""));
-      const start = veld2("Start", bestaand?.start || (nu ? `${nu}-09-01` : ""), "date");
-      const eind = veld2("Einde", bestaand?.eind || (nu ? `${nu + 1}-06-30` : ""), "date");
+      const label = veld3("Label", bestaand?.label || (nu ? defaultLabel(nu) : ""));
+      const start = veld3("Start", bestaand?.start || (nu ? `${nu}-09-01` : ""), "date");
+      const eind = veld3("Einde", bestaand?.eind || (nu ? `${nu + 1}-06-30` : ""), "date");
       body.append(
         label.wrap,
         start.wrap,
@@ -1801,11 +2171,11 @@ textarea.invoer { resize: vertical; }
   function kalenderDialoog(root, ctx, sj) {
     dialoog("Vakantie / vrije dag", (body, sluit) => {
       const type = el("select", { class: "invoer" }, ...Object.entries(KALENDER_TYPE).map(([v, l]) => el("option", { value: v }, l)));
-      const naam = veld2("Naam", "");
-      const van = veld2("Van", "", "date");
-      const tot = veld2("Tot en met", "", "date");
+      const naam = veld3("Naam", "");
+      const van = veld3("Van", "", "date");
+      const tot = veld3("Tot en met", "", "date");
       body.append(
-        etiket2("Type", type),
+        etiket3("Type", type),
         naam.wrap,
         van.wrap,
         tot.wrap,
@@ -1827,15 +2197,15 @@ textarea.invoer { resize: vertical; }
       );
     });
   }
-  function veld2(label, waarde = "", type = "text") {
+  function veld3(label, waarde = "", type = "text") {
     const input = el("input", { class: "invoer", type, value: waarde });
-    return { input, wrap: etiket2(label, input) };
+    return { input, wrap: etiket3(label, input) };
   }
-  function etiket2(label, control) {
+  function etiket3(label, control) {
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // app/src/views/rooster.js
+  // src/views/rooster.js
   var rooster_exports = {};
   __export(rooster_exports, {
     render: () => render4
@@ -1878,11 +2248,11 @@ textarea.invoer { resize: vertical; }
   function slotDialoog(root, ctx, schooljaarId, bestaand) {
     dialoog(bestaand ? "Lesmoment bewerken" : "Lesmoment toevoegen", (body, sluit) => {
       const dag = el("select", { class: "invoer" }, ...DAGEN.map((d, i) => el("option", { value: i + 1, selected: bestaand?.dag === i + 1 }, d)));
-      const start = veld3("Van", bestaand?.start || "08:25", "time");
-      const eind = veld3("Tot", bestaand?.eind || "09:15", "time");
-      const lokaal = veld3("Lokaal (optioneel)", bestaand?.lokaal || "");
+      const start = veld4("Van", bestaand?.start || "08:25", "time");
+      const eind = veld4("Tot", bestaand?.eind || "09:15", "time");
+      const lokaal = veld4("Lokaal (optioneel)", bestaand?.lokaal || "");
       body.append(
-        etiket3("Dag", dag),
+        etiket4("Dag", dag),
         start.wrap,
         eind.wrap,
         lokaal.wrap,
@@ -1910,15 +2280,15 @@ textarea.invoer { resize: vertical; }
       );
     });
   }
-  function veld3(label, waarde = "", type = "text") {
+  function veld4(label, waarde = "", type = "text") {
     const input = el("input", { class: "invoer", type, value: waarde });
-    return { input, wrap: etiket3(label, input) };
+    return { input, wrap: etiket4(label, input) };
   }
-  function etiket3(label, control) {
+  function etiket4(label, control) {
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // app/src/views/aanwezigheid.js
+  // src/views/aanwezigheid.js
   var aanwezigheid_exports = {};
   __export(aanwezigheid_exports, {
     render: () => render5
@@ -1941,9 +2311,9 @@ textarea.invoer { resize: vertical; }
     );
     const houder = el("div", { id: "aanw-houder" });
     root.append(houder);
-    datum.addEventListener("change", () => teken());
-    await teken();
-    async function teken() {
+    datum.addEventListener("change", () => teken2());
+    await teken2();
+    async function teken2() {
       leeg(houder);
       const leerlingen = await leerlingenVanKlas(ctx.klasId);
       if (!leerlingen.length) {
@@ -1985,17 +2355,1872 @@ textarea.invoer { resize: vertical; }
     }
   }
 
-  // app/src/views/afspraken.js
+  // src/views/inhaalwerk.js
+  var inhaalwerk_exports = {};
+  __export(inhaalwerk_exports, {
+    render: () => render6
+  });
+  var OPEN_STATUS = /* @__PURE__ */ new Set(["open", "afspraak", "ingepland", "afgelegd"]);
+  var AFGESLOTEN_STATUS = /* @__PURE__ */ new Set(["afgesloten"]);
+  function statusBadgeKlasse(status) {
+    if (AFGESLOTEN_STATUS.has(status)) return "badge badge--stil ihw-badge ihw-badge--afgesloten";
+    if (status === "ingepland" || status === "afgelegd") return "badge ihw-badge ihw-badge--ingepland";
+    return "badge ihw-badge ihw-badge--open";
+  }
+  async function render6(root, ctx) {
+    stijl("css-inhaalwerk", `
+    .ihw-samenvatting { display:flex; flex-wrap:wrap; gap:.6rem; margin:.4rem 0 .9rem; }
+    .ihw-stat { display:flex; flex-direction:column; gap:.15rem; padding:.55rem .8rem;
+      background:var(--paneel-2); border:1px solid var(--rand); border-radius:var(--radius-s); min-width:6.5rem; }
+    .ihw-stat__getal { font-size:1.35rem; font-weight:700; line-height:1; }
+    .ihw-stat__label { font-size:.8rem; color:var(--tekst-zacht); }
+    .ihw-stat--open .ihw-stat__getal { color:var(--rood); }
+    .ihw-stat--ingepland .ihw-stat__getal { color:var(--goud); }
+    .ihw-stat--afgesloten .ihw-stat__getal { color:var(--groen); }
+    .ihw-badge--open { background:color-mix(in srgb, var(--rood) 18%, transparent); color:var(--rood); }
+    .ihw-badge--ingepland { background:color-mix(in srgb, var(--goud) 22%, transparent); color:var(--goud); }
+    .ihw-badge--afgesloten { color:var(--tekst-zacht); }
+    .ihw-filter { display:flex; align-items:center; gap:.5rem; }
+    .ihw-filter .veld { margin:0; }
+    .ihw-rij-status { min-width:9rem; }
+    .ihw-datum { white-space:nowrap; color:var(--tekst-zacht); }
+    .ihw-titel { font-weight:600; }
+    .ihw-leerling { white-space:nowrap; }
+  `);
+    if (!ctx.klasId) {
+      root.append(leegKaart("Geen actieve klas", "Kies een klas om afwezigheden en inhaalwerk op te volgen."));
+      return;
+    }
+    const klas = await get("klassen", ctx.klasId);
+    const leerlingen = await leerlingenVanKlas(ctx.klasId);
+    const naamVan = new Map(leerlingen.map((l) => [l.id, `${l.voornaam} ${l.naam}`.trim()]));
+    root.append(
+      el(
+        "div",
+        { class: "kaart__kop kaart__kop--los" },
+        el("h2", {}, `Afwezigheden & inhaalwerk — ${klas?.naam || ""}`),
+        el("button", {
+          class: "knop knop--primair",
+          onClick: () => bewerkDialoog(root, ctx, leerlingen, null)
+        }, "+ Inhaalwerk")
+      ),
+      el("p", { class: "zacht" }, "Opvolging van gemiste toetsen en taken: wat moet nog ingehaald, ingepland of afgesloten worden?")
+    );
+    if (!leerlingen.length) {
+      root.append(leegKaart("Geen leerlingen", "Voeg eerst leerlingen toe aan deze klas."));
+      return;
+    }
+    const items = await byIndex("inhaalwerk", "klasId", ctx.klasId);
+    const aantalOpen = items.filter((i) => i.status === "open" || i.status === "afspraak").length;
+    const aantalIngepland = items.filter((i) => i.status === "ingepland" || i.status === "afgelegd").length;
+    const aantalAfgesloten = items.filter((i) => AFGESLOTEN_STATUS.has(i.status)).length;
+    root.append(
+      el(
+        "div",
+        { class: "ihw-samenvatting" },
+        el(
+          "div",
+          { class: "ihw-stat ihw-stat--open" },
+          el("span", { class: "ihw-stat__getal" }, String(aantalOpen)),
+          el("span", { class: "ihw-stat__label" }, "Open")
+        ),
+        el(
+          "div",
+          { class: "ihw-stat ihw-stat--ingepland" },
+          el("span", { class: "ihw-stat__getal" }, String(aantalIngepland)),
+          el("span", { class: "ihw-stat__label" }, "Ingepland")
+        ),
+        el(
+          "div",
+          { class: "ihw-stat ihw-stat--afgesloten" },
+          el("span", { class: "ihw-stat__getal" }, String(aantalAfgesloten)),
+          el("span", { class: "ihw-stat__label" }, "Afgesloten")
+        )
+      )
+    );
+    const filter = keuze("Filter op status", { alle: "Alle", ...INHAALWERK_STATUS }, "alle");
+    filter.wrap.classList.add("ihw-filter");
+    filter.select.addEventListener("change", () => tekenLijst());
+    root.append(el("div", { class: "ihw-filter" }, filter.wrap));
+    const houder = el("div", { id: "ihw-houder" });
+    root.append(houder);
+    tekenLijst();
+    function tekenLijst() {
+      leeg(houder);
+      const gekozen = filter.select.value;
+      let lijst = items.slice();
+      if (gekozen !== "alle") lijst = lijst.filter((i) => i.status === gekozen);
+      if (!lijst.length) {
+        houder.append(leegKaart(
+          "Niets te tonen",
+          gekozen === "alle" ? "Voeg inhaalwerk toe met de knop hierboven." : "Geen items met deze status."
+        ));
+        return;
+      }
+      lijst.sort((a, b) => {
+        const oa = OPEN_STATUS.has(a.status) ? 0 : 1;
+        const ob = OPEN_STATUS.has(b.status) ? 0 : 1;
+        if (oa !== ob) return oa - ob;
+        const da = a.scheduledDatum || a.missedDatum || "";
+        const dbb = b.scheduledDatum || b.missedDatum || "";
+        return da.localeCompare(dbb);
+      });
+      const tabel = el(
+        "table",
+        { class: "tabel" },
+        el("thead", {}, el(
+          "tr",
+          {},
+          el("th", {}, "Leerling"),
+          el("th", {}, "Type"),
+          el("th", {}, "Titel"),
+          el("th", {}, "Status"),
+          el("th", {}, "Gemist"),
+          el("th", {}, "Ingepland"),
+          el("th", {}, "")
+        ))
+      );
+      const tbody = el("tbody", {});
+      for (const it of lijst) {
+        const statusSel = el(
+          "select",
+          { class: "invoer invoer--kort ihw-rij-status" },
+          ...Object.entries(INHAALWERK_STATUS).map(([v, l]) => el("option", { value: v, selected: v === it.status }, l))
+        );
+        statusSel.addEventListener("change", async () => {
+          it.status = statusSel.value;
+          await put("inhaalwerk", it);
+          toast("Status bijgewerkt");
+          render6(leeg(root), ctx);
+        });
+        tbody.append(
+          el(
+            "tr",
+            {},
+            el("td", { class: "ihw-leerling" }, naamVan.get(it.leerlingId) || "— onbekend —"),
+            el("td", {}, INHAALWERK_TYPE[it.type] || it.type),
+            el("td", { class: "ihw-titel" }, it.titel || "—"),
+            el("td", {}, el("span", { class: statusBadgeKlasse(it.status) }, INHAALWERK_STATUS[it.status] || it.status)),
+            el("td", { class: "ihw-datum" }, it.missedDatum ? datumKort(it.missedDatum) : "—"),
+            el("td", { class: "ihw-datum" }, it.scheduledDatum ? datumKort(it.scheduledDatum) : "—"),
+            el(
+              "td",
+              {},
+              el(
+                "div",
+                { class: "knoprij knoprij--rechts" },
+                statusSel,
+                el("button", {
+                  class: "icoonknop",
+                  title: "Bewerken",
+                  onClick: () => bewerkDialoog(root, ctx, leerlingen, it)
+                }, "✏️"),
+                el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
+                  if (await bevestig(
+                    `Inhaalwerk "${it.titel || INHAALWERK_TYPE[it.type] || "item"}" verwijderen?`,
+                    { gevaar: true, jaLabel: "Verwijderen" }
+                  )) {
+                    await remove("inhaalwerk", it.id);
+                    toast("Verwijderd");
+                    render6(leeg(root), ctx);
+                  }
+                } }, "🗑")
+              )
+            )
+          )
+        );
+      }
+      tabel.append(tbody);
+      houder.append(el("div", { class: "kaart" }, tabel));
+    }
+  }
+  function bewerkDialoog(root, ctx, leerlingen, bestaand) {
+    dialoog(bestaand ? "Inhaalwerk bewerken" : "Nieuw inhaalwerk", (body, sluit) => {
+      const leerlingOpties = Object.fromEntries(
+        leerlingen.map((l) => [l.id, `${l.voornaam} ${l.naam}`.trim()])
+      );
+      const leerling = keuze("Leerling", leerlingOpties, bestaand?.leerlingId || leerlingen[0]?.id);
+      const type = keuze("Type", INHAALWERK_TYPE, bestaand?.type || "toets");
+      const titel = veld("Titel", { value: bestaand?.titel || "", placeholder: "Bv. Toets hoofdstuk 3" });
+      const status = keuze("Status", INHAALWERK_STATUS, bestaand?.status || "open");
+      const missed = veld("Gemist op", { type: "date", value: bestaand?.missedDatum || "" });
+      const scheduled = veld("Ingepland op", { type: "date", value: bestaand?.scheduledDatum || "" });
+      const note = tekstveld("Notitie", { value: bestaand?.note || "", placeholder: "Optionele afspraken of context…" });
+      body.append(
+        leerling.wrap,
+        type.wrap,
+        titel.wrap,
+        status.wrap,
+        missed.wrap,
+        scheduled.wrap,
+        note.wrap,
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            if (!leerling.select.value) {
+              toast("Kies een leerling", "fout");
+              return;
+            }
+            const gegevens = {
+              leerlingId: leerling.select.value,
+              klasId: ctx.klasId,
+              type: type.select.value,
+              titel: titel.input.value.trim(),
+              status: status.select.value,
+              missedDatum: missed.input.value,
+              scheduledDatum: scheduled.input.value,
+              note: note.input.value.trim()
+            };
+            if (bestaand) {
+              Object.assign(bestaand, gegevens);
+              await put("inhaalwerk", bestaand);
+            } else {
+              await put("inhaalwerk", maakInhaalwerk(gegevens));
+            }
+            sluit();
+            toast("Opgeslagen");
+            render6(leeg(root), ctx);
+          } }, "Opslaan")
+        )
+      );
+    });
+  }
+
+  // src/views/leerlingfiche.js
+  var leerlingfiche_exports = {};
+  __export(leerlingfiche_exports, {
+    render: () => render7
+  });
+
+  // src/domain/individueel.js
+  var huidigeMaand = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 7);
+  async function verhoogQuota(quotaId) {
+    const q = await get("quota", quotaId);
+    if (!q) return null;
+    if (q.maand !== huidigeMaand()) {
+      q.maand = huidigeMaand();
+      q.aantal = 0;
+    }
+    q.aantal += 1;
+    q.laatst = (/* @__PURE__ */ new Date()).toISOString();
+    await put("quota", q);
+    return { quota: q, sein: q.aantal >= q.drempel };
+  }
+  async function verlaagQuota(quotaId) {
+    const q = await get("quota", quotaId);
+    if (!q) return null;
+    q.aantal = Math.max(0, q.aantal - 1);
+    await put("quota", q);
+    return { quota: q, sein: q.aantal >= q.drempel };
+  }
+  async function logConsequentie({ leerlingId, klasId, stap: stap2, note = "", observatieId = null }) {
+    const c = maakConsequentie({ leerlingId, klasId, stap: stap2, note, observatieId });
+    await put("consequenties", c);
+    return c;
+  }
+  async function ficheData(leerlingId) {
+    const leerling = await get("leerlingen", leerlingId);
+    const [aanw, observaties, quota, consequenties, inhaalwerk, notities] = await Promise.all([
+      byIndex("aanwezigheid", "leerlingId", leerlingId),
+      byIndex("observaties", "leerlingId", leerlingId),
+      byIndex("quota", "leerlingId", leerlingId),
+      byIndex("consequenties", "leerlingId", leerlingId),
+      byIndex("inhaalwerk", "leerlingId", leerlingId),
+      byIndex("notities", "leerlingId", leerlingId)
+    ]);
+    const aanwStats = { aanwezig: 0, telaat: 0, gewettigd: 0, ongewettigd: 0, deel: 0 };
+    for (const a of aanw) if (a.status in aanwStats) aanwStats[a.status]++;
+    const sorteerNieuw = (a, b) => (b.datum || "").localeCompare(a.datum || "");
+    observaties.sort(sorteerNieuw);
+    consequenties.sort(sorteerNieuw);
+    notities.sort(sorteerNieuw);
+    const seinen = quota.filter((q) => q.maand === huidigeMaand() && q.aantal >= q.drempel);
+    return { leerling, aanwezigheid: aanwStats, observaties, quota, consequenties, inhaalwerk, notities, seinen };
+  }
+
+  // src/views/leerlingfiche.js
+  async function render7(root, ctx) {
+    stijl("css-leerlingfiche", CSS);
+    root.append(el("div", { class: "kaart__kop kaart__kop--los" }, el("h2", {}, "Leerlingfiche")));
+    if (!ctx.klasId) {
+      root.append(
+        leegKaart("Geen actieve klas", "Kies eerst een klas (bij Klassen) om een leerlingfiche te bekijken.")
+      );
+      return;
+    }
+    const leerlingen = await leerlingenVanKlas(ctx.klasId);
+    const allen = await all("leerlingen");
+    allen.sort((a, b) => (a.naam + a.voornaam).localeCompare(b.naam + b.voornaam, "nl"));
+    const naamVan = (l) => `${l.voornaam} ${l.naam}`.trim() || "(naamloos)";
+    const opties = { "": "— Kies een leerling —" };
+    for (const l of leerlingen) opties[l.id] = naamVan(l);
+    const kies = keuze("Leerling in deze klas", opties, "");
+    const zoek = el("input", {
+      class: "invoer",
+      type: "search",
+      placeholder: "Zoek op naam (alle leerlingen)…"
+    });
+    const zoekResultaat = el("div", { class: "lf-zoekresultaat" });
+    const zoekVeld = el("label", { class: "veld" }, el("span", {}, "Zoeken over alle leerlingen"), zoek, zoekResultaat);
+    const detail = el("div", { class: "lf-detail" });
+    const toon = async (leerlingId) => {
+      leeg(detail);
+      if (!leerlingId) return;
+      const data = await ficheData(leerlingId);
+      if (!data?.leerling) {
+        detail.append(el("p", { class: "zacht" }, "Leerling niet gevonden."));
+        return;
+      }
+      toonFiche(detail, data, naamVan);
+    };
+    kies.select.addEventListener("change", () => {
+      zoek.value = "";
+      leeg(zoekResultaat);
+      toon(kies.select.value);
+    });
+    zoek.addEventListener("input", () => {
+      const term = zoek.value.trim().toLowerCase();
+      leeg(zoekResultaat);
+      if (!term) return;
+      const treffers = allen.filter((l) => naamVan(l).toLowerCase().includes(term)).slice(0, 8);
+      if (!treffers.length) {
+        zoekResultaat.append(el("div", { class: "lf-zoekresultaat__leeg zacht" }, "Geen leerling gevonden."));
+        return;
+      }
+      for (const l of treffers) {
+        zoekResultaat.append(
+          el(
+            "button",
+            {
+              class: "lf-treffer",
+              type: "button",
+              onClick: () => {
+                kies.select.value = leerlingen.some((k) => k.id === l.id) ? l.id : "";
+                zoek.value = "";
+                leeg(zoekResultaat);
+                toon(l.id);
+              }
+            },
+            el("span", { class: "lf-treffer__naam" }, naamVan(l)),
+            l.email ? el("span", { class: "lf-treffer__mail zacht" }, l.email) : null
+          )
+        );
+      }
+    });
+    root.append(
+      el(
+        "div",
+        { class: "kaart" },
+        el("div", { class: "lf-kiezer" }, kies.wrap, zoekVeld)
+      ),
+      detail
+    );
+    if (leerlingen.length) {
+      kies.select.value = leerlingen[0].id;
+      toon(leerlingen[0].id);
+    } else {
+      detail.append(
+        leegKaart("Nog geen leerlingen", "Deze klas heeft nog geen leerlingen. Voeg ze toe bij Klassen.")
+      );
+    }
+  }
+  function toonFiche(root, data, naamVan) {
+    const { leerling, aanwezigheid, observaties, quota, consequenties, inhaalwerk, notities, seinen } = data;
+    root.append(
+      el(
+        "div",
+        { class: "kaart" },
+        el(
+          "div",
+          { class: "lf-kop" },
+          el(
+            "div",
+            {},
+            el("h2", { class: "lf-kop__naam" }, naamVan(leerling)),
+            el("p", { class: "zacht lf-kop__mail" }, leerling.email || "Geen e-mailadres")
+          ),
+          seinen.length ? el(
+            "span",
+            { class: "badge lf-badge-sein", title: "Quota over de drempel deze maand" },
+            `🔔 ${seinen.length} ${seinen.length === 1 ? "actief sein" : "actieve seinen"}`
+          ) : null
+        )
+      )
+    );
+    const diag = el("div", { class: "diag" });
+    for (const [sleutel, label] of Object.entries(AANWEZIGHEID_STATUS)) {
+      diag.append(
+        el(
+          "div",
+          { class: "diag__item" },
+          el("strong", {}, String(aanwezigheid[sleutel] ?? 0)),
+          el("span", { class: "zacht" }, label)
+        )
+      );
+    }
+    root.append(kaart("Aanwezigheid", diag));
+    root.append(kaart(
+      "Feitelijke tellers (quota)",
+      quota.length ? el(
+        "div",
+        { class: "lf-lijst" },
+        ...quota.map((q) => {
+          const overDrempel = q.aantal >= q.drempel;
+          return el(
+            "div",
+            { class: "regel lf-regel" + (overDrempel ? " lf-regel--sein" : "") },
+            el("span", { class: "regel__label" }, QUOTA_TYPES[q.type] || q.type),
+            el(
+              "span",
+              { class: "lf-quota__waarde" },
+              overDrempel ? el("span", { class: "badge lf-badge-sein" }, "🔔") : null,
+              el("strong", {}, `${q.aantal}/${q.drempel}`)
+            )
+          );
+        })
+      ) : nogNiets("Nog geen tellers geregistreerd.")
+    ));
+    root.append(kaart(
+      "Observaties (ABC)",
+      observaties.length ? el(
+        "div",
+        { class: "lf-lijst" },
+        ...observaties.map(
+          (o) => el(
+            "div",
+            { class: "lf-item" + (o.opvolgen ? " lf-item--opvolgen" : "") },
+            el(
+              "div",
+              { class: "lf-item__kop" },
+              el("span", { class: "zacht" }, datumKort(o.datum)),
+              el("span", { class: "badge badge--stil" }, OBSERVATIE_CATEGORIE[o.categorie] || o.categorie),
+              o.opvolgen ? el("span", { class: "badge lf-badge-opvolgen" }, "Opvolgen") : null
+            ),
+            abcRegel("A", o.aanleiding),
+            abcRegel("B", o.gedrag),
+            abcRegel("C", o.gevolg)
+          )
+        )
+      ) : nogNiets("Nog geen observaties.")
+    ));
+    root.append(kaart(
+      "Consequenties",
+      consequenties.length ? el(
+        "div",
+        { class: "lf-lijst" },
+        ...consequenties.map(
+          (c) => el(
+            "div",
+            { class: "regel lf-regel" },
+            el("span", { class: "regel__label" }, datumKort(c.datum)),
+            el("span", {}, c.stap || "—")
+          )
+        )
+      ) : nogNiets("Nog geen consequenties gezet.")
+    ));
+    root.append(kaart(
+      "Inhaalwerk",
+      inhaalwerk.length ? el(
+        "div",
+        { class: "lf-lijst" },
+        ...inhaalwerk.map(
+          (i) => el(
+            "div",
+            { class: "lf-item" },
+            el(
+              "div",
+              { class: "lf-item__kop" },
+              el("span", { class: "badge badge--stil" }, INHAALWERK_TYPE[i.type] || i.type),
+              el("span", { class: "lf-inhaal__titel" }, i.titel || "(zonder titel)"),
+              el("span", { class: "badge" }, INHAALWERK_STATUS[i.status] || i.status)
+            )
+          )
+        )
+      ) : nogNiets("Geen openstaand inhaalwerk.")
+    ));
+    root.append(kaart(
+      "Communicatie",
+      notities.length ? el(
+        "div",
+        { class: "lf-lijst" },
+        ...notities.map(
+          (n) => el(
+            "div",
+            { class: "lf-item" },
+            el(
+              "div",
+              { class: "lf-item__kop" },
+              el("span", { class: "badge badge--stil" }, NOTITIE_KANAAL[n.kanaal] || n.kanaal),
+              el("span", { class: "zacht" }, datumKort(n.datum))
+            ),
+            el("p", { class: "lf-notitie__tekst" }, n.tekst || "—")
+          )
+        )
+      ) : nogNiets("Nog geen communicatie geregistreerd.")
+    ));
+  }
+  function kaart(titel, inhoud) {
+    return el("div", { class: "kaart" }, el("h3", { class: "sectiekop" }, titel), inhoud);
+  }
+  function nogNiets(tekst) {
+    return el("p", { class: "zacht lf-nogniets" }, tekst);
+  }
+  function abcRegel(letter, tekst) {
+    if (!tekst) return null;
+    return el(
+      "div",
+      { class: "lf-abc" },
+      el("span", { class: "lf-abc__letter" }, letter),
+      el("span", {}, tekst)
+    );
+  }
+  var CSS = `
+.lf-kiezer { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 16px; }
+.lf-kiezer .veld { margin-bottom: 0; }
+.lf-zoekresultaat { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.lf-treffer {
+  text-align: left; display: flex; flex-direction: column; gap: 1px; cursor: pointer;
+  padding: 8px 10px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--paneel-2); color: var(--tekst);
+}
+.lf-treffer:hover { border-color: var(--accent); }
+.lf-treffer__naam { font-weight: 600; }
+.lf-treffer__mail { font-size: 0.78rem; }
+.lf-zoekresultaat__leeg { font-size: 0.85rem; padding: 4px 2px; }
+
+.lf-detail { display: flex; flex-direction: column; gap: 14px; }
+.lf-detail .kaart { margin: 0; }
+
+.lf-kop { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lf-kop__naam { margin: 0; }
+.lf-kop__mail { margin: 2px 0 0; }
+.lf-badge-sein { background: color-mix(in srgb, var(--goud) 26%, transparent); color: var(--tekst); }
+
+.lf-lijst { display: flex; flex-direction: column; gap: 8px; }
+.lf-regel { align-items: center; }
+.lf-regel--sein { color: var(--tekst); font-weight: 600; }
+.lf-quota__waarde { display: inline-flex; align-items: center; gap: 8px; }
+
+.lf-item { padding: 10px 12px; background: var(--paneel-2); border-radius: var(--radius-s); border: 1px solid var(--rand); }
+.lf-item--opvolgen { border-color: color-mix(in srgb, var(--goud) 55%, var(--rand)); }
+.lf-item__kop { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.lf-badge-opvolgen { background: color-mix(in srgb, var(--goud) 26%, transparent); color: var(--tekst); }
+.lf-inhaal__titel { font-weight: 600; }
+
+.lf-abc { display: flex; gap: 8px; padding: 1px 0; font-size: 0.9rem; }
+.lf-abc__letter {
+  flex: 0 0 auto; width: 18px; height: 18px; display: grid; place-items: center; margin-top: 1px;
+  border-radius: 4px; background: var(--paneel); border: 1px solid var(--rand); color: var(--tekst-zacht);
+  font-size: 0.7rem; font-weight: 700;
+}
+.lf-notitie__tekst { margin: 0; }
+.lf-nogniets { margin: 0; font-style: italic; }
+`;
+
+  // src/views/individueel.js
+  var individueel_exports = {};
+  __export(individueel_exports, {
+    render: () => render8
+  });
+  var CSS2 = `
+.ind-uitleg { border-left: 3px solid var(--goud); background: var(--paneel-2); padding: 12px 14px; border-radius: var(--radius-s); margin-bottom: 14px; }
+.ind-uitleg p { margin: 0; color: var(--tekst-zacht); font-size: 0.86rem; line-height: 1.45; }
+.ind-lijst { display: flex; flex-direction: column; gap: 12px; }
+.ind-kaart__kop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ind-kaart__naam { font-size: 1.05rem; font-weight: 700; margin-right: auto; }
+.ind-quota { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 12px; }
+.ind-teller { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--paneel-2); }
+.ind-teller__label { flex: 1; font-size: 0.88rem; }
+.ind-teller__telling { font-variant-numeric: tabular-nums; font-weight: 700; }
+.ind-teller--seint { border-color: var(--goud); background: color-mix(in srgb, var(--goud) 16%, var(--paneel-2)); }
+.ind-sein { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 0.78rem; color: var(--goud); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--goud); }
+.ind-teller__knoppen { display: flex; gap: 4px; }
+.ind-teller__knoppen .icoonknop { border: 1px solid var(--rand); }
+.ind-quota--leeg { color: var(--tekst-zacht); font-style: italic; font-size: 0.84rem; margin: 8px 0 12px; }
+.ind-ladder__stap { border: 1px solid var(--rand); border-radius: var(--radius-s); padding: 10px 12px; margin-bottom: 8px; }
+.ind-ladder__kop { display: flex; align-items: center; gap: 10px; }
+.ind-ladder__label { font-weight: 700; margin-right: auto; }
+.ind-ladder__hint { margin: 4px 0 0; color: var(--tekst-zacht); font-size: 0.82rem; }
+.ind-vragen { margin: 8px 0 0; padding: 8px 10px; background: var(--paneel-2); border-radius: var(--radius-s); }
+.ind-vragen li { display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; font-size: 0.84rem; list-style: none; }
+.ind-check { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.ind-check input { width: auto; }
+`;
+  async function render8(root, ctx) {
+    stijl("css-individueel", CSS2);
+    if (!ctx.klasId) {
+      root.append(leegKaart("Geen actieve klas", "Kies een klas in de balk bovenaan om het individuele spoor te openen."));
+      return;
+    }
+    const klas = await get("klassen", ctx.klasId);
+    root.append(
+      el("div", { class: "kaart__kop kaart__kop--los" }, el("h2", {}, `Individueel spoor — ${klas?.naam || ""}`)),
+      el(
+        "div",
+        { class: "ind-uitleg" },
+        el(
+          "p",
+          {},
+          "Dit spoor is privaat en feitelijk: tellers, ABC-observaties en herstelstappen. Het staat los van de klaspot — een teller die “seint” (🔔) is enkel een signaal, geen automatische straf. Elk gevolg beslist u zelf."
+        )
+      )
+    );
+    const leerlingen = await leerlingenVanKlas(ctx.klasId);
+    if (!leerlingen.length) {
+      root.append(leegKaart("Geen leerlingen", "Voeg eerst leerlingen toe aan deze klas."));
+      return;
+    }
+    const lijst = el("div", { class: "ind-lijst" });
+    root.append(lijst);
+    for (const l of leerlingen) {
+      const kaart2 = el("div", { class: "kaart ind-kaart" });
+      lijst.append(kaart2);
+      await vulKaart(kaart2, l, ctx);
+    }
+  }
+  async function vulKaart(kaart2, leerling, ctx) {
+    leeg(kaart2);
+    const naam = `${leerling.voornaam} ${leerling.naam}`.trim();
+    const hertekenen = () => vulKaart(kaart2, leerling, ctx);
+    const [tellers, observaties] = await Promise.all([
+      byIndex("quota", "leerlingId", leerling.id),
+      byIndex("observaties", "leerlingId", leerling.id)
+    ]);
+    const seinenAantal = tellers.filter((q) => q.aantal >= q.drempel).length;
+    const kop = el(
+      "div",
+      { class: "ind-kaart__kop" },
+      el("span", { class: "ind-kaart__naam" }, naam),
+      seinenAantal ? el("span", { class: "ind-sein", title: "Teller(s) boven de drempel" }, `🔔 ${seinenAantal} seint${seinenAantal > 1 ? "en" : ""}`) : null,
+      el("span", { class: "badge badge--stil" }, `${observaties.length} observatie${observaties.length === 1 ? "" : "s"}`)
+    );
+    kaart2.append(kop);
+    if (tellers.length) {
+      const box = el("div", { class: "ind-quota" });
+      tellers.sort((a, b) => (QUOTA_TYPES[a.type] || a.type).localeCompare(QUOTA_TYPES[b.type] || b.type, "nl"));
+      for (const q of tellers) {
+        const seint = q.aantal >= q.drempel;
+        box.append(
+          el(
+            "div",
+            { class: "ind-teller" + (seint ? " ind-teller--seint" : "") },
+            el(
+              "span",
+              { class: "ind-teller__label" },
+              `${QUOTA_TYPES[q.type] || q.type}: `,
+              el("span", { class: "ind-teller__telling" }, `${q.aantal}/${q.drempel}`)
+            ),
+            seint ? el("span", { class: "ind-sein" }, "🔔 seint") : null,
+            el(
+              "div",
+              { class: "ind-teller__knoppen" },
+              el("button", { class: "icoonknop", title: "Teller verlagen (correctie)", disabled: q.aantal <= 0, onClick: async () => {
+                await verlaagQuota(q.id);
+                hertekenen();
+              } }, "−"),
+              el("button", { class: "icoonknop", title: "Teller verhogen", onClick: async () => {
+                const res = await verhoogQuota(q.id);
+                if (res?.sein) toast(`${naam} — ${QUOTA_TYPES[q.type] || q.type} seint (${res.quota.aantal}/${res.quota.drempel}) 🔔`, "waarschuwing");
+                hertekenen();
+              } }, "+")
+            )
+          )
+        );
+      }
+      kaart2.append(box);
+    } else {
+      kaart2.append(el("p", { class: "ind-quota--leeg" }, "Nog geen tellers voor deze leerling."));
+    }
+    kaart2.append(
+      el(
+        "div",
+        { class: "knoprij" },
+        el("button", { class: "knop", onClick: () => tellerDialoog(leerling, ctx, hertekenen) }, "＋ teller"),
+        el("button", { class: "knop", onClick: () => observatieDialoog(leerling, ctx, hertekenen) }, "📝 Observatie"),
+        el("button", { class: "knop", onClick: () => ladderDialoog(leerling, ctx) }, "🪜 Herstel/consequentie")
+      )
+    );
+  }
+  function tellerDialoog(leerling, ctx, klaar) {
+    dialoog(`Nieuwe teller — ${leerling.voornaam} ${leerling.naam}`.trim(), (body, sluit) => {
+      const type = keuze("Type teller", QUOTA_TYPES, "boek");
+      const drempel = veld("Drempel (seint vanaf)", { type: "number", value: 3 });
+      body.append(
+        type.wrap,
+        drempel.wrap,
+        el("p", { class: "zacht" }, "De teller reset automatisch elke maand. Boven de drempel geeft hij enkel een seintje."),
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            const d = Number(drempel.input.value);
+            const q = maakQuota({ leerlingId: leerling.id, klasId: ctx.klasId, type: type.select.value, drempel: d > 0 ? d : 3 });
+            await put("quota", q);
+            sluit();
+            toast("Teller toegevoegd");
+            await klaar();
+          } }, "Toevoegen")
+        )
+      );
+    });
+  }
+  function observatieDialoog(leerling, ctx, klaar) {
+    dialoog(`Observatie — ${leerling.voornaam} ${leerling.naam}`.trim(), (body, sluit) => {
+      const categorie = keuze("Categorie", OBSERVATIE_CATEGORIE, "gedrag");
+      const aanleiding = tekstveld("A — Aanleiding (wat ging eraan vooraf?)", { rows: 2 });
+      const gedrag = tekstveld("B — Gedrag / feit (wat gebeurde er precies?)", { rows: 2 });
+      const gevolg = tekstveld("C — Gevolg (wat volgde erop?)", { rows: 2 });
+      const opvolgen = el("input", { type: "checkbox" });
+      body.append(
+        categorie.wrap,
+        aanleiding.wrap,
+        gedrag.wrap,
+        gevolg.wrap,
+        el("label", { class: "ind-check" }, opvolgen, el("span", {}, "Opvolgen")),
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            if (!gedrag.input.value.trim()) {
+              toast("Beschrijf minstens het gedrag (B)", "fout");
+              return;
+            }
+            const o = maakObservatie({
+              leerlingId: leerling.id,
+              klasId: ctx.klasId,
+              categorie: categorie.select.value,
+              aanleiding: aanleiding.input.value.trim(),
+              gedrag: gedrag.input.value.trim(),
+              gevolg: gevolg.input.value.trim(),
+              opvolgen: opvolgen.checked
+            });
+            await put("observaties", o);
+            sluit();
+            toast("Observatie bewaard");
+            await klaar();
+          } }, "Bewaren")
+        )
+      );
+    });
+  }
+  function ladderDialoog(leerling, ctx) {
+    dialoog(`Herstel / consequentie — ${leerling.voornaam} ${leerling.naam}`.trim(), (body, sluit) => {
+      const note = tekstveld("Notitie bij de stap (optioneel)", { rows: 2, placeholder: "Bv. context of afspraak…" });
+      const stappen = el("div", {});
+      for (const stap2 of CONSEQUENTIE_LADDER) {
+        const kop = el(
+          "div",
+          { class: "ind-ladder__kop" },
+          el("span", { class: "ind-ladder__label" }, stap2.label),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            await logConsequentie({ leerlingId: leerling.id, klasId: ctx.klasId, stap: stap2.sleutel, note: note.input.value.trim() });
+            sluit();
+            toast(`Stap gezet: ${stap2.label}`);
+          } }, "Zet stap")
+        );
+        const vak = el("div", { class: "ind-ladder__stap" }, kop, el("p", { class: "ind-ladder__hint" }, stap2.hint));
+        if (stap2.sleutel === "herstelgesprek") {
+          vak.append(
+            el(
+              "ul",
+              { class: "ind-vragen" },
+              ...HERSTELVRAGEN.map((v) => el("li", {}, el("span", {}, "☐"), el("span", {}, v)))
+            )
+          );
+        }
+        stappen.append(vak);
+      }
+      body.append(
+        el("p", { class: "zacht" }, "Van licht naar zwaar. Kies bewust — dit is een keuze, geen automatisme."),
+        note.wrap,
+        stappen,
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Sluiten")
+        )
+      );
+    });
+  }
+
+  // src/views/puntenboek.js
+  var puntenboek_exports = {};
+  __export(puntenboek_exports, {
+    render: () => render9
+  });
+
+  // src/domain/evaluaties.js
+  async function puntenboek(klasId) {
+    const [evaluaties, resultaten, leerlingen] = await Promise.all([
+      byIndex("evaluaties", "klasId", klasId),
+      byIndex("evalresultaten", "klasId", klasId),
+      leerlingenVanKlas(klasId)
+    ]);
+    evaluaties.sort((a, b) => (a.datum || "").localeCompare(b.datum || ""));
+    const map = /* @__PURE__ */ new Map();
+    for (const r of resultaten) map.set(`${r.leerlingId}|${r.evaluatieId}`, r);
+    const gemiddelde = /* @__PURE__ */ new Map();
+    for (const l of leerlingen) {
+      let gewogenSom = 0;
+      let gewichtSom = 0;
+      for (const e of evaluaties) {
+        const r = map.get(`${l.id}|${e.id}`);
+        if (!r || r.afwezig || r.punten == null || !e.maxPunten) continue;
+        const pct = r.punten / e.maxPunten * 100;
+        const g = e.gewicht || 100;
+        gewogenSom += pct * g;
+        gewichtSom += g;
+      }
+      gemiddelde.set(l.id, gewichtSom ? Math.round(gewogenSom / gewichtSom * 10) / 10 : null);
+    }
+    return {
+      evaluaties,
+      leerlingen,
+      resultaat: (leerlingId, evaluatieId) => map.get(`${leerlingId}|${evaluatieId}`),
+      gemiddelde
+    };
+  }
+
+  // src/views/puntenboek.js
+  stijl("css-puntenboek", `
+  .pb-schuif { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .pb-tabel { min-width: 100%; border-collapse: collapse; }
+  .pb-tabel th, .pb-tabel td {
+    border-bottom: 1px solid var(--rand);
+    padding: 7px 9px; text-align: left; vertical-align: middle;
+  }
+  .pb-tabel thead th {
+    position: sticky; top: 0; background: var(--paneel); z-index: 1;
+    font-size: 0.8rem;
+  }
+  .pb-naam { white-space: nowrap; font-weight: 600; }
+  .pb-evalkop { cursor: pointer; border-radius: var(--radius-s); }
+  .pb-evalkop:hover { background: var(--paneel-2); }
+  .pb-evalkop__titel { display: block; font-weight: 700; }
+  .pb-evalkop__meta { display: block; color: var(--tekst-zacht); font-size: 0.72rem; font-weight: 400; }
+  .pb-cel { display: flex; align-items: center; gap: 4px; }
+  .pb-cel .invoer--kort { width: 4.2rem; }
+  .pb-afw {
+    padding: 3px 6px; font-size: 0.68rem; line-height: 1; border-radius: var(--radius-s);
+    border: 1px solid var(--rand); background: var(--paneel); color: var(--tekst-zacht); cursor: pointer;
+  }
+  .pb-afw.is-actief { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pb-gem-kop, .pb-gem {
+    background: var(--paneel-2);
+    border-left: 2px solid var(--accent) !important;
+    text-align: right; white-space: nowrap;
+  }
+  .pb-gem { font-weight: 700; }
+  .pb-gem--leeg { color: var(--tekst-zacht); font-weight: 400; }
+`);
+  async function render9(root, ctx) {
+    if (!ctx.klasId) {
+      root.append(leegKaart("Geen actieve klas", "Kies een klas om evaluaties en punten bij te houden."));
+      return;
+    }
+    const klas = await get("klassen", ctx.klasId);
+    const kop = el(
+      "div",
+      { class: "kaart__kop kaart__kop--los" },
+      el("h2", {}, `Evaluaties & puntenboek — ${klas?.naam || ""}`),
+      el("button", { class: "knop knop--primair", onClick: () => evaluatieDialoog(root, ctx, null) }, "+ Evaluatie")
+    );
+    root.append(kop);
+    root.append(el(
+      "p",
+      { class: "zacht" },
+      "Punten zijn een privaat hulpmiddel — lokaal bewaard, geen ranking of labels. Het gemiddelde is gewogen naar het gewicht per evaluatie."
+    ));
+    const houder = el("div", {});
+    root.append(houder);
+    await teken(houder, ctx);
+  }
+  async function teken(houder, ctx) {
+    leeg(houder);
+    const pb = await puntenboek(ctx.klasId);
+    if (!pb.leerlingen.length) {
+      houder.append(leegKaart("Geen leerlingen", "Voeg eerst leerlingen toe aan deze klas."));
+      return;
+    }
+    if (!pb.evaluaties.length) {
+      houder.append(leegKaart(
+        "Nog geen evaluaties",
+        "Maak een eerste evaluatie (toets, taak, mondeling …) om punten in te voeren.",
+        el("button", { class: "knop knop--primair", onClick: () => evaluatieDialoog(houder.parentElement, ctx, null) }, "+ Evaluatie")
+      ));
+      return;
+    }
+    const resMap = /* @__PURE__ */ new Map();
+    for (const l of pb.leerlingen) {
+      for (const e of pb.evaluaties) {
+        const r = pb.resultaat(l.id, e.id);
+        if (r) resMap.set(`${l.id}|${e.id}`, r);
+      }
+    }
+    const gemCellen = /* @__PURE__ */ new Map();
+    const koprij = el(
+      "tr",
+      {},
+      el("th", {}, "Leerling"),
+      ...pb.evaluaties.map((e) => el(
+        "th",
+        { class: "pb-evalkop", title: "Klik om te bewerken of te verwijderen", onClick: () => evaluatieDialoog(houder.parentElement, ctx, e) },
+        el("span", { class: "pb-evalkop__titel" }, e.titel || (EVALUATIE_TYPE[e.type] || "Evaluatie")),
+        el("span", { class: "pb-evalkop__meta" }, `/${e.maxPunten}${e.datum ? " · " + datumKort(e.datum) : ""}`)
+      )),
+      el("th", { class: "pb-gem-kop", title: "Gewogen gemiddelde" }, "Gemiddelde")
+    );
+    const tbody = el("tbody", {});
+    for (const l of pb.leerlingen) {
+      const rij = el("tr", {}, el("td", { class: "pb-naam" }, `${l.voornaam} ${l.naam}`.trim()));
+      for (const e of pb.evaluaties) {
+        rij.append(el("td", {}, maakCel(ctx, l, e, resMap, gemCellen)));
+      }
+      const gem = pb.gemiddelde.get(l.id);
+      const gemCel = el("td", { class: gem == null ? "pb-gem pb-gem--leeg" : "pb-gem" }, gem == null ? "—" : `${Math.round(gem)}%`);
+      gemCellen.set(l.id, gemCel);
+      rij.append(gemCel);
+      tbody.append(rij);
+    }
+    houder.append(
+      el(
+        "div",
+        { class: "kaart" },
+        el(
+          "div",
+          { class: "pb-schuif" },
+          el("table", { class: "tabel pb-tabel" }, el("thead", {}, koprij), tbody)
+        )
+      )
+    );
+  }
+  function maakCel(ctx, leerling, evaluatie, resMap, gemCellen) {
+    const key = `${leerling.id}|${evaluatie.id}`;
+    const bestaand = resMap.get(key);
+    const state = { afw: !!bestaand?.afwezig };
+    const invoer = el("input", {
+      class: "invoer invoer--kort",
+      type: "number",
+      min: "0",
+      max: String(evaluatie.maxPunten),
+      step: "any",
+      value: bestaand?.punten == null ? "" : bestaand.punten,
+      placeholder: "—",
+      disabled: state.afw
+    });
+    const afwKnop = el("button", {
+      class: state.afw ? "pb-afw is-actief" : "pb-afw",
+      type: "button",
+      title: "Afwezig — telt niet mee",
+      "aria-pressed": String(state.afw)
+    }, "afw");
+    async function bewaar() {
+      const puntenVal = state.afw || invoer.value === "" ? null : Number(invoer.value);
+      const huidig = resMap.get(key);
+      let rec;
+      if (huidig) rec = { ...huidig, punten: puntenVal, afwezig: state.afw };
+      else rec = maakEvalResultaat({ evaluatieId: evaluatie.id, leerlingId: leerling.id, klasId: ctx.klasId, punten: puntenVal, afwezig: state.afw });
+      await put("evalresultaten", rec);
+      resMap.set(key, rec);
+      await ververGemiddelden(ctx, gemCellen);
+    }
+    invoer.addEventListener("change", bewaar);
+    invoer.addEventListener("blur", bewaar);
+    afwKnop.addEventListener("click", async () => {
+      state.afw = !state.afw;
+      afwKnop.classList.toggle("is-actief", state.afw);
+      afwKnop.setAttribute("aria-pressed", String(state.afw));
+      invoer.disabled = state.afw;
+      await bewaar();
+    });
+    return el("div", { class: "pb-cel" }, invoer, afwKnop);
+  }
+  async function ververGemiddelden(ctx, gemCellen) {
+    const pb = await puntenboek(ctx.klasId);
+    for (const [leerlingId, cel] of gemCellen) {
+      const gem = pb.gemiddelde.get(leerlingId);
+      if (gem == null) {
+        cel.textContent = "—";
+        cel.className = "pb-gem pb-gem--leeg";
+      } else {
+        cel.textContent = `${Math.round(gem)}%`;
+        cel.className = "pb-gem";
+      }
+    }
+  }
+  function evaluatieDialoog(root, ctx, bestaand) {
+    dialoog(bestaand ? "Evaluatie bewerken" : "Nieuwe evaluatie", (body, sluit) => {
+      const titel = veld("Titel", { value: bestaand?.titel || "" });
+      const type = keuze("Type", EVALUATIE_TYPE, bestaand?.type || "toets");
+      const datum = veld("Datum", { type: "date", value: bestaand?.datum || "" });
+      const maxPunten = veld("Max. punten", { type: "number", value: bestaand?.maxPunten ?? 10 });
+      const gewicht = veld("Gewicht (%)", { type: "number", value: bestaand?.gewicht ?? 100 });
+      const thema = veld("Thema", { value: bestaand?.thema || "" });
+      const note = tekstveld("Notitie", { value: bestaand?.note || "", rows: 2 });
+      const acties = el("div", { class: "dialoog__acties" });
+      if (bestaand) {
+        acties.append(el("button", { class: "knop knop--stil", onClick: async () => {
+          if (!await bevestig(`"${bestaand.titel || "deze evaluatie"}" verwijderen? Alle bijhorende punten gaan mee.`, { gevaar: true, jaLabel: "Verwijderen" })) return;
+          const res = await byIndex("evalresultaten", "evaluatieId", bestaand.id);
+          for (const r of res) await remove("evalresultaten", r.id);
+          await remove("evaluaties", bestaand.id);
+          sluit();
+          toast("Evaluatie verwijderd");
+          hertekenRoot(root, ctx);
+        } }, "🗑 Verwijderen"));
+      }
+      acties.append(
+        el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+        el("button", { class: "knop knop--primair", onClick: async () => {
+          if (!titel.input.value.trim()) {
+            toast("Geef een titel", "fout");
+            return;
+          }
+          const velden = {
+            titel: titel.input.value.trim(),
+            type: type.select.value,
+            datum: datum.input.value,
+            maxPunten: Number(maxPunten.input.value) || 10,
+            gewicht: Number(gewicht.input.value) || 100,
+            thema: thema.input.value.trim(),
+            note: note.input.value.trim()
+          };
+          if (bestaand) await put("evaluaties", { ...bestaand, ...velden });
+          else await put("evaluaties", maakEvaluatie({ klasId: ctx.klasId, ...velden }));
+          sluit();
+          toast("Opgeslagen");
+          hertekenRoot(root, ctx);
+        } }, "Opslaan")
+      );
+      body.append(titel.wrap, type.wrap, datum.wrap, maxPunten.wrap, gewicht.wrap, thema.wrap, note.wrap, acties);
+    });
+  }
+  function hertekenRoot(root, ctx) {
+    if (root) render9(leeg(root), ctx);
+  }
+
+  // src/views/acties.js
+  var acties_exports = {};
+  __export(acties_exports, {
+    render: () => render10
+  });
+  var CSS3 = `
+.acties-invoer { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+.acties-invoer .invoer { min-width: 0; }
+.acties-invoer__tekst { flex: 1 1 220px; }
+.acties-invoer__datum { flex: 0 0 auto; }
+.actie-lijst { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.actie-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--paneel-2); }
+.actie-item input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 auto; cursor: pointer; accent-color: var(--groen); }
+.actie-item__tekst { flex: 1; min-width: 0; }
+.actie-item--gedaan .actie-item__tekst { text-decoration: line-through; color: var(--tekst-zacht); }
+.actie-item__meta { display: flex; gap: 6px; align-items: center; flex: 0 0 auto; }
+.notitie-lijst { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.notitie-item { padding: 10px 12px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--paneel-2); }
+.notitie-item__kop { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.notitie-item__tekst { margin: 4px 0 0; white-space: pre-wrap; }
+.notitie-item__voet { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+.badge--opvolgen { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+`;
+  async function render10(root, ctx) {
+    stijl("css-acties", CSS3);
+    const klas = ctx.klasId ? await get("klassen", ctx.klasId) : null;
+    root.append(
+      el(
+        "div",
+        { class: "kaart__kop kaart__kop--los" },
+        el("h2", {}, "Acties & notities")
+      ),
+      el("p", { class: "zacht" }, klas ? `To-do's en communicatie-notities — gekoppeld waar mogelijk aan ${klas.naam}.` : "To-do's en communicatie-notities. Kies een actieve klas om notities aan leerlingen te koppelen.")
+    );
+    await tekenTaken(root, ctx);
+    await tekenNotities(root, ctx);
+  }
+  function klasnaam(ctx, id) {
+    if (!id) return "";
+    const k = (ctx.klassen || []).find((x) => x.id === id);
+    return k ? k.naam : "";
+  }
+  async function tekenTaken(root, ctx) {
+    const kaart2 = el("div", { class: "kaart" });
+    root.append(kaart2);
+    await hertekenTaken(kaart2, ctx);
+  }
+  async function hertekenTaken(kaart2, ctx) {
+    leeg(kaart2);
+    const tekstIn = el("input", { class: "invoer", type: "text", placeholder: "Nieuwe taak…" });
+    const datumIn = el("input", { class: "invoer invoer--kort", type: "date" });
+    const voegToe = async () => {
+      const tekst = tekstIn.value.trim();
+      if (!tekst) {
+        toast("Geef een taak in", "fout");
+        return;
+      }
+      await put("acties", maakActie({ tekst, klasId: ctx.klasId || null, datum: datumIn.value || "" }));
+      toast("Taak toegevoegd");
+      await hertekenTaken(kaart2, ctx);
+    };
+    tekstIn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") voegToe();
+    });
+    const toonGedaan = kaart2._toonGedaan ?? false;
+    const gedaanSchakel = el(
+      "label",
+      { class: "schakel" },
+      el("input", { type: "checkbox", checked: toonGedaan, onChange: async (e) => {
+        kaart2._toonGedaan = e.target.checked;
+        await hertekenTaken(kaart2, ctx);
+      } }),
+      el("span", {}, "Toon gedaan")
+    );
+    kaart2.append(
+      el(
+        "div",
+        { class: "kaart__kop kaart__kop--los" },
+        el("h3", {}, "Taken / to-do's"),
+        gedaanSchakel
+      ),
+      el(
+        "div",
+        { class: "acties-invoer" },
+        el("div", { class: "acties-invoer__tekst" }, tekstIn),
+        el("div", { class: "acties-invoer__datum" }, datumIn),
+        el("button", { class: "knop knop--primair", onClick: voegToe }, "Toevoegen")
+      )
+    );
+    let acties = await all("acties");
+    acties.sort((a, b) => {
+      if (a.status === "gedaan" !== (b.status === "gedaan")) return a.status === "gedaan" ? 1 : -1;
+      return (b.aangemaakt || "").localeCompare(a.aangemaakt || "");
+    });
+    if (!toonGedaan) acties = acties.filter((a) => a.status !== "gedaan");
+    if (!acties.length) {
+      kaart2.append(leegKaart("Geen taken", toonGedaan ? "Voeg hierboven een taak toe." : "Alles is afgewerkt — of voeg een nieuwe taak toe."));
+      return;
+    }
+    const lijst = el("ul", { class: "actie-lijst" });
+    for (const a of acties) {
+      const gedaan = a.status === "gedaan";
+      const kn = klasnaam(ctx, a.klasId);
+      lijst.append(
+        el(
+          "li",
+          { class: "actie-item" + (gedaan ? " actie-item--gedaan" : "") },
+          el("input", {
+            type: "checkbox",
+            checked: gedaan,
+            title: gedaan ? "Markeer als open" : "Markeer als gedaan",
+            onChange: async () => {
+              a.status = gedaan ? "open" : "gedaan";
+              await put("acties", a);
+              await hertekenTaken(kaart2, ctx);
+            }
+          }),
+          el("span", { class: "actie-item__tekst" }, a.tekst),
+          el(
+            "div",
+            { class: "actie-item__meta" },
+            a.datum ? el("span", { class: "badge badge--stil" }, datumKort(a.datum)) : null,
+            kn ? el("span", { class: "badge" }, kn) : null,
+            el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
+              await remove("acties", a.id);
+              toast("Taak verwijderd");
+              await hertekenTaken(kaart2, ctx);
+            } }, "🗑")
+          )
+        )
+      );
+    }
+    kaart2.append(lijst);
+  }
+  async function tekenNotities(root, ctx) {
+    const kaart2 = el("div", { class: "kaart" });
+    root.append(kaart2);
+    await hertekenNotities(kaart2, ctx);
+  }
+  async function hertekenNotities(kaart2, ctx) {
+    leeg(kaart2);
+    kaart2.append(
+      el(
+        "div",
+        { class: "kaart__kop kaart__kop--los" },
+        el("h3", {}, "Communicatie-notities"),
+        el("button", { class: "knop knop--primair", onClick: () => notitieDialoog(kaart2, ctx, null) }, "+ Notitie")
+      ),
+      el("p", { class: "zacht" }, "Deze notities blijven lokaal; Klaskompas verstuurt niets.")
+    );
+    const notities = await all("notities");
+    notities.sort((a, b) => (b.datum || "").localeCompare(a.datum || ""));
+    if (!notities.length) {
+      kaart2.append(leegKaart("Nog geen notities", "Noteer een gesprek of afspraak met ouder, mentor, zorg of directie."));
+      return;
+    }
+    const namen = await leerlingNamenMap(notities);
+    const lijst = el("ul", { class: "notitie-lijst" });
+    for (const n of notities) {
+      const naam = n.leerlingId ? namen.get(n.leerlingId) : "";
+      lijst.append(
+        el(
+          "li",
+          { class: "notitie-item" },
+          el(
+            "div",
+            { class: "notitie-item__kop" },
+            el("span", { class: "badge" }, NOTITIE_KANAAL[n.kanaal] || n.kanaal),
+            el("span", { class: "badge badge--stil" }, datumKort(n.datum)),
+            naam ? el("span", { class: "zacht" }, naam) : null,
+            n.opvolgen ? el("span", { class: "badge badge--opvolgen" }, "⚑ Opvolgen") : null
+          ),
+          el("p", { class: "notitie-item__tekst" }, n.tekst),
+          el(
+            "div",
+            { class: "notitie-item__voet" },
+            el("span", { class: "spatie" }),
+            el("button", { class: "icoonknop", title: "Bewerken", onClick: () => notitieDialoog(kaart2, ctx, n) }, "✏️"),
+            el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
+              if (await bevestig("Deze notitie verwijderen?", { gevaar: true, jaLabel: "Verwijderen" })) {
+                await remove("notities", n.id);
+                toast("Notitie verwijderd");
+                await hertekenNotities(kaart2, ctx);
+              }
+            } }, "🗑")
+          )
+        )
+      );
+    }
+    kaart2.append(lijst);
+  }
+  async function leerlingNamenMap(notities) {
+    const map = /* @__PURE__ */ new Map();
+    const ids = [...new Set(notities.map((n) => n.leerlingId).filter(Boolean))];
+    for (const id of ids) {
+      const l = await get("leerlingen", id);
+      if (l) map.set(id, `${l.voornaam} ${l.naam}`.trim());
+    }
+    return map;
+  }
+  async function notitieDialoog(kaart2, ctx, bestaand) {
+    const leerlingen = ctx.klasId ? await leerlingenVanKlas(ctx.klasId) : [];
+    dialoog(bestaand ? "Notitie bewerken" : "Nieuwe notitie", (body, sluit) => {
+      const kanaal = keuze("Kanaal", NOTITIE_KANAAL, bestaand?.kanaal || "ouder");
+      let leerlingSel = null;
+      if (leerlingen.length) {
+        const opties = { "": "— Geen leerling —" };
+        for (const l of leerlingen) opties[l.id] = `${l.voornaam} ${l.naam}`.trim();
+        leerlingSel = keuze("Leerling (optioneel)", opties, bestaand?.leerlingId || "");
+      }
+      const tekst = tekstveld("Notitie", { value: bestaand?.tekst || "", rows: 4, placeholder: "Wat is er besproken of afgesproken?" });
+      const opvolgen = el("input", { type: "checkbox", checked: !!bestaand?.opvolgen });
+      const opvolgenWrap = el("label", { class: "schakel" }, opvolgen, el("span", {}, "Opvolgen"));
+      body.append(
+        kanaal.wrap,
+        leerlingSel ? leerlingSel.wrap : null,
+        tekst.wrap,
+        opvolgenWrap,
+        el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            if (!tekst.input.value.trim()) {
+              toast("Geef een notitie in", "fout");
+              return;
+            }
+            const leerlingId = leerlingSel ? leerlingSel.select.value || null : bestaand?.leerlingId || null;
+            if (bestaand) {
+              Object.assign(bestaand, {
+                kanaal: kanaal.select.value,
+                leerlingId,
+                tekst: tekst.input.value.trim(),
+                opvolgen: opvolgen.checked
+              });
+              await put("notities", bestaand);
+            } else {
+              await put("notities", maakNotitie({
+                leerlingId,
+                klasId: ctx.klasId || null,
+                kanaal: kanaal.select.value,
+                tekst: tekst.input.value.trim(),
+                opvolgen: opvolgen.checked
+              }));
+            }
+            sluit();
+            toast("Notitie opgeslagen");
+            await hertekenNotities(kaart2, ctx);
+          } }, "Opslaan")
+        )
+      );
+    });
+  }
+
+  // src/views/zitplan.js
+  var zitplan_exports = {};
+  __export(zitplan_exports, {
+    render: () => render11
+  });
+
+  // src/domain/zitplan.js
+  function rasterAfmeting(n, kolommen = 4) {
+    const cols = Math.min(kolommen, Math.max(1, n));
+    const rijen = Math.max(1, Math.ceil(n / cols));
+    return { rijen, kolommen: cols };
+  }
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function genereerZitplan(leerlingen, regels = [], { kolommen = 4 } = {}) {
+    const ids = leerlingen.map((l) => l.id);
+    const naam = new Map(leerlingen.map((l) => [l.id, `${l.voornaam || ""} ${l.naam || ""}`.trim()]));
+    const n = ids.length;
+    const { rijen, kolommen: cols } = rasterAfmeting(n, kolommen);
+    const grensVoor = Math.ceil(rijen / 2);
+    const vast = /* @__PURE__ */ new Map();
+    const vooraan = /* @__PURE__ */ new Set();
+    const achteraan = /* @__PURE__ */ new Set();
+    const nietnaast = [];
+    for (const r of regels) {
+      if (r.type === "vasteplaats" && r.leerlingId != null && r.rij != null && r.kol != null) vast.set(r.leerlingId, { rij: r.rij, kol: r.kol });
+      else if (r.type === "vastvooraan" && r.leerlingId) vooraan.add(r.leerlingId);
+      else if (r.type === "vastachteraan" && r.leerlingId) achteraan.add(r.leerlingId);
+      else if (r.type === "nietnaast" && r.leerlingId && r.leerlingId2) nietnaast.push([r.leerlingId, r.leerlingId2]);
+    }
+    const alleCellen = [];
+    for (let rij = 0; rij < rijen; rij++) for (let kol = 0; kol < cols; kol++) alleCellen.push({ rij, kol });
+    const cK = (c) => `${c.rij},${c.kol}`;
+    const telSchendingen = (plek) => {
+      let s = 0;
+      for (const [a, b] of nietnaast) {
+        const pa = plek.get(a);
+        const pb = plek.get(b);
+        if (pa && pb && pa.rij === pb.rij && Math.abs(pa.kol - pb.kol) === 1) s++;
+      }
+      return s;
+    };
+    const probeer = () => {
+      const plek = /* @__PURE__ */ new Map();
+      const bezet = /* @__PURE__ */ new Set();
+      for (const [id, pos] of vast) {
+        if (id && ids.includes(id) && pos.rij < rijen && pos.kol < cols && !bezet.has(cK(pos))) {
+          plek.set(id, pos);
+          bezet.add(cK(pos));
+        }
+      }
+      const vrij = alleCellen.filter((c) => !bezet.has(cK(c)));
+      const teplaatsen = ids.filter((id) => !plek.has(id));
+      const front = shuffle(vrij.filter((c) => c.rij < grensVoor));
+      const back = shuffle(vrij.filter((c) => c.rij >= grensVoor));
+      const rest2 = shuffle([...vrij]);
+      const gebruikt = /* @__PURE__ */ new Set();
+      const pak = (pool) => {
+        while (pool.length) {
+          const c = pool.pop();
+          if (!gebruikt.has(cK(c))) {
+            gebruikt.add(cK(c));
+            return c;
+          }
+        }
+        return null;
+      };
+      const onopgelost2 = [];
+      const mustFront = teplaatsen.filter((id) => vooraan.has(id));
+      const mustBack = teplaatsen.filter((id) => achteraan.has(id) && !vooraan.has(id));
+      const overige = teplaatsen.filter((id) => !vooraan.has(id) && !achteraan.has(id));
+      for (const id of mustFront) {
+        const c = pak(front) || pak(rest2);
+        if (c) plek.set(id, c);
+        else onopgelost2.push(`Geen plaats voor ${naam.get(id)}`);
+      }
+      for (const id of mustBack) {
+        const c = pak(back) || pak(rest2);
+        if (c) plek.set(id, c);
+        else onopgelost2.push(`Geen plaats voor ${naam.get(id)}`);
+      }
+      const restCellen = shuffle(alleCellen.filter((c) => !gebruikt.has(cK(c)) && !bezet.has(cK(c))));
+      for (const id of overige) {
+        const c = restCellen.pop();
+        if (c) {
+          plek.set(id, c);
+          gebruikt.add(cK(c));
+        } else onopgelost2.push(`Geen plaats voor ${naam.get(id)}`);
+      }
+      return { plek, onopgelost: onopgelost2 };
+    };
+    let beste = null;
+    for (let i = 0; i < 400; i++) {
+      const r = probeer();
+      const score = telSchendingen(r.plek) + r.onopgelost.length;
+      if (!beste || score < beste.score) beste = { ...r, score };
+      if (score === 0) break;
+    }
+    const onopgelost = [...beste.onopgelost];
+    const rest = telSchendingen(beste.plek);
+    if (rest > 0) onopgelost.push(`${rest}× "niet naast elkaar" kon niet volledig worden gerespecteerd`);
+    const plaatsen = [...beste.plek.entries()].map(([leerlingId, pos]) => ({ leerlingId, rij: pos.rij, kol: pos.kol }));
+    return { plaatsen, rijen, kolommen: cols, onopgelost };
+  }
+
+  // src/views/zitplan.js
+  var KOLOMMEN = 4;
+  var ZITSTIJL = `
+.zp-kop { align-items: flex-start; }
+.zp-room {
+  overflow-x: auto;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius-s);
+  background: var(--paneel-2);
+  padding: 0 0 4px;
+}
+.zp-board {
+  min-height: 40px;
+  margin-bottom: 12px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid var(--rand);
+  border-radius: var(--radius-s) var(--radius-s) 0 0;
+  color: #fff;
+  background: linear-gradient(180deg, var(--accent), var(--groen));
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.zp-seats {
+  min-width: 560px;
+  padding: 4px 12px 12px;
+  display: grid;
+  gap: 14px;
+}
+.zp-seat {
+  position: relative;
+  min-height: 88px;
+  padding: 15px 8px 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--rand);
+  border-radius: 11px;
+  background: var(--paneel);
+  box-shadow: 0 3px 7px rgba(20, 40, 25, 0.08);
+}
+.zp-seat::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 46%;
+  height: 13px;
+  transform: translateX(-50%);
+  border: 1px solid var(--accent);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: var(--accent);
+  opacity: 0.85;
+}
+.zp-seat--leeg {
+  border-style: dashed;
+  background: var(--paneel-2);
+  box-shadow: none;
+}
+.zp-seat--leeg::before { opacity: 0.3; }
+.zp-seat--slot { border-color: var(--goud); }
+.zp-naam {
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--tekst);
+}
+.zp-leegtekst { color: var(--tekst-zacht); font-size: 0.72rem; font-style: italic; }
+.zp-slot {
+  font-size: 0.62rem;
+  font-weight: 750;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--goud) 22%, var(--paneel));
+  color: color-mix(in srgb, var(--goud) 55%, var(--tekst));
+  white-space: nowrap;
+}
+.zp-onopgelost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 12px;
+}
+.zp-regellijst { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
+.zp-regel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius-s);
+  background: var(--paneel-2);
+}
+.zp-regel__tekst { font-size: 0.85rem; }
+.zp-regel__type { font-weight: 700; }
+.zp-nota { margin-top: 14px; display: flex; align-items: flex-start; gap: 8px; font-size: 0.72rem; }
+`;
+  var SLOT_TEKST = {
+    vastvooraan: "vast vooraan",
+    vastachteraan: "vast achteraan",
+    vasteplaats: "vaste plaats",
+    nietnaast: "niet naast"
+  };
+  function volledigeNaam(l) {
+    return `${l?.voornaam || ""} ${l?.naam || ""}`.trim() || "—";
+  }
+  async function render11(root, ctx) {
+    stijl("css-zitplan", ZITSTIJL);
+    leeg(root);
+    if (!ctx.klasId) {
+      root.append(
+        leegKaart("Geen actieve klas", "Kies bovenaan een klas om een zitplan te maken.")
+      );
+      return;
+    }
+    const klas = await get("klassen", ctx.klasId);
+    const leerlingen = await leerlingenVanKlas(ctx.klasId);
+    const naamVan = new Map(leerlingen.map((l) => [l.id, l]));
+    let plan = await get("zitplannen", ctx.klasId);
+    let bewaard = !!plan;
+    async function laadRegels() {
+      return byIndex("zitregels", "klasId", ctx.klasId);
+    }
+    function slotMap(regels) {
+      const m = /* @__PURE__ */ new Map();
+      for (const r of regels) {
+        if (r.leerlingId) m.set(r.leerlingId, SLOT_TEKST[r.type] || "vast");
+        if (r.type === "nietnaast" && r.leerlingId2) m.set(r.leerlingId2, SLOT_TEKST.nietnaast);
+      }
+      return m;
+    }
+    async function teken2() {
+      leeg(root);
+      const regels = await laadRegels();
+      const slots = slotMap(regels);
+      root.append(
+        el(
+          "div",
+          { class: "kaart__kop kaart__kop--los zp-kop" },
+          el(
+            "div",
+            {},
+            el("h2", {}, "Zitplan"),
+            el(
+              "p",
+              { class: "zacht" },
+              klas?.naam ? `${klas.naam} · ${leerlingen.length} leerlingen` : `${leerlingen.length} leerlingen`
+            )
+          ),
+          el(
+            "div",
+            { class: "knoprij" },
+            el("button", { class: "knop", onClick: () => randvoorwaardenDialoog() }, "⚙ Randvoorwaarden"),
+            el("button", { class: "knop", onClick: () => genereer() }, "⤨ Genereer/Schud plaatsen"),
+            el("button", { class: "knop knop--primair", onClick: () => bewaar() }, "💾 Bewaar plan")
+          )
+        )
+      );
+      const kaart2 = el("div", { class: "kaart" });
+      if (!leerlingen.length) {
+        kaart2.append(
+          el(
+            "div",
+            { class: "leeg" },
+            el("div", { class: "leeg__icoon" }, "🪑"),
+            el("h3", {}, "Nog geen leerlingen"),
+            el("p", {}, "Voeg eerst leerlingen toe aan deze klas via Klassen & leerlingen.")
+          )
+        );
+        root.append(kaart2);
+        restNota();
+        return;
+      }
+      if (!plan || !plan.plaatsen?.length) {
+        kaart2.append(
+          el(
+            "div",
+            { class: "leeg" },
+            el("div", { class: "leeg__icoon" }, "🪑"),
+            el("h3", {}, "Nog geen zitplan"),
+            el("p", {}, 'Genereer een plaatsing; randvoorwaarden ("slotjes") worden zo goed mogelijk gerespecteerd.'),
+            el("button", { class: "knop knop--primair", onClick: () => genereer() }, "⤨ Genereer plaatsen")
+          )
+        );
+        root.append(kaart2);
+        restNota();
+        return;
+      }
+      kaart2.append(
+        el(
+          "div",
+          { class: "knoprij", style: { marginBottom: "10px" } },
+          el(
+            "span",
+            { class: bewaard ? "badge" : "badge badge--stil" },
+            bewaard ? "💾 Bewaard plan" : "● Niet bewaard"
+          ),
+          regels.length ? el("span", { class: "badge badge--stil" }, `🔒 ${regels.length} randvoorwaarde${regels.length === 1 ? "" : "n"}`) : null
+        )
+      );
+      const cellen = /* @__PURE__ */ new Map();
+      for (const p of plan.plaatsen) cellen.set(`${p.rij},${p.kol}`, p.leerlingId);
+      const seats = el("div", {
+        class: "zp-seats",
+        style: { gridTemplateColumns: `repeat(${plan.kolommen}, minmax(120px, 1fr))` }
+      });
+      for (let rij = 0; rij < plan.rijen; rij++) {
+        for (let kol = 0; kol < plan.kolommen; kol++) {
+          const lid = cellen.get(`${rij},${kol}`);
+          if (!lid) {
+            seats.append(el(
+              "div",
+              { class: "zp-seat zp-seat--leeg" },
+              el("span", { class: "zp-leegtekst" }, "leeg")
+            ));
+            continue;
+          }
+          const l = naamVan.get(lid);
+          const slot = slots.get(lid);
+          seats.append(
+            el(
+              "div",
+              { class: "zp-seat" + (slot ? " zp-seat--slot" : "") },
+              el("div", { class: "zp-naam" }, l?.voornaam || "", l ? el("br") : null, l?.naam || (!l ? "(onbekend)" : "")),
+              slot ? el("div", { class: "zp-slot" }, `🔒 ${slot}`) : null
+            )
+          );
+        }
+      }
+      kaart2.append(
+        el(
+          "div",
+          { class: "zp-room" },
+          el("div", { class: "zp-board" }, "♟ Bord · leerkrachtzone"),
+          seats
+        )
+      );
+      if (plan.onopgelost?.length) {
+        kaart2.append(
+          el(
+            "div",
+            { class: "zp-onopgelost" },
+            el("span", { class: "badge badge--stil" }, "⚠ niet volledig opgelost"),
+            ...plan.onopgelost.map((t) => el("span", { class: "zacht", style: { fontSize: "0.74rem" } }, t))
+          )
+        );
+      }
+      root.append(kaart2);
+      restNota();
+    }
+    function restNota() {
+      root.append(
+        el(
+          "p",
+          { class: "zacht zp-nota" },
+          el("span", {}, "🔒"),
+          el("span", {}, "Enkel neutrale zitinfo; persoonlijke notities blijven in Administratie.")
+        )
+      );
+    }
+    async function genereer() {
+      if (!leerlingen.length) {
+        toast("Geen leerlingen om te plaatsen", "fout");
+        return;
+      }
+      const regels = await laadRegels();
+      const res = genereerZitplan(leerlingen, regels, { kolommen: KOLOMMEN });
+      plan = {
+        klasId: ctx.klasId,
+        naam: "Zitplan",
+        plaatsen: res.plaatsen,
+        rijen: res.rijen,
+        kolommen: res.kolommen,
+        onopgelost: res.onopgelost,
+        aangemaakt: (/* @__PURE__ */ new Date()).toISOString()
+      };
+      bewaard = false;
+      toast("Plaatsing gegenereerd");
+      await teken2();
+    }
+    async function bewaar() {
+      if (!plan || !plan.plaatsen?.length) {
+        toast("Genereer eerst een plaatsing", "fout");
+        return;
+      }
+      await put("zitplannen", {
+        klasId: ctx.klasId,
+        naam: plan.naam || "Zitplan",
+        plaatsen: plan.plaatsen,
+        rijen: plan.rijen,
+        kolommen: plan.kolommen,
+        onopgelost: plan.onopgelost || [],
+        aangemaakt: (/* @__PURE__ */ new Date()).toISOString()
+      });
+      bewaard = true;
+      toast("Zitplan bewaard");
+      await teken2();
+    }
+    function randvoorwaardenDialoog() {
+      dialoog("Randvoorwaarden", (body) => {
+        async function vul() {
+          leeg(body);
+          const regels = await laadRegels();
+          body.append(el(
+            "p",
+            { class: "zacht" },
+            "Slotjes sturen de plaatsing. Ze worden zo goed mogelijk gerespecteerd bij het genereren."
+          ));
+          if (!regels.length) {
+            body.append(el("p", { class: "zacht" }, "Nog geen randvoorwaarden."));
+          } else {
+            const lijst = el("ul", { class: "zp-regellijst" });
+            for (const r of regels) {
+              lijst.append(
+                el(
+                  "li",
+                  { class: "zp-regel" },
+                  el(
+                    "span",
+                    { class: "zp-regel__tekst" },
+                    el("span", { class: "zp-regel__type" }, ZITREGEL_TYPE[r.type] || r.type),
+                    " — ",
+                    regelBetrokkenen(r)
+                  ),
+                  el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
+                    await remove("zitregels", r.id);
+                    toast("Randvoorwaarde verwijderd");
+                    await vul();
+                    await teken2();
+                  } }, "✕")
+                )
+              );
+            }
+            body.append(lijst);
+          }
+          body.append(
+            el(
+              "div",
+              { class: "dialoog__acties" },
+              el("button", { class: "knop knop--primair", onClick: () => regelToevoegenDialoog(vul) }, "+ Regel")
+            )
+          );
+        }
+        vul();
+      });
+    }
+    function regelBetrokkenen(r) {
+      if (r.type === "nietnaast") {
+        return `${volledigeNaam(naamVan.get(r.leerlingId))} & ${volledigeNaam(naamVan.get(r.leerlingId2))}`;
+      }
+      if (r.type === "vasteplaats") {
+        const pos = r.rij != null && r.kol != null ? ` (rij ${r.rij + 1}, kol ${r.kol + 1})` : "";
+        return volledigeNaam(naamVan.get(r.leerlingId)) + pos;
+      }
+      return volledigeNaam(naamVan.get(r.leerlingId));
+    }
+    function leerlingOpties() {
+      const o = {};
+      for (const l of leerlingen) o[l.id] = volledigeNaam(l);
+      return o;
+    }
+    function regelToevoegenDialoog(naVul) {
+      dialoog("Randvoorwaarde toevoegen", (body, sluit) => {
+        const typeKeuze = keuze("Type", ZITREGEL_TYPE, "vastvooraan");
+        const extra = el("div", {});
+        body.append(typeKeuze.wrap, extra);
+        let velden = {};
+        function tekenExtra() {
+          leeg(extra);
+          velden = {};
+          const t = typeKeuze.select.value;
+          const opties = leerlingOpties();
+          if (t === "nietnaast") {
+            velden.a = keuze("Leerling", opties, leerlingen[0]?.id);
+            velden.b = keuze("Niet naast", opties, leerlingen[1]?.id || leerlingen[0]?.id);
+            extra.append(velden.a.wrap, velden.b.wrap);
+          } else if (t === "vasteplaats") {
+            velden.a = keuze("Leerling", opties, leerlingen[0]?.id);
+            velden.rij = veld("Rij (1 = vooraan)", { type: "number", value: "1" });
+            velden.kol = veld("Kolom", { type: "number", value: "1" });
+            extra.append(velden.a.wrap, velden.rij.wrap, velden.kol.wrap);
+          } else {
+            velden.a = keuze("Leerling", opties, leerlingen[0]?.id);
+            extra.append(velden.a.wrap);
+          }
+        }
+        typeKeuze.select.addEventListener("change", tekenExtra);
+        tekenExtra();
+        body.append(
+          el(
+            "div",
+            { class: "dialoog__acties" },
+            el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+            el("button", { class: "knop knop--primair", onClick: async () => {
+              const t = typeKeuze.select.value;
+              const g = { klasId: ctx.klasId, type: t };
+              if (t === "nietnaast") {
+                const a = velden.a.select.value;
+                const b = velden.b.select.value;
+                if (!a || !b || a === b) {
+                  toast("Kies twee verschillende leerlingen", "fout");
+                  return;
+                }
+                g.leerlingId = a;
+                g.leerlingId2 = b;
+              } else if (t === "vasteplaats") {
+                const a = velden.a.select.value;
+                if (!a) {
+                  toast("Kies een leerling", "fout");
+                  return;
+                }
+                const rij = Math.max(1, parseInt(velden.rij.input.value, 10) || 1) - 1;
+                const kol = Math.max(1, parseInt(velden.kol.input.value, 10) || 1) - 1;
+                g.leerlingId = a;
+                g.rij = rij;
+                g.kol = kol;
+              } else {
+                const a = velden.a.select.value;
+                if (!a) {
+                  toast("Kies een leerling", "fout");
+                  return;
+                }
+                g.leerlingId = a;
+              }
+              await put("zitregels", maakZitregel(g));
+              sluit();
+              toast("Randvoorwaarde toegevoegd");
+              await naVul();
+              await teken2();
+            } }, "Toevoegen")
+          )
+        );
+      });
+    }
+    await teken2();
+  }
+
+  // src/views/afspraken.js
   var afspraken_exports = {};
   __export(afspraken_exports, {
     projecteer: () => projecteer,
-    render: () => render6
+    render: () => render12
   });
   async function laadAfspraken() {
     const opgeslagen = await getSetting("afspraken", null);
     return Array.isArray(opgeslagen) && opgeslagen.length ? opgeslagen : [...DEFAULT_AFSPRAKEN];
   }
-  async function render6(root, ctx) {
+  async function render12(root, ctx) {
     const afspraken = await laadAfspraken();
     root.append(
       el(
@@ -2033,7 +4258,7 @@ textarea.invoer { resize: vertical; }
           el("button", { class: "knop knop--stil", onClick: async () => {
             await setSetting("afspraken", [...DEFAULT_AFSPRAKEN]);
             toast("Teruggezet op de standaardafspraken");
-            render6(leeg(root), ctx);
+            render12(leeg(root), ctx);
           } }, "↺ Standaard"),
           el("span", { class: "spatie" }),
           el("button", { class: "knop knop--primair", onClick: async () => {
@@ -2099,12 +4324,12 @@ textarea.invoer { resize: vertical; }
     document.body.append(overlay);
   }
 
-  // app/src/views/beloningen.js
+  // src/views/beloningen.js
   var beloningen_exports = {};
   __export(beloningen_exports, {
-    render: () => render7
+    render: () => render13
   });
-  async function render7(root, ctx) {
+  async function render13(root, ctx) {
     const klas = ctx.klasId ? await get("klassen", ctx.klasId) : null;
     root.append(
       el(
@@ -2117,9 +4342,9 @@ textarea.invoer { resize: vertical; }
           el("button", { class: "knop", onClick: async () => {
             const n = await zaaiStartMenu();
             toast(n ? `${n} sjablonen toegevoegd` : "Startmenu bestaat al");
-            render7(leeg(root), ctx);
+            render13(leeg(root), ctx);
           } }, "✨ Startmenu"),
-          el("button", { class: "knop knop--primair", onClick: () => bewerkDialoog(root, ctx, null) }, "+ Beloning")
+          el("button", { class: "knop knop--primair", onClick: () => bewerkDialoog2(root, ctx, null) }, "+ Beloning")
         )
       ),
       el("p", { class: "zacht" }, klas ? `Menu voor ${klas.naam} — klas-eigen beloningen én gedeelde sjablonen.` : "Kies een actieve klas om klas-eigen beloningen te zien. Sjablonen (voor alle klassen) verschijnen altijd.")
@@ -2154,12 +4379,12 @@ textarea.invoer { resize: vertical; }
               el("span", { class: "badge" }, b.klasId === "*" ? "sjabloon" : "deze klas"),
               el("span", { class: "badge badge--stil" }, BELONING_NIVEAU[b.niveau] || b.niveau),
               el("span", { class: "spatie" }),
-              el("button", { class: "icoonknop", title: "Bewerken", onClick: () => bewerkDialoog(root, ctx, b) }, "✏️"),
+              el("button", { class: "icoonknop", title: "Bewerken", onClick: () => bewerkDialoog2(root, ctx, b) }, "✏️"),
               el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
                 if (await bevestig(`"${b.naam}" verwijderen?`, { gevaar: true, jaLabel: "Verwijderen" })) {
                   await remove("beloningen", b.id);
                   toast("Verwijderd");
-                  render7(leeg(root), ctx);
+                  render13(leeg(root), ctx);
                 }
               } }, "🗑")
             )
@@ -2169,15 +4394,15 @@ textarea.invoer { resize: vertical; }
       root.append(el("div", { class: "kaart" }, el("h3", { class: "sectiekop" }, label), grid));
     }
   }
-  function bewerkDialoog(root, ctx, bestaand) {
+  function bewerkDialoog2(root, ctx, bestaand) {
     dialoog(bestaand ? "Beloning bewerken" : "Nieuwe beloning", (body, sluit) => {
-      const naam = veld4("Naam", bestaand?.naam || "");
-      const prijs = veld4("Prijs (€)", bestaand?.prijs ?? 25, "number");
-      const categorie = keuze("Categorie", BELONING_CATEGORIE, bestaand?.categorie || "voorrecht");
-      const niveau = keuze("Niveau", BELONING_NIVEAU, bestaand?.niveau || "midden");
-      const talen = veld4("Talen-toepassing (optioneel)", bestaand?.talen || "");
+      const naam = veld5("Naam", bestaand?.naam || "");
+      const prijs = veld5("Prijs (€)", bestaand?.prijs ?? 25, "number");
+      const categorie = keuze2("Categorie", BELONING_CATEGORIE, bestaand?.categorie || "voorrecht");
+      const niveau = keuze2("Niveau", BELONING_NIVEAU, bestaand?.niveau || "midden");
+      const talen = veld5("Talen-toepassing (optioneel)", bestaand?.talen || "");
       const oms = veldArea("Omschrijving (optioneel)", bestaand?.omschrijving || "");
-      const scope = keuze(
+      const scope = keuze2(
         "Geldt voor",
         { klas: "Deze klas", sjabloon: "Alle klassen (sjabloon)" },
         bestaand ? bestaand.klasId === "*" ? "sjabloon" : "klas" : ctx.klasId ? "klas" : "sjabloon"
@@ -2224,34 +4449,34 @@ textarea.invoer { resize: vertical; }
             }
             sluit();
             toast("Opgeslagen");
-            render7(leeg(root), ctx);
+            render13(leeg(root), ctx);
           } }, "Opslaan")
         )
       );
     });
   }
-  function veld4(label, waarde = "", type = "text") {
+  function veld5(label, waarde = "", type = "text") {
     const input = el("input", { class: "invoer", type, value: waarde });
-    return { input, wrap: etiket4(label, input) };
+    return { input, wrap: etiket5(label, input) };
   }
   function veldArea(label, waarde = "") {
     const input = el("textarea", { class: "invoer", rows: 2 }, waarde);
-    return { input, wrap: etiket4(label, input) };
+    return { input, wrap: etiket5(label, input) };
   }
-  function keuze(label, opties, gekozen) {
+  function keuze2(label, opties, gekozen) {
     const select = el("select", { class: "invoer" }, ...Object.entries(opties).map(([v, l]) => el("option", { value: v, selected: v === gekozen }, l)));
-    return { select, wrap: etiket4(label, select) };
+    return { select, wrap: etiket5(label, select) };
   }
-  function etiket4(label, control) {
+  function etiket5(label, control) {
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // app/src/views/instellingen.js
+  // src/views/instellingen.js
   var instellingen_exports = {};
   __export(instellingen_exports, {
-    render: () => render8
+    render: () => render14
   });
-  async function render8(root, ctx) {
+  async function render14(root, ctx) {
     root.append(el("h2", { class: "sectiekop" }, "Instellingen & backup"));
     if (ctx.klasId) {
       const klas = await get("klassen", ctx.klasId);
@@ -2271,7 +4496,7 @@ textarea.invoer { resize: vertical; }
         "div",
         { class: "kaart" },
         el("div", { class: "kaart__kop" }, el("h3", {}, `Klaspot — ${klas.naam}`), el("span", { class: "badge badge--stil" }, "per klas")),
-        el("div", { class: "raster2" }, ...Object.values(velden).map((v) => v.wrap), etiket5("Decibel-modus", decibelModus)),
+        el("div", { class: "raster2" }, ...Object.values(velden).map((v) => v.wrap), etiket6("Decibel-modus", decibelModus)),
         el("div", { class: "schakels" }, optieC.wrap, collectiefGevolg.wrap),
         el("p", { class: "zacht" }, "De tool meet, telt en seint — elk gevolg voor leerlingen blijft door jou getriggerd (ADR-0001 §2.4)."),
         el(
@@ -2293,6 +4518,49 @@ textarea.invoer { resize: vertical; }
           } }, "💾 Opslaan")
         )
       ));
+      const voorwaarden = await byIndex("optiecvoorwaarden", "klasId", ctx.klasId);
+      const lijst = el("div", { class: "voorwaarden" });
+      if (!voorwaarden.length) lijst.append(el("p", { class: "zacht" }, "Nog geen voorwaarden. Zonder voorwaarden blijft optie C in de praktijk uit."));
+      for (const v of voorwaarden) {
+        lijst.append(el(
+          "div",
+          { class: "voorwaarde" + (v.actief ? "" : " voorwaarde--uit") },
+          el(
+            "label",
+            { class: "schakel" },
+            el("input", { type: "checkbox", checked: v.actief, onChange: async (e) => {
+              v.actief = e.target.checked;
+              await put("optiecvoorwaarden", v);
+            } }),
+            el("span", {}, v.tekst)
+          ),
+          el("button", { class: "icoonknop", title: "Verwijderen", onClick: async () => {
+            await remove("optiecvoorwaarden", v.id);
+            render14(leeg(root), ctx);
+          } }, "✕")
+        ));
+      }
+      const nieuw = veld("Nieuwe voorwaarde", { placeholder: 'bv. "Herhaald wangedrag na twee waarschuwingen, tijdens groepswerk"' });
+      root.append(el(
+        "div",
+        { class: "kaart" },
+        el("div", { class: "kaart__kop" }, el("h3", {}, "Optie C — voorwaarden"), el("span", { class: "badge " + (c.optieC ? "" : "badge--stil") }, c.optieC ? "actief" : "uit")),
+        el("p", { class: "zacht" }, "Individueel gedrag mag de klaspot enkel doen dalen als optie C hierboven aanstaat én onder deze expliciet, vooraf gedefinieerde voorwaarden (OD-2). Zo blijft het voorspelbaar en eerlijk; jij triggert elke daling zelf."),
+        lijst,
+        el(
+          "div",
+          { class: "knoprij" },
+          nieuw.wrap,
+          el("button", { class: "knop", onClick: async () => {
+            if (!nieuw.input.value.trim()) {
+              toast("Geef een voorwaarde", "fout");
+              return;
+            }
+            await put("optiecvoorwaarden", maakOptieCVoorwaarde({ klasId: ctx.klasId, tekst: nieuw.input.value.trim() }));
+            render14(leeg(root), ctx);
+          } }, "+ Toevoegen")
+        )
+      ));
     } else {
       root.append(el("div", { class: "kaart" }, el("p", { class: "zacht" }, "Kies een actieve klas om de klaspot te configureren.")));
     }
@@ -2307,7 +4575,7 @@ textarea.invoer { resize: vertical; }
         { class: "knoprij" },
         el("button", { class: "knop knop--primair", onClick: () => downloadBackup() }, "⬇️ Backup downloaden")
       ),
-      etiket5("Backup-bestand herstellen", bestand),
+      etiket6("Backup-bestand herstellen", bestand),
       el(
         "div",
         { class: "knoprij" },
@@ -2315,6 +4583,68 @@ textarea.invoer { resize: vertical; }
         el("button", { class: "knop knop--gevaar-zacht", onClick: () => herstel(bestand, "vervang", ctx) }, "♻️ Vervangen")
       )
     ));
+    const lock = await lockStatus();
+    const slotKaart = el("div", { class: "kaart" });
+    slotKaart.append(el("h3", {}, "🔒 Beveiliging"));
+    if (lock.enabled) {
+      slotKaart.append(
+        el("p", { class: "zacht" }, "App-lock staat aan: bij het openen vraagt Klaskompas een pincode."),
+        el(
+          "div",
+          { class: "knoprij" },
+          el("button", { class: "knop", onClick: () => pinDialoog(root, ctx, "wijzig") }, "Pincode wijzigen"),
+          el("button", { class: "knop knop--gevaar-zacht", onClick: () => pinDialoog(root, ctx, "uit") }, "App-lock uitschakelen")
+        )
+      );
+    } else {
+      slotKaart.append(
+        el("p", { class: "zacht" }, "Zet een pincode op deze app-installatie. Nuttig op een gedeeld toestel. De pincode wordt nooit bewaard — enkel een hash."),
+        el("div", { class: "knoprij" }, el("button", { class: "knop knop--primair", onClick: () => pinDialoog(root, ctx, "aan") }, "App-lock inschakelen"))
+      );
+    }
+    const encWachtwoord = veld("Wachtwoord", { type: "password", placeholder: "min. 6 tekens" });
+    const encBestand = el("input", { type: "file", accept: ".json,application/json", class: "invoer" });
+    slotKaart.append(
+      el("hr", { class: "scheiding" }),
+      el("h4", {}, "Versleutelde backup"),
+      el("p", { class: "zacht" }, "Een backup die je veilig buiten dit toestel kunt bewaren (AES-256). Bewaar het wachtwoord goed — zonder wachtwoord is herstel onmogelijk."),
+      encWachtwoord.wrap,
+      el(
+        "div",
+        { class: "knoprij" },
+        el("button", { class: "knop knop--primair", onClick: async () => {
+          try {
+            await downloadVersleuteldeBackup(encWachtwoord.input.value);
+            toast("Versleutelde backup gedownload");
+          } catch (e) {
+            toast(e.message, "fout");
+          }
+        } }, "⬇️ Versleuteld downloaden")
+      ),
+      etiket6("Versleutelde backup herstellen", encBestand),
+      el(
+        "div",
+        { class: "knoprij" },
+        el("button", { class: "knop", onClick: async () => {
+          const f = encBestand.files?.[0];
+          if (!f) {
+            toast("Kies eerst een bestand", "fout");
+            return;
+          }
+          try {
+            const obj = JSON.parse(await f.text());
+            const backup = await ontsleutelBackup(obj, encWachtwoord.input.value);
+            const r = await importeerBackup(backup, "merge");
+            toast(`Hersteld: ${r.records} records`);
+            await ctx.herlaadKlassen();
+            ctx.navigate("dashboard");
+          } catch (e) {
+            toast(e.message, "fout");
+          }
+        } }, "🔓 Ontsleutelen & samenvoegen")
+      )
+    );
+    root.append(slotKaart);
     const tellingen = await telAlles();
     root.append(el(
       "div",
@@ -2352,9 +4682,54 @@ textarea.invoer { resize: vertical; }
       toast("Herstel mislukt: " + e.message, "fout");
     }
   }
+  function pinDialoog(root, ctx, modus) {
+    const titel = modus === "uit" ? "App-lock uitschakelen" : modus === "wijzig" ? "Pincode wijzigen" : "App-lock inschakelen";
+    dialoog(titel, (body, sluit) => {
+      if (modus === "uit") {
+        const pin = veld("Huidige pincode", { type: "password" });
+        body.append(pin.wrap, el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--gevaar", onClick: async () => {
+            try {
+              await zetLockAf(pin.input.value);
+              sluit();
+              toast("App-lock uitgeschakeld");
+              render14(leeg(root), ctx);
+            } catch (e) {
+              toast(e.message, "fout");
+            }
+          } }, "Uitschakelen")
+        ));
+      } else {
+        const pin = veld("Nieuwe pincode (min. 4)", { type: "password" });
+        const herhaal = veld("Herhaal pincode", { type: "password" });
+        body.append(pin.wrap, herhaal.wrap, el(
+          "div",
+          { class: "dialoog__acties" },
+          el("button", { class: "knop", onClick: sluit }, "Annuleren"),
+          el("button", { class: "knop knop--primair", onClick: async () => {
+            if (pin.input.value !== herhaal.input.value) {
+              toast("De pincodes verschillen", "fout");
+              return;
+            }
+            try {
+              await stelPinIn(pin.input.value);
+              sluit();
+              toast("Pincode ingesteld");
+              render14(leeg(root), ctx);
+            } catch (e) {
+              toast(e.message, "fout");
+            }
+          } }, "Opslaan")
+        ));
+      }
+    });
+  }
   function getal(label, waarde) {
     const input = el("input", { class: "invoer", type: "number", step: "any", value: waarde });
-    return { input, wrap: etiket5(label, input) };
+    return { input, wrap: etiket6(label, input) };
   }
   function getalW(v) {
     return Number(v.input.value) || 0;
@@ -2363,15 +4738,15 @@ textarea.invoer { resize: vertical; }
     const input = el("input", { type: "checkbox", checked: !!aan });
     return { input, wrap: el("label", { class: "schakel" }, input, el("span", {}, label)) };
   }
-  function etiket5(label, control) {
+  function etiket6(label, control) {
     return el("label", { class: "veld" }, el("span", {}, label), control);
   }
 
-  // app/src/views/klasscherm.js
+  // src/views/klasscherm.js
   var klasscherm_exports = {};
   __export(klasscherm_exports, {
     cleanup: () => cleanup,
-    render: () => render9
+    render: () => render15
   });
   var actief = { stream: null, ctx: null, raf: 0, tick: 0 };
   function stopAlles() {
@@ -2385,7 +4760,7 @@ textarea.invoer { resize: vertical; }
   function cleanup() {
     stopAlles();
   }
-  async function render9(root, ctx) {
+  async function render15(root, ctx) {
     stopAlles();
     if (!ctx.klasId) {
       root.append(el(
@@ -2400,142 +4775,180 @@ textarea.invoer { resize: vertical; }
     const klas = await get("klassen", ctx.klasId);
     const status = await potStatus(ctx.klasId);
     const config = status.config;
-    const podium = el("div", { class: "podium" });
-    root.append(podium);
-    podium.append(
+    const bord = el("div", { class: "klasbord" });
+    root.append(bord);
+    bord.append(el(
+      "header",
+      { class: "kb-top" },
       el(
         "div",
-        { class: "podium__kop" },
-        el("div", { class: "podium__klas" }, klas?.naam || "Klas"),
-        el(
-          "div",
-          { class: "podium__acties" },
-          el("button", { class: "knop knop--stil", onClick: () => projecteer() }, "🤝 Afspraken"),
-          el("a", { class: "knop knop--stil", href: "#/dashboard" }, "‹ Administratie")
-        )
-      )
-    );
-    const reminder = await getSetting("reminder:" + ctx.klasId, "Lesklaar · boek + taak van vorige dag · aan het werk");
-    const strip = el("div", { class: "reminder", title: "Klik om aan te passen", onClick: async () => {
-      const nieuw = prompt("Reminder / dagfocus:", reminder);
-      if (nieuw != null) {
-        await setSetting("reminder:" + ctx.klasId, nieuw);
-        strip.querySelector("span").textContent = nieuw;
-      }
-    } }, el("strong", {}, "📌 "), el("span", {}, reminder));
-    podium.append(strip);
-    const rooster = el("div", { class: "podium__rooster" });
-    podium.append(rooster);
-    const kokerWrap = el("div", { class: "koker-kolom" });
-    rooster.append(kokerWrap);
-    const saldoEl = el("div", { class: "koker__saldo" }, euro(status.saldo));
-    const koker = el("div", { class: "koker" });
-    const vulling = el("div", { class: "koker__vulling" });
-    const briefjes = el("div", { class: "koker__briefjes" });
-    vulling.append(briefjes);
-    const doelLijn = el("div", { class: "koker__doel", title: "Prijsdrempel" }, el("span", {}, `🎯 ${euro(config.prijsdrempel)}`));
-    koker.append(vulling, doelLijn);
-    kokerWrap.append(saldoEl, koker, el(
-      "div",
-      { class: "koker__onder" },
-      el("span", { class: "zacht" }, `Start ${euro(config.startkapitaal)} · bodem ${euro(config.bodem)}`)
-    ));
-    const bannerEl = el("div", { class: "podium__banner" });
-    kokerWrap.append(bannerEl);
-    function tekenKoker(s) {
-      saldoEl.textContent = euro(s.saldo);
-      const doel = Math.max(s.config.prijsdrempel || 1, 1);
-      const pct = Math.max(0, Math.min(100, s.saldo / doel * 100));
-      vulling.style.height = pct + "%";
-      const stapEuro = Math.max(1, Math.round(doel / 12));
-      const n = Math.min(24, Math.floor(s.saldo / stapEuro));
-      leeg(briefjes);
-      for (let i = 0; i < n; i++) briefjes.append(el("div", { class: "briefje" }, "€"));
-      koker.classList.toggle("koker--vol", s.saldo >= (s.config.prijsdrempel || Infinity));
-      tekenBanner(s);
-    }
-    function tekenBanner(s) {
-      leeg(bannerEl);
-      if (s.saldo >= (s.config.prijsdrempel || Infinity)) {
-        bannerEl.className = "podium__banner podium__banner--feest";
-        bannerEl.append(
-          el("span", {}, "🎉 Prijsdrempel bereikt!"),
-          el("button", { class: "knop knop--primair", onClick: () => openMenu(ctx, herteken) }, "Beloning kiezen")
-        );
-      } else if (s.saldo <= (s.config.herstartdrempel ?? -Infinity)) {
-        bannerEl.className = "podium__banner podium__banner--waarschuwing";
-        bannerEl.append(el("span", {}, "⚠️ Herstart-zone — samen terugverdienen"));
-        if (s.config.collectiefGevolg) {
-          bannerEl.append(el("button", { class: "knop knop--stil", onClick: () => herstartUitleg() }, "Wat betekent dit?"));
-        }
-      } else {
-        bannerEl.className = "podium__banner";
-      }
-    }
-    async function herteken() {
-      const s = await potStatus(ctx.klasId);
-      tekenKoker(s);
-    }
-    const paneel = el("div", { class: "podium__paneel" });
-    rooster.append(paneel);
-    const stap2 = config.stapbedrag ?? 1;
-    paneel.append(
-      el(
-        "div",
-        { class: "knoppen-groot" },
-        el("button", { class: "grootknop grootknop--plus", onClick: () => beweeg2(1) }, el("span", {}, `+ ${euro(stap2)}`), el("small", {}, "verdienen")),
-        el("button", { class: "grootknop grootknop--min", onClick: () => beweeg2(-1) }, el("span", {}, `− ${euro(stap2)}`), el("small", {}, "collectief"))
+        { class: "kb-brand" },
+        el("div", { class: "kb-crest" }, "🧭"),
+        el("div", {}, el("h1", { class: "kb-title" }, klas?.naam || "Klas", klas?.niveau ? el("span", { class: "kb-grade" }, klas.niveau) : null))
       ),
       el(
         "div",
-        { class: "knoprij knoprij--centraal" },
-        el("button", { class: "knop", onClick: () => beweeg2(5) }, `+ ${euro(stap2 * 5)}`),
-        el("button", { class: "knop", onClick: () => beweeg2(-5) }, `− ${euro(stap2 * 5)}`),
-        el("button", { class: "knop", onClick: () => openMenu(ctx, herteken) }, "🎁 Menu"),
-        el("button", { class: "knop knop--stil", onClick: async () => {
-          if (await bevestig("Pot terugzetten op het startkapitaal? (bv. na een prijs of nieuwe periode)")) {
-            const s = await reset(ctx.klasId);
-            tekenKoker(s);
-            toast("Nieuwe cyclus gestart");
-          }
-        } }, "↺ Reset"),
-        el("button", { class: "knop knop--stil", onClick: () => toonLog(ctx.klasId) }, "📜 Log")
-      )
-    );
-    async function beweeg2(richting) {
-      const s = richting > 0 ? await verdien(ctx.klasId, Math.abs(richting), richting > 1 || richting < -1 ? "Meerdere stappen" : "Collectief gedrag") : await verlies(ctx.klasId, Math.abs(richting), "Collectief negatief gedrag");
-      tekenKoker(s);
-    }
-    paneel.append(bouwDecibel(ctx.klasId, config, beweeg2, herteken));
-    paneel.append(await bouwDrill(ctx.klasId));
-    tekenKoker(status);
-  }
-  function bouwDecibel(klasId, config, beweegFn, herteken) {
-    const wrap2 = el("div", { class: "decibel" });
-    const titel = el(
+        { class: "kb-modes" },
+        el("span", { class: "kb-mode active" }, "▣ Lesmodus"),
+        el("a", { class: "kb-mode", href: "#/dashboard" }, "⚙ Administratie")
+      ),
+      el("div", { class: "kb-privacy" }, "🔒 privacy: lokaal")
+    ));
+    const reminder = await getSetting("reminder:" + ctx.klasId, "Neem je boek en de taak uit je planner. Start daarna stil aan de opdracht.");
+    const focusText = el("div", { class: "kb-focus-text", title: "Klik om aan te passen" }, reminder);
+    focusText.addEventListener("click", async () => {
+      const n = prompt("Dagfocus / reminder:", focusText.textContent);
+      if (n != null) {
+        await setSetting("reminder:" + ctx.klasId, n);
+        focusText.textContent = n;
+      }
+    });
+    const drillTeller = el("strong", {});
+    const dots = el("div", { class: "kb-dots" }, ...DRILL_STAPPEN.map(() => el("span", {})));
+    bord.append(el(
+      "section",
+      { class: "kb-focus" },
+      el("div", { class: "kb-focus-icon" }, "◎"),
+      focusText,
+      el("div", { class: "kb-progress" }, drillTeller, dots)
+    ));
+    const grid = el("div", { class: "kb-grid" });
+    bord.append(grid);
+    const amount = el("div", { class: "kb-amount" }, euro(status.saldo));
+    const notes = el("div", { class: "kb-notes" });
+    const drempelLabel = el("div", { class: "kb-threshold-label" }, `${euro(config.prijsdrempel)}`, el("br"), "KLASPRIJS");
+    const tube = el(
       "div",
-      { class: "decibel__kop" },
-      el("span", {}, "🎙️ Geluidsmeter"),
-      el("span", { class: "zacht" }, config.decibelModus === "objectief" ? "objectief" : config.decibelModus === "bevestigen" ? "bevestigen" : "uit")
+      { class: "kb-tube" },
+      notes,
+      el("div", { class: "kb-threshold", style: { top: "7%" } }, el("div", { class: "kb-threshold-line" }), drempelLabel),
+      el("div", { class: "kb-bottom" }, `Bodem ${euro(config.bodem)}`)
     );
-    const balk = el("div", { class: "decibel__balk" });
-    const vul = el("div", { class: "decibel__vul" });
-    const drempelLijn = el("div", { class: "decibel__drempel" });
-    drempelLijn.style.left = (config.decibelDrempel ?? 55) + "%";
-    balk.append(vul, drempelLijn);
-    const knop = el("button", { class: "knop knop--primair", onClick: () => toggle() }, "▶ Meten aan");
-    const uitleg = el("p", { class: "zacht decibel__uitleg" }, "Meet enkel live volume. Neemt niets op en herkent niemand.");
-    wrap2.append(titel, balk, knop, uitleg);
-    let aan = false;
-    let boven = 0;
+    const capFooter = el("div", { class: "kb-cap-footer" });
+    const capital = el(
+      "article",
+      { class: "kb-card kb-capital" },
+      el("div", { class: "kb-card-h" }, el("div", {}, el("h2", { class: "kb-card-t" }, "Klaskapitaal"), el("p", { class: "kb-card-s" }, "Samen groeien we."))),
+      el("div", {}, el("div", { class: "kb-amount-label" }, "Huidig bedrag"), amount),
+      el("div", { class: "kb-tube-zone" }, tube),
+      el(
+        "div",
+        { class: "kb-controls" },
+        el("button", { class: "kb-big plus", onClick: () => beweeg2(1) }, el("span", {}, `+ ${euro(config.stapbedrag)}`), el("small", {}, "verdienen")),
+        el("button", { class: "kb-big min", onClick: () => beweeg2(-1) }, el("span", {}, `− ${euro(config.stapbedrag)}`), el("small", {}, "collectief"))
+      ),
+      el(
+        "div",
+        { class: "kb-minirij" },
+        el("button", { class: "kb-mini", onClick: () => beweeg2(5) }, `+${euro(config.stapbedrag * 5)}`),
+        el("button", { class: "kb-mini", onClick: () => beweeg2(-5) }, `−${euro(config.stapbedrag * 5)}`),
+        el("button", { class: "kb-mini", onClick: () => openMenu() }, "🎁 Menu"),
+        el("button", { class: "kb-mini", onClick: () => projecteer() }, "🤝 Afspraken"),
+        el("button", { class: "kb-mini", onClick: async () => {
+          if (await bevestig("Pot terugzetten op het startkapitaal?")) {
+            await reset(ctx.klasId);
+            herteken();
+            toast("Nieuwe cyclus");
+          }
+        } }, "↺"),
+        el("button", { class: "kb-mini", onClick: () => toonLog(ctx.klasId) }, "📜")
+      ),
+      capFooter
+    );
+    grid.append(capital);
+    function tekenKapitaal(s) {
+      amount.textContent = euro(s.saldo);
+      const doel = Math.max(s.config.prijsdrempel || 1, 1);
+      const fractie = Math.max(0, Math.min(1, s.saldo / doel));
+      const maxNotes = 7;
+      const aantal = Math.round(fractie * maxNotes);
+      leeg(notes);
+      for (let i = 0; i < aantal; i++) {
+        const denom = i % 3 === 2 ? 20 : 50;
+        const note = el("div", { class: `kb-note kb-note-${denom}`, style: { bottom: `${i / maxNotes * 90}%`, transform: `translateX(-50%) rotate(${i % 2 ? 1.5 : -1.6}deg)` } }, el("span", { class: "val" }, String(denom)));
+        notes.append(note);
+      }
+      leeg(capFooter);
+      if (s.saldo >= (s.config.prijsdrempel || Infinity)) {
+        capFooter.className = "kb-cap-footer feest";
+        capFooter.append(el("span", {}, "🎉 Prijsdrempel bereikt!"), el("button", { class: "kb-mini", onClick: () => openMenu() }, "Beloning kiezen"));
+      } else {
+        capFooter.className = "kb-cap-footer";
+        const nog = Math.max(0, Math.round((s.config.prijsdrempel - s.saldo) * 100) / 100);
+        capFooter.append(el("span", {}, "Nog nodig voor de klasprijs"), el("strong", {}, euro(nog)));
+      }
+    }
+    async function beweeg2(n) {
+      const s = n > 0 ? await verdien(ctx.klasId, Math.abs(n), Math.abs(n) > 1 ? "Meerdere stappen" : "Collectief gedrag") : await verlies(ctx.klasId, Math.abs(n), "Collectief negatief gedrag");
+      tekenKapitaal(s);
+    }
+    async function herteken() {
+      tekenKapitaal(await potStatus(ctx.klasId));
+    }
+    async function openMenu() {
+      dialoog("Beloningsmenu", async (body, sluit) => {
+        const s = await potStatus(ctx.klasId);
+        const items = await menuVoorKlas(ctx.klasId);
+        body.append(el("div", { class: "menu-saldo" }, "Saldo: ", el("strong", {}, euro(s.saldo))));
+        if (!items.length) body.append(el("p", { class: "zacht" }, "Nog geen beloningen. Voeg ze toe onder “Beloningen”."));
+        const rooster = el("div", { class: "menu-grid" });
+        for (const b of items) {
+          const kanNiet = s.saldo < b.prijs;
+          rooster.append(el(
+            "div",
+            { class: "menu-item menu-item--" + b.niveau },
+            el("div", { class: "menu-item__kop" }, el("span", { class: "menu-item__naam" }, b.naam), el("span", { class: "menu-item__prijs" }, euro(b.prijs))),
+            b.omschrijving ? el("p", { class: "menu-item__oms" }, b.omschrijving) : null,
+            b.talen ? el("p", { class: "menu-item__talen" }, "🗣 " + b.talen) : null,
+            el("button", { class: "knop " + (kanNiet ? "knop--stil" : "knop--primair"), disabled: kanNiet, onClick: async () => {
+              const r = await wisselIn(ctx.klasId, b.id);
+              if (r.ok) {
+                toast("Ingewisseld! Saldo " + euro(r.saldo));
+                sluit();
+                herteken();
+              } else toast(r.reden, "fout");
+            } }, kanNiet ? "Nog sparen" : "Inwisselen")
+          ));
+        }
+        body.append(rooster, el("div", { class: "dialoog__acties" }, el("button", { class: "knop", onClick: sluit }, "Sluiten")));
+      });
+    }
+    const midden = el("div", { class: "kb-middle" });
+    grid.append(midden);
+    midden.append(bouwGeluid(ctx.klasId, config), await bouwDrill(ctx.klasId, drillTeller, dots));
+    grid.append(await bouwZitplan(ctx.klasId));
+    tekenKapitaal(status);
+  }
+  function bouwGeluid(klasId, config) {
     const drempel = config.decibelDrempel ?? 55;
+    const mask = el("div", { class: "kb-meter-mask", style: { height: "100%" } });
+    const current = el("div", { class: "kb-current", style: { bottom: "0%" } }, "—");
+    const tooloud = el("div", { class: "kb-tooloud", style: { bottom: drempel + "%" } }, el("span", {}, `TE LUID · ${drempel}`));
+    const meter = el("div", { class: "kb-meter" }, mask, tooloud, current);
+    const status = el("div", { class: "kb-status" }, "▥ METER UIT");
+    const knop = el("button", { class: "knop knop--primair kb-sound-btn", onClick: () => toggle() }, "▶ Meten aan");
+    const kaart2 = el(
+      "article",
+      { class: "kb-card kb-sound" },
+      el("div", { class: "kb-card-h" }, el("div", {}, el("h2", { class: "kb-card-t" }, "Stilte verdient"), el("p", { class: "kb-card-s" }, "We meten, jij ziet."))),
+      el(
+        "div",
+        { class: "kb-meter-area" },
+        el("div", { class: "kb-scale" }, el("span", {}, "luid"), el("span", {}, ""), el("span", {}, ""), el("span", {}, "stil")),
+        meter,
+        el("div", { class: "kb-sound-copy" }, status, el("p", {}, "Onder de drempel blijft de klas verdienen. Deze meter neemt niets op en herkent niemand."))
+      ),
+      knop
+    );
+    let aan = false, boven = 0;
     async function toggle() {
       if (aan) {
         stopAlles();
         aan = false;
         knop.textContent = "▶ Meten aan";
-        balk.classList.remove("decibel--live");
-        vul.style.width = "0%";
+        status.textContent = "▥ METER UIT";
+        status.className = "kb-status";
+        mask.style.height = "100%";
         return;
       }
       try {
@@ -2550,7 +4963,6 @@ textarea.invoer { resize: vertical; }
         actief.ctx = audio;
         aan = true;
         knop.textContent = "⏸ Meten uit";
-        balk.classList.add("decibel--live");
         let som = 0, tellen = 0;
         const meet = () => {
           analyser.getByteTimeDomainData(buf);
@@ -2559,10 +4971,20 @@ textarea.invoer { resize: vertical; }
             const v = (buf[i] - 128) / 128;
             sum += v * v;
           }
-          const rms = Math.sqrt(sum / buf.length);
-          const niveau = Math.min(100, Math.round(rms * 240));
-          vul.style.width = niveau + "%";
-          vul.className = "decibel__vul " + (niveau >= drempel ? "decibel__vul--rood" : niveau >= drempel * 0.7 ? "decibel__vul--oranje" : "decibel__vul--groen");
+          const niveau = Math.min(100, Math.round(Math.sqrt(sum / buf.length) * 240));
+          mask.style.height = 100 - niveau + "%";
+          current.style.bottom = Math.min(96, niveau) + "%";
+          current.textContent = String(niveau);
+          if (niveau >= drempel) {
+            status.textContent = "▲ TE LUID";
+            status.className = "kb-status luid";
+          } else if (niveau >= drempel * 0.7) {
+            status.textContent = "● LET OP";
+            status.className = "kb-status";
+          } else {
+            status.textContent = "▥ RUSTIG";
+            status.className = "kb-status";
+          }
           som += niveau;
           tellen++;
           actief.raf = requestAnimationFrame(meet);
@@ -2575,80 +4997,133 @@ textarea.invoer { resize: vertical; }
           if (config.decibelModus !== "objectief") return;
           if (gem >= drempel) {
             boven++;
-            if (boven >= 2) {
-              const s = await verlies(klasId, 1, "Aanhoudend te luid (objectieve drift)", "decibel");
-              herteken(s);
-            }
+            if (boven >= 2) await verlies(klasId, 1, "Aanhoudend te luid (objectieve drift)", "decibel");
           } else {
             boven = 0;
-            const s = await verdien(klasId, 1, "Stil gewerkt", "decibel");
-            herteken(s);
+            await verdien(klasId, 1, "Stil gewerkt", "decibel");
           }
         }, 6e3);
-      } catch (e) {
+      } catch (_) {
         toast("Geen toegang tot de microfoon", "fout");
       }
     }
-    return wrap2;
+    return kaart2;
   }
-  async function bouwDrill(klasId) {
+  async function bouwDrill(klasId, drillTeller, dots) {
     const sleutel = "drill:" + klasId;
-    const opgeslagen = await getSetting(sleutel, []) || [];
-    const status = new Set(opgeslagen);
-    const wrap2 = el("div", { class: "drill" }, el("div", { class: "drill__kop" }, "✅ Lesstart"));
-    const lijst = el("div", { class: "drill__lijst" });
+    const status = new Set(await getSetting(sleutel, []) || []);
+    const steps = el("ol", { class: "kb-steps" });
+    const items = [];
+    function ververs() {
+      const klaar = status.size;
+      drillTeller.textContent = `Drill ${klaar}/${DRILL_STAPPEN.length}`;
+      dots.querySelectorAll("span").forEach((d, i) => d.classList.toggle("done", i < klaar));
+      items.forEach((li, i) => {
+        const gedaan = status.has(i);
+        const huidig = !gedaan && i === klaar;
+        li.className = "kb-step " + (gedaan ? "done" : huidig ? "current" : "pending");
+        li.querySelector(".kb-check").textContent = gedaan ? "✓" : huidig ? "→" : "•";
+      });
+    }
     DRILL_STAPPEN.forEach((tekst, i) => {
-      const aan = status.has(i);
-      const item = el("button", { class: "drill__stap" + (aan ? " drill__stap--klaar" : ""), onClick: async () => {
+      const li = el("button", { class: "kb-step", onClick: async () => {
         if (status.has(i)) status.delete(i);
         else status.add(i);
         await setSetting(sleutel, [...status]);
-        item.classList.toggle("drill__stap--klaar");
-      } }, el("span", { class: "drill__vink" }, aan ? "✓" : i + 1), el("span", {}, tekst));
-      lijst.append(item);
+        ververs();
+      } }, el("span", { class: "kb-nr" }, String(i + 1)), el("span", { class: "kb-step-label" }, tekst.split(" — ")[0]), el("span", { class: "kb-check" }, "•"));
+      items.push(li);
+      steps.append(li);
     });
-    wrap2.append(lijst, el("button", { class: "knop knop--stil drill__reset", onClick: async () => {
-      status.clear();
-      await setSetting(sleutel, []);
-      lijst.querySelectorAll(".drill__stap").forEach((n, i) => {
-        n.classList.remove("drill__stap--klaar");
-        n.querySelector(".drill__vink").textContent = i + 1;
-      });
-    } }, "Nieuwe les"));
-    return wrap2;
+    const kaart2 = el(
+      "article",
+      { class: "kb-card kb-drill" },
+      el(
+        "div",
+        { class: "kb-card-h" },
+        el("div", {}, el("h2", { class: "kb-card-t" }, "Lesstart-drill")),
+        el("button", { class: "kb-mini", onClick: async () => {
+          status.clear();
+          await setSetting(sleutel, []);
+          ververs();
+        } }, "Nieuwe les")
+      ),
+      steps,
+      el("div", { class: "kb-privacy-note" }, el("span", {}, "🔒"), el("span", {}, "Individuele correcties worden niet geprojecteerd. Ze blijven privé."))
+    );
+    ververs();
+    return kaart2;
   }
-  async function openMenu(ctx, herteken) {
-    dialoog("Beloningsmenu", async (body, sluit) => {
-      const status = await potStatus(ctx.klasId);
-      const items = await menuVoorKlas(ctx.klasId);
-      body.append(el("div", { class: "menu-saldo" }, "Saldo: ", el("strong", {}, euro(status.saldo))));
-      if (!items.length) {
-        body.append(el("p", { class: "zacht" }, "Nog geen beloningen. Voeg ze toe onder “Beloningen”."));
+  async function bouwZitplan(klasId) {
+    const [plan, regels, leerlingen, aanwVandaag] = await Promise.all([
+      get("zitplannen", klasId),
+      byIndex("zitregels", "klasId", klasId),
+      leerlingenVanKlas(klasId),
+      byIndex("aanwezigheid", "klasId", klasId)
+    ]);
+    const naam = new Map(leerlingen.map((l) => [l.id, `${l.voornaam || ""} ${l.naam || ""}`.trim()]));
+    const vandaag = isoDatum(/* @__PURE__ */ new Date());
+    const teller = { aanwezig: 0, telaat: 0, afwezig: 0 };
+    for (const a of aanwVandaag.filter((x) => x.datum === vandaag)) {
+      if (a.status === "aanwezig") teller.aanwezig++;
+      else if (a.status === "telaat") teller.telaat++;
+      else teller.afwezig++;
+    }
+    const chipTeller = {};
+    for (const r of regels) chipTeller[r.type] = (chipTeller[r.type] || 0) + 1;
+    const chips = Object.entries(chipTeller).map(([t, n]) => el("span", { class: "kb-chip" }, `🔒 ${n}× ${ZITREGEL_TYPE[t] || t}`));
+    const room = el("div", { class: "kb-room" });
+    if (plan?.plaatsen?.length) {
+      const regelVoor = /* @__PURE__ */ new Map();
+      for (const r of regels) {
+        if (r.leerlingId) regelVoor.set(r.leerlingId, ZITREGEL_TYPE[r.type]);
       }
-      const grid = el("div", { class: "menu-grid" });
-      for (const b of items) {
-        const kanNiet = status.saldo < b.prijs;
-        grid.append(
-          el(
+      const seats = el("div", { class: "kb-seats", style: { gridTemplateColumns: `repeat(${plan.kolommen}, minmax(110px, 1fr))` } });
+      const geplaatst = new Map(plan.plaatsen.map((p) => [`${p.rij},${p.kol}`, p.leerlingId]));
+      for (let rij = 0; rij < plan.rijen; rij++) {
+        for (let kol = 0; kol < plan.kolommen; kol++) {
+          const lid = geplaatst.get(`${rij},${kol}`);
+          if (!lid) {
+            seats.append(el("div", {}));
+            continue;
+          }
+          const volledig = naam.get(lid) || "—";
+          const delen = volledig.split(" ");
+          seats.append(el(
             "div",
-            { class: "menu-item menu-item--" + b.niveau },
-            el("div", { class: "menu-item__kop" }, el("span", { class: "menu-item__naam" }, b.naam), el("span", { class: "menu-item__prijs" }, euro(b.prijs))),
-            b.omschrijving ? el("p", { class: "menu-item__oms" }, b.omschrijving) : null,
-            b.talen ? el("p", { class: "menu-item__talen" }, "🗣 " + b.talen) : null,
-            el("button", { class: "knop " + (kanNiet ? "knop--stil" : "knop--primair"), disabled: kanNiet, onClick: async () => {
-              const r = await wisselIn(ctx.klasId, b.id);
-              if (r.ok) {
-                toast("Ingewisseld! Nieuw saldo " + euro(r.saldo));
-                sluit();
-                herteken();
-              } else toast(r.reden, "fout");
-            } }, kanNiet ? "Nog sparen" : "Inwisselen")
-          )
-        );
+            { class: "kb-seat" },
+            el("div", { class: "kb-student" }, delen[0] || volledig, delen.length > 1 ? el("br") : null, delen.slice(1).join(" ")),
+            el("div", { class: "kb-seat-meta" }, regelVoor.has(lid) ? "🔒 " + regelVoor.get(lid) : "")
+          ));
+        }
       }
-      body.append(grid);
-      body.append(el("div", { class: "dialoog__acties" }, el("button", { class: "knop", onClick: sluit }, "Sluiten")));
-    });
+      room.append(el("div", { class: "kb-board" }, "♟ Bord · leerkrachtzone"), seats);
+    } else {
+      room.append(el(
+        "div",
+        { class: "kb-room-leeg" },
+        el("p", {}, "Nog geen zitplan bewaard."),
+        el("a", { class: "knop knop--primair", href: "#/zitplan" }, "Zitplan maken")
+      ));
+    }
+    return el(
+      "article",
+      { class: "kb-card kb-seating" },
+      el(
+        "div",
+        { class: "kb-card-h" },
+        el("div", {}, el("h2", { class: "kb-card-t" }, "Zitplan"), el("p", { class: "kb-card-s" }, "Bordzijde bovenaan.")),
+        el("a", { class: "kb-mini", href: "#/zitplan" }, "⚙ Beheer")
+      ),
+      el(
+        "div",
+        { class: "kb-summary" },
+        el("div", { class: "kb-sum" }, "👥", el("div", {}, el("strong", {}, String(teller.aanwezig)), " aanwezig · ", el("span", {}, `${teller.telaat} te laat · ${teller.afwezig} afwezig`))),
+        el("div", { class: "kb-sum" }, chips.length ? el("div", { class: "kb-chips" }, ...chips) : el("span", { class: "zacht" }, "Geen randvoorwaarden ingesteld"))
+      ),
+      room,
+      el("div", { class: "kb-seating-foot" }, el("span", {}, "ⓘ"), el("span", {}, "Enkel neutrale zitinfo wordt geprojecteerd. Persoonlijke notities blijven in Administratie."))
+    );
   }
   async function toonLog(klasId) {
     dialoog("Logboek van de pot", async (body, sluit) => {
@@ -2668,25 +5143,22 @@ textarea.invoer { resize: vertical; }
       body.append(lijst, el("div", { class: "dialoog__acties" }, el("button", { class: "knop", onClick: sluit }, "Sluiten")));
     });
   }
-  function herstartUitleg() {
-    dialoog("Herstart-uitdaging", (body, sluit) => {
-      body.append(
-        el("p", {}, "De pot staat laag. Dit is geen straf, maar een gedeelde kans: de klas krijgt een korte, neutrale opdracht om samen terug te verdienen."),
-        el("p", { class: "zacht" }, "Lukt de herstart niet, dan volgt (indien ingeschakeld) een collectief gevolg: terugvallen op individueel werk met een korte controle op het einde. Jij beslist en triggert dit zelf — het gebeurt nooit automatisch."),
-        el("div", { class: "dialoog__acties" }, el("button", { class: "knop knop--primair", onClick: sluit }, "Begrepen"))
-      );
-    });
-  }
 
-  // app/src/main.js
+  // src/main.js
   var ROUTES = {
     dashboard: { titel: "Dashboard", icoon: "🏠", view: dashboard_exports, groep: "admin" },
     klassen: { titel: "Klassen & leerlingen", icoon: "👥", view: klassen_exports, groep: "admin" },
+    leerlingfiche: { titel: "Leerlingfiche", icoon: "🪪", view: leerlingfiche_exports, groep: "admin" },
+    aanwezigheid: { titel: "Aanwezigheid", icoon: "✅", view: aanwezigheid_exports, groep: "admin" },
+    inhaalwerk: { titel: "Afwezigheden & inhaalwerk", icoon: "🔁", view: inhaalwerk_exports, groep: "admin" },
+    puntenboek: { titel: "Evaluaties & puntenboek", icoon: "📊", view: puntenboek_exports, groep: "admin" },
+    individueel: { titel: "Individueel spoor", icoon: "🙋", view: individueel_exports, groep: "admin" },
+    beloningen: { titel: "Beloningen", icoon: "🎁", view: beloningen_exports, groep: "admin" },
+    zitplan: { titel: "Zitplan", icoon: "🪑", view: zitplan_exports, groep: "admin" },
+    acties: { titel: "Acties & notities", icoon: "🗒️", view: acties_exports, groep: "admin" },
+    afspraken: { titel: "Afspraken & instructie", icoon: "🤝", view: afspraken_exports, groep: "admin" },
     schooljaar: { titel: "Schooljaar & kalender", icoon: "📅", view: schooljaar_exports, groep: "admin" },
     rooster: { titel: "Rooster", icoon: "🗓️", view: rooster_exports, groep: "admin" },
-    aanwezigheid: { titel: "Aanwezigheid", icoon: "✅", view: aanwezigheid_exports, groep: "admin" },
-    afspraken: { titel: "Afspraken & instructie", icoon: "🤝", view: afspraken_exports, groep: "admin" },
-    beloningen: { titel: "Beloningen", icoon: "🎁", view: beloningen_exports, groep: "admin" },
     instellingen: { titel: "Instellingen & backup", icoon: "⚙️", view: instellingen_exports, groep: "admin" },
     klasscherm: { titel: "Klasscherm", icoon: "📺", view: klasscherm_exports, groep: "les" }
   };
@@ -2698,21 +5170,69 @@ textarea.invoer { resize: vertical; }
     klaskiezer: null
   };
   async function init() {
-    document.body.append(bouwShell());
     try {
       await db();
-      await zaaiStartMenu();
     } catch (e) {
-      app.inhoud.append(
+      document.body.append(
         el(
           "div",
-          { class: "kaart kaart--fout" },
-          el("h2", {}, "Kan de lokale opslag niet openen"),
-          el("p", {}, String(e.message || e)),
-          el("p", { class: "hint" }, "Klaskompas heeft IndexedDB nodig. Werk je in een privévenster of met opslag geblokkeerd, sta dan lokale opslag toe.")
+          { class: "opstartfout" },
+          el(
+            "div",
+            { class: "kaart kaart--fout" },
+            el("h2", {}, "Kan de lokale opslag niet openen"),
+            el("p", {}, String(e.message || e)),
+            el("p", { class: "zacht" }, "Klaskompas heeft IndexedDB nodig. Werk je in een privévenster of met opslag geblokkeerd, sta dan lokale opslag toe.")
+          )
         )
       );
       return;
+    }
+    const lock = await lockStatus();
+    if (lock.enabled) toonSlot(boot);
+    else await boot();
+  }
+  function toonSlot(onOk) {
+    const invoer = el("input", { class: "slot__invoer", type: "password", inputmode: "numeric", autocomplete: "off", placeholder: "••••", "aria-label": "Pincode" });
+    const fout = el("div", { class: "slot__fout" });
+    const probeer = async () => {
+      if (await controleerPin(invoer.value)) {
+        scherm.remove();
+        onOk();
+      } else {
+        fout.textContent = "Verkeerde pincode.";
+        invoer.value = "";
+        invoer.focus();
+        scherm.querySelector(".slot__kaart").classList.remove("slot--shake");
+        void scherm.offsetWidth;
+        scherm.querySelector(".slot__kaart").classList.add("slot--shake");
+      }
+    };
+    invoer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") probeer();
+    });
+    const scherm = el(
+      "div",
+      { class: "slot" },
+      el(
+        "div",
+        { class: "slot__kaart" },
+        el("div", { class: "slot__logo" }, "🧭"),
+        el("h1", {}, "Klaskompas"),
+        el("p", { class: "zacht" }, "Voer je pincode in om verder te gaan."),
+        invoer,
+        fout,
+        el("button", { class: "knop knop--primair slot__knop", onClick: probeer }, "Ontgrendelen")
+      )
+    );
+    document.body.append(scherm);
+    setTimeout(() => invoer.focus(), 50);
+  }
+  async function boot() {
+    document.body.append(bouwShell());
+    try {
+      await zaaiStartMenu();
+    } catch (_) {
     }
     app.actieveKlasId = await getSetting("actieveKlasId", null);
     await herlaadKlassen();

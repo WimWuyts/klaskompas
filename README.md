@@ -15,6 +15,10 @@ geen server, geen externe datastroom, geen scores of labels per leerling.
 | **`prototypes/`** | Vroeg verkennend prototype (opgevolgd door `app/`). | verkenning |
 | **`data/`** | Voorbeeld-CSV met fictieve leerlingen. | voorbeeld |
 
+Het projecteerbare **Klasscherm** (Lesmodus):
+
+![Klasscherm](app/dist/klasscherm.png)
+
 ## Snel starten
 
 ```bash
