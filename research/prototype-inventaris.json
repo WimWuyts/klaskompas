@@ -1,0 +1,346 @@
+{
+  "appName": "Klascockpit (prototype v4)",
+  "storageSync": "Single-file HTML/CSS/JS. Alle data zit in één JavaScript-object `state` dat als JSON wordt bewaard onder localStorage-sleutel `klascockpit-v4` (constante SKEY). Er is een optionele cloud-laag via `window.storage.get/set` (alleen in de claude.ai-browseromgeving; `_hasCloud`-vlag); anders 100% lokaal. `storageSave` schrijft ALTIJD eerst lokaal en pas daarna cloud. Bij laden (`storageLoad`) wordt eerst cloud geprobeerd, dan localStorage. Automatische opslag na elke mutatie via `save()`→`syncUp()`, plus een polling-timer elke 30s (`schedulePoll`). Overdracht/backup: (1) JSON-export `klascockpit-DATUM.json` en JSON-import; (2) CSV-import van klassen/leerlingen (kolommen o.a. voornaam+achternaam, volledige_naam, leerling, class_name/klas, school_year, email, subject, level); (3) CSV-export van het puntenboek; (4) TXT-export van een leerlingrapport (knop heet 'Rapport PDF' maar levert .txt); (5) data-in-URL: `#data=` (base64 van hele state) en `#d=` (deflate-raw gecomprimeerde base64url), automatisch ingeladen bij openen; (6) delen via WhatsApp (wa.me) en mailto e-mail; (7) QR-code via EXTERNE dienst api.qrserver.com. BELANGRIJK: 'import' gebruikt `mergeState` = `Object.assign(state,defaults,remote)` en OVERSCHRIJFT dus de volledige state — het is geen echte merge, ondanks UI-teksten die 'data wordt samengevoegd' beloven. Geen versionering, geen conflictoplossing (last-write-wins), geen encryptie.</storageSync>\n<parameter name=\"dataEntities\">[{\"entity\":\"profile (leerkrachtprofiel, enkelvoudig object)\",\"fields\":[\"name\",\"schoolYear\",\"startDate\",\"endDate\"]},{\"entity\":\"schoolYears[]\",\"fields\":[\"label (formaat JJJJ-JJJJ, gevalideerd)\",\"startDate\",\"endDate\"]},{\"entity\":\"classes[] (klasgroep)\",\"fields\":[\"id\",\"name\",\"schoolYear\",\"subject (vak)\",\"level (leerjaar/graad)\",\"note\"]},{\"entity\":\"students[] (leerling)\",\"fields\":[\"id\",\"identifier (naam/code, vrij tekstveld)\",\"classId\",\"schoolYear\",\"email\",\"note (interne notitie)\"]},{\"entity\":\"absences[] (afwezigheid)\",\"fields\":[\"id\",\"date\",\"studentId\",\"classId\",\"type (afwezig ongewettigd/afwezig gewettigd/te laat/deel gemist/andere)\",\"hasMissed (ja/nee)\",\"note\"]},{\"entity\":\"makeups[] (inhaalwerk)\",\"fields\":[\"id\",\"absenceId\",\"studentId\",\"classId\",\"type (toets/taak/mondeling/lesinhoud/andere)\",\"title\",\"status (open/wacht op afspraak/ingepland/afgelegd/niet opgedaagd/afgesloten)\",\"scheduledDate\",\"missedDate\"]},{\"entity\":\"observations[] (observatie)\",\"fields\":[\"id\",\"date\",\"studentId\",\"classId\",\"category (werkhouding/gedrag/sociale vaardigheden/motivatie/klasparticipatie/positief/andere)\",\"followUp (ja/nee)\",\"note\"]},{\"entity\":\"classManagement[] (klasmanagement-item)\",\"fields\":[\"id\",\"date\",\"studentId\",\"classId\",\"category (gedrag/materiaal/taalgebruik/samenwerking/andere)\",\"severity (licht/herhaald/herhaald probleem/ernstig)\",\"measure (geen/gesprek leerling/nablijven/oudercontact/rapport directie/andere)\",\"status (geregistreerd/opvolgen/besproken/afgerond)\",\"note\"]},{\"entity\":\"evaluations[] (evaluatie)\",\"fields\":[\"id\",\"date\",\"classId\",\"title\",\"type (toets/taak/mondeling/oefening/observatie/andere)\",\"maxPunten\",\"weight (gewicht %, wordt bewaard maar NIET gebruikt in berekening)\",\"topic (thema/leerplandoelen, vrij tekst)\",\"note\"]},{\"entity\":\"evalResults[] (resultaat)\",\"fields\":[\"id\",\"evaluationId\",\"studentId\",\"classId\",\"resultVal (vrije tekst bv. 14/20)\",\"signal (voldoende/goed/onvoldoende/remediëring nodig/afwezig; auto via autoSignal)\",\"note\"]},{\"entity\":\"remediation[] (remediëring)\",\"fields\":[\"id\",\"studentId\",\"classId\",\"evaluationId\",\"type (herhaling)\",\"status (gepland/in uitvoering/afgerond)\",\"startDate\",\"note\"]},{\"entity\":\"communication[] (communicatie)\",\"fields\":[\"id\",\"date\",\"studentId\",\"classId\",\"type (e-mail ouder/telefoongesprek/gesprek leerling/gesprek ouder/brief/CLB-contact/andere)\",\"status (voorbereid/verstuurd/besproken/afgerond)\",\"subject\",\"note\",\"deadline\"]},{\"entity\":\"actions[] (actie/opvolgpunt)\",\"fields\":[\"id\",\"title\",\"classId\",\"studentId\",\"priority (normaal/hoog/dringend)\",\"status (open/in uitvoering/afgerond)\",\"dueDate\",\"note\"]},{\"entity\":\"klasNotes (map classId→string)\",\"fields\":[\"klasnotitie tekst per klas\"]},{\"entity\":\"zorgProfielen (map studentId→array)\",\"fields\":[\"type (iac/baso/dyslexie/dyscalculie/adhd/andere)\",\"note (toelichting)\"]},{\"entity\":\"aanwezigheid (map 'JJJJ-MM-DD_classId'→ {studentId:status})\",\"fields\":[\"status: aanwezig/afwezig/te_laat/gewettigd\"]},{\"entity\":\"weekNotes (map weekstart→string)\",\"fields\":[\"weeknotitie tekst\"]},{\"entity\":\"UI-state (in state bewaard)\",\"fields\":[\"activeClassId\",\"currentWeek\",\"showOpenOnly\",\"filterYear\",\"darkMode\"]}]",
+  "modules": [
+    {
+      "name": "Dashboard",
+      "purpose": "Dagelijks startoverzicht per actieve klas met begroeting, metrics en attentielijsten.",
+      "fields": [
+        "tijdgebaseerde begroeting (Goedemorgen/-middag/-avond)",
+        "datum + actieve klas"
+      ],
+      "interactions": [
+        "Klikbare metric-tegels: Klassen, Leerlingen actieve klas, Open acties, Open inhaalwerk, Comm. gepland, Niet opgedaagd, Obs. opvolging (elk linkt naar de pagina)",
+        "Snelknop 'Aanwezigheid registreren'",
+        "Panelen: Aandachtspunten (niet-opgedaagd inhaalwerk, dringende/vervallen acties, verstreken comm.-deadlines, obs.-opvolging), Open acties, Communicatie gepland (met 'x te laat'-badge), Remediëring lopend",
+        "Klasnotitie-strip (bewerkbaar)"
+      ],
+      "strengths": [
+        "Sterk teacher-first samenvattend beeld",
+        "Attentiepunten combineren meerdere entiteiten",
+        "Alles doorklikbaar"
+      ],
+      "gaps": [
+        "Aandachtspunten leunen naar interpretatie/risicosignalen; grens met 'gecombineerde risicoscores' bewaken",
+        "Geen filtering per lesuur; toont dagbeeld niet per lesmoment"
+      ]
+    },
+    {
+      "name": "Weekoverzicht",
+      "purpose": "Weekbeeld met navigatie per week en vier panelen plus weeknotitie.",
+      "fields": [
+        "weeknotitie (textarea per weekstart)"
+      ],
+      "interactions": [
+        "Vorige/Volgende week, Vandaag",
+        "Panelen: Afwezigheden, Evaluaties, Open acties, Communicatie (gefilterd op actieve klas voor abs/evals)",
+        "Snelknoppen naar Aanwezigheid/Afwezigheid/Evaluatie",
+        "Weeknotitie bewaren"
+      ],
+      "strengths": [
+        "Weekplanning-blik",
+        "Notitie per week bewaard (weekNotes)"
+      ],
+      "gaps": [
+        "Geen lesrooster/lesuren",
+        "Acties/comm. niet op weekdatum gefilterd (toont gewoon open items)"
+      ]
+    },
+    {
+      "name": "Mijn klassen",
+      "purpose": "Beheer van klasgroepen en leerlingen + CSV-import.",
+      "fields": [
+        "Klas: Naam*, Schooljaar*, Vak, Leerjaar/graad, Notitie",
+        "Leerling: Naam*, Klas*, E-mail, Interne notitie",
+        "Filter op schooljaar",
+        "CSV-bestand kiezen"
+      ],
+      "interactions": [
+        "Klas toevoegen/selecteren/verwijderen (cascade-verwijdering van gekoppelde data), klasnotitie bewerken",
+        "Leerling toevoegen, naar fiche, bewerken (zorgprofiel-modal), verwijderen",
+        "CSV-importeren met kolomherkenning (voornaam/achternaam, volledige_naam, class_name, school_year, email, subject, level); bestandsnaam = klasnaam als kolom ontbreekt"
+      ],
+      "strengths": [
+        "Flexibele CSV-import met veel kolomaliassen (NL/EN/FR)",
+        "Cascade-delete houdt data consistent",
+        "Formulier behoudt schooljaar/klas na invoer voor snel herhalen"
+      ],
+      "gaps": [
+        "Leerlingnaam is vrij tekstveld 'identifier' — risico op echte namen; CLAUDE.md eist fictieve namen",
+        "Geen leerlingnummer/stamboeknr, geschlacht, geboortedatum (bewust of hiaat?)",
+        "Geen bulk-bewerken"
+      ]
+    },
+    {
+      "name": "Leerlingfiche",
+      "purpose": "360°-fiche per leerling met samenvatting en deelpanelen.",
+      "fields": [
+        "leerlingkiezer (dropdown), vorige/volgende"
+      ],
+      "interactions": [
+        "Snelacties: +Afwezigheid, +Observatie, +Communicatie, +Actie (voorselecteert leerling en springt naar pagina), Bewerken, 'Rapport PDF' (levert .txt)",
+        "Panelen: identiteit + zorgbadges + telbadges, Afwezigheidsoverzicht (ongewettigd↑/gewettigd G), Observaties, Evaluaties & punten, Communicatie, Klasmanagement"
+      ],
+      "strengths": [
+        "Volledig geïntegreerd leerlingbeeld",
+        "Zorgmaatregelen zichtbaar met toelichting",
+        "Tekstueel rapport exporteerbaar"
+      ],
+      "gaps": [
+        "'Rapport PDF'-label misleidend (is .txt)",
+        "Toont zorg/gedrag/gezondheidsgevoelige info gebundeld — AVG-aandacht",
+        "Typfout 'Comunicatie' in kop"
+      ]
+    },
+    {
+      "name": "Aanwezigheid registreren",
+      "purpose": "Snel de volledige klas per datum afvinken.",
+      "fields": [
+        "datum",
+        "klaskeuze",
+        "status per leerling: A(aanwezig)/X(afwezig)/L(te laat)/G(gewettigd)"
+      ],
+      "interactions": [
+        "'Iedereen aanwezig' snelknop",
+        "Per-leerling statusknoppen met kleurcodering en zorgbadges",
+        "Live-teller ✓/X/L/G",
+        "Bewaren → schrijft naar aanwezigheid-map ÉN genereert absences-records voor niet-aanwezigen (dubbelcheck op leerling+datum+klas)",
+        "Afwezigheidshistoriek actieve klas (laatste 30)"
+      ],
+      "strengths": [
+        "Zeer snelle klasgang, mobielvriendelijk (grote touch targets)",
+        "Automatische, dubbel-vermijdende synchronisatie naar afwezigheidslog",
+        "Zorgmaatregelen inline zichtbaar"
+      ],
+      "gaps": [
+        "Per dag, niet per lesuur — voor vakleerkracht die klas enkele uren/week ziet minder passend",
+        "Aanwezigheidsstatussen mappen niet op officiële Vlaamse/Discimus-afwezigheidscodes",
+        "Bewaren maakt automatisch absence-records: 'stille automatisering met gevolgen' bewaken"
+      ]
+    },
+    {
+      "name": "Afwezigheidslog & inhaalwerk",
+      "purpose": "Losse registratie van afwezigheden en opvolging van inhaalwerk.",
+      "fields": [
+        "Afwezigheid: Datum*, Leerling*, Type (afwezig ongewettigd/gewettigd/te laat/deel gemist/andere), Inhaalwerk nodig? (ja/nee), Notitie",
+        "Inhaalwerk: Afwezigheid*, Type gemist (toets/taak/mondeling/lesinhoud/andere), Status, Titel*, Afspraakdatum"
+      ],
+      "interactions": [
+        "Toevoegen, verwijderen (met confirm)",
+        "Inhaalwerk-status doorlopen via 'Volgende status' (cyclus open→...→afgesloten)"
+      ],
+      "strengths": [
+        "Koppeling afwezigheid↔inhaalwerk",
+        "Statuscyclus expliciet gemodelleerd"
+      ],
+      "gaps": [
+        "Geen automatische herinnering bij naderende afspraakdatum",
+        "Geen documentupload (attest/bewijs)"
+      ]
+    },
+    {
+      "name": "Observaties & klasmanagement",
+      "purpose": "Feitelijke gedrags-/werkhoudingsobservaties en klasmanagement-registraties.",
+      "fields": [
+        "Observatie: Datum*, Leerling*, Categorie (werkhouding/gedrag/sociale vaardigheden/motivatie/klasparticipatie/positief/andere), Opvolging? (ja/nee), Notitie*",
+        "Klasmanagement: Datum*, Leerling*, Categorie (gedrag/materiaal/taalgebruik/samenwerking/andere), Ernst (licht/herhaald/herhaald probleem/ernstig), Maatregel (geen/gesprek leerling/nablijven/oudercontact/rapport directie/andere), Status, Notitie*"
+      ],
+      "interactions": [
+        "Beide registreren/lijst/verwijderen",
+        "Notitie is verplicht (feitgericht)"
+      ],
+      "strengths": [
+        "Onderscheid tussen neutrale observatie en klasmanagement",
+        "Positieve categorie aanwezig (herstel/erkenning)"
+      ],
+      "gaps": [
+        "'Ernst' + 'Maatregel' (nablijven/oudercontact/rapport directie) benaderen sanctie-registratie — grens met absolute grenzen (geen automatische sancties) bewaken; nu manueel maar structureel aanwezig",
+        "Categorieën als 'motivatie' kunnen tot interpretatie/karakterduiding leiden — bewaken tegen afgeleide karaktereigenschappen"
+      ]
+    },
+    {
+      "name": "Evaluaties & remediëring",
+      "purpose": "Evaluaties definiëren, losse resultaten registreren, remediëring opvolgen.",
+      "fields": [
+        "Evaluatie: Datum*, Type (toets/taak/mondeling/oefening/observatie/andere), Titel*, Max. punten, Gewicht %, Thema/leerplandoelen (vrij), Notitie",
+        "Resultaat: Evaluatie*, Leerling*, Resultaat (vrije tekst), Signaal (voldoende/goed/onvoldoende/remediëring nodig/afwezig), Notitie"
+      ],
+      "interactions": [
+        "Evaluatie/resultaat toevoegen, verwijderen",
+        "Resultaat met signaal 'remediëring nodig'/'onvoldoende' maakt automatisch remediëring-record",
+        "Remediëring-status doorlopen"
+      ],
+      "strengths": [
+        "Remediëring gekoppeld aan evaluatie",
+        "Herstelgericht: automatische opvolging na zwak resultaat"
+      ],
+      "gaps": [
+        "Automatisch aanmaken van remediëring bij 'onvoldoende' = automatisering met gevolg voor leerling; expliciete opt-in ontbreekt",
+        "Gewicht (weight) wordt bewaard maar nergens in berekening gebruikt",
+        "Geen vaardigheidsgerichte evaluatie (lezen/luisteren/spreken/schrijven/gesprek) — relevant voor talen Engels/Spaans",
+        "Geen ERK-niveaus (A1–B1)"
+      ]
+    },
+    {
+      "name": "Puntenboek",
+      "purpose": "Matrixoverzicht van alle resultaten per klas met inline-invoer, gemiddelde en remediëring-opvolging.",
+      "fields": [
+        "klaskeuze",
+        "inline puntinvoer per leerling×evaluatie (vrije tekst, bv. 14/20)"
+      ],
+      "interactions": [
+        "Inline bewerken → savePunten berekent signaal via autoSignal (≥70% goed, ≥50% voldoende, ≥40% onvoldoende, <40% remediëring nodig; max standaard 20) en maakt bij zwak resultaat stil een remediëring-record",
+        "Gemiddelde % per leerling gekleurd (good/warn/bad)",
+        "CSV-export",
+        "Remediëring 'Volgende status'"
+      ],
+      "strengths": [
+        "Overzichtelijke matrix, sticky leerlingnaam",
+        "Snelle inline-invoer met kleurcodering",
+        "CSV-export"
+      ],
+      "gaps": [
+        "autoSignal + auto-remediëring is stille automatisering met leerlinggevolg (conflicteert met productprincipe)",
+        "Gemiddelde negeert gewicht (weight)",
+        "BUG: CSV-export kolom 'Gemiddelde %' altijd leeg (scores-array wordt nooit gevuld, regel ~2111-2116)",
+        "Percentage-drempels hardcoded, niet configureerbaar",
+        "Kleur als enige signaaldrager (toegankelijkheid)"
+      ]
+    },
+    {
+      "name": "Communicatie",
+      "purpose": "Logboek van contacten met ouders/leerling/CLB met opvolgdeadline.",
+      "fields": [
+        "Datum*, Leerling*, Type (e-mail ouder/telefoongesprek/gesprek leerling/gesprek ouder/brief/CLB-contact/andere), Status (voorbereid/verstuurd/besproken/afgerond), Deadline opvolging, Onderwerp*, Notitie"
+      ],
+      "interactions": [
+        "Registreren, 'Afgerond' markeren, verwijderen",
+        "Verstreken deadline (status voorbereid) → 'overdue'-markering + dashboard-alert"
+      ],
+      "strengths": [
+        "Deadlinebewaking met visuele waarschuwing",
+        "CLB-contact als expliciet type"
+      ],
+      "gaps": [
+        "Geen sjablonen/mailkoppeling",
+        "Gevoelige gesprekinhoud in vrije notitie zonder afscherming"
+      ]
+    },
+    {
+      "name": "Acties & opvolgpunten",
+      "purpose": "Persoonlijke takenlijst, optioneel gekoppeld aan klas/leerling.",
+      "fields": [
+        "Omschrijving*, Klas, Leerling, Prioriteit (normaal/hoog/dringend), Status (open/in uitvoering/afgerond), Vervaldag, Notitie"
+      ],
+      "interactions": [
+        "Toevoegen, 'Afgerond', verwijderen, 'Toon alleen open'-filter",
+        "Sortering op prioriteit; vervallen items gemarkeerd"
+      ],
+      "strengths": [
+        "Eenvoudige GTD-achtige opvolging, koppelbaar aan context",
+        "Vervaldagbewaking"
+      ],
+      "gaps": [
+        "Geen herinneringen/notificaties",
+        "Geen herhalende taken"
+      ]
+    },
+    {
+      "name": "Sync & apparaten (Overdracht)",
+      "purpose": "Data verplaatsen tussen apparaten en back-up maken.",
+      "fields": [
+        "e-mailadres voor overdracht",
+        "opslagstatuslijn (tellingen)"
+      ],
+      "interactions": [
+        "Download/Import JSON-bestand, Cloud-sync forceren",
+        "Overdrachtslink genereren (#data= base64) + kopiëren",
+        "Tabs: Laptop→gsm, Gsm→laptop, Via e-mail (mailto), Deel via link (deflate-raw #d= + QR via api.qrserver.com + WhatsApp)",
+        "Wekelijkse back-up download/herstel"
+      ],
+      "strengths": [
+        "Veel praktische overdrachtswegen voor niet-technische leerkracht",
+        "Duidelijke stap-voor-stap uitleg",
+        "Compressie voor kleinere links"
+      ],
+      "gaps": [
+        "PRIVACY: 'Deel via link' stuurt de share-URL (met daarin ALLE schooldata) naar externe api.qrserver.com voor QR-generatie — data verlaat het apparaat naar een derde partij; conflicteert met privacy-by-design/lokaal-eerst",
+        "WhatsApp/e-mail/URL bevatten onversleutelde volledige dataset incl. zorg-/gezondheidsgegevens",
+        "'Import' overschrijft alle data (mergeState = Object.assign) ondanks belofte 'wordt samengevoegd' — dataverliesrisico",
+        "Geen sync-conflictoplossing (last-write-wins)"
+      ]
+    },
+    {
+      "name": "Instellingen",
+      "purpose": "Profiel, schooljaren, databeheer en weergave.",
+      "fields": [
+        "Profiel: Naam/label, Standaard schooljaar, Start-/Einddatum",
+        "Schooljaren-lijst",
+        "Donkere modus"
+      ],
+      "interactions": [
+        "Profiel bewaren, schooljaar actief zetten/verwijderen/toevoegen (modal, formaat JJJJ-JJJJ, optie klassen+leerlingen kopiëren)",
+        "Exporteer alles / Importeer JSON / Alle data wissen",
+        "Donkere modus togglen"
+      ],
+      "strengths": [
+        "Schooljaar-kopieerfunctie (klassen + optioneel leerlingen zonder registraties) — handig bij jaarovergang",
+        "Volledige data-wis met confirm"
+      ],
+      "gaps": [
+        "Geen configureerbare afwezigheidstypes/beoordelingsdrempels",
+        "Geen app-lock/PIN voor gevoelige data",
+        "'Alle data wissen' onherstelbaar (geen back-upprompt/undo)"
+      ]
+    },
+    {
+      "name": "Overkoepelend: navigatie & snelinvoer",
+      "purpose": "Globale UI-schil: sidebar, klas-switcher, zoekbalk, FAB-snelinvoer, mobiele bottom-nav, modals, toasts.",
+      "fields": [],
+      "interactions": [
+        "Prominente klas-switcher (actieve klas) bovenaan sidebar",
+        "Globale zoekbalk (leerlingen/klassen/open acties)",
+        "FAB + snelmodals voor Aanwezigheid/Afwezigheid/Observatie/Actie/Communicatie",
+        "Mobiele bottom-nav (Home/Aanwezig/Punten/Fiche/Meer) + hamburger sidebar",
+        "Sync-status pill/indicator"
+      ],
+      "strengths": [
+        "Sterk teacher-first: minimale handelingen, snelinvoer overal",
+        "Consistente responsive/mobiele aanpak, 44px touch targets, dark mode",
+        "Live sync-indicatie"
+      ],
+      "gaps": [
+        "Geen toetsenbord-sneltoetsen",
+        "Zoekfunctie beperkt tot 3 entiteiten"
+      ]
+    }
+  ],
+  "overallGaps": [
+    "PRIVACY/AVG: gevoelige gegevens (zorgmaatregelen dyslexie/dyscalculie/ADHD/IAC/BaSO = gezondheidsgerelateerde bijzondere categorieën) worden onversleuteld in localStorage bewaard en via WhatsApp/e-mail/URL/externe QR-dienst (api.qrserver.com) gedeeld — botst met privacy-by-design en lokaal-eerst",
+    "Absolute grens 'geen echte leerlinggegevens': leerlingnaam is een vrij tekstveld ('identifier'); niets stuurt naar fictieve voorbeelddata uit data/examples",
+    "Stille automatisering met leerlinggevolg: puntenboek/resultaat maakt automatisch remediëring-records aan bij 'onvoldoende'/'remediëring nodig' zonder expliciete bevestiging; aanwezigheid genereert automatisch afwezigheidsrecords — bewaken tegen productprincipe 'geen stille automatisering met gevolgen'",
+    "Sanctie-nabijheid: klasmanagement kent 'ernst' (licht→ernstig) en 'maatregel' (nablijven/oudercontact/rapport directie); nog manueel maar structureel aanwezig — grens met 'geen automatische sancties' en 'geen risicoscores' bewaken",
+    "Interpretatie boven feit: categorieën als 'motivatie' en dashboardsamenvattingen ('aandachtspunten') kunnen richting karakterduiding/risicoprofilering neigen",
+    "Vlaamse conformiteit ontbreekt: afwezigheidsstatussen mappen niet op officiële Discimus/afwezigheidscodes; geen relatie tot Smartschool/Informat (bewust GEEN vervanging, maar interoperabiliteit/export in officieel formaat ontbreekt)",
+    "Vakleerkracht-realiteit 2e graad talen niet ondersteund: aanwezigheid en planning zijn per dag i.p.v. per lesuur/lesrooster, terwijl een vakleerkracht meerdere klasgroepen elk enkele uren/week ziet",
+    "Talenspecifiek ontbreekt: geen vaardigheidsgerichte evaluatie (lezen/luisteren/spreken/schrijven/gesprek), geen ERK-niveaus (A1–B1), geen koppeling aan leerplandoelen (enkel vrij tekstveld 'thema')",
+    "Puntenberekening onvolledig: 'gewicht %' wordt bewaard maar niet gebruikt; gemiddelde is ongewogen; percentage-drempels hardcoded; geen trimesters/semesters/rapportperiodes",
+    "Data-integriteit: 'import'/overdracht OVERSCHRIJFT de volledige state (mergeState = Object.assign) ondanks UI-belofte 'wordt samengevoegd' → dataverliesrisico; geen sync-conflictoplossing (last-write-wins); geen versionering",
+    "BUG: CSV-export van het puntenboek levert altijd een lege kolom 'Gemiddelde %' (scores-array wordt nooit gevuld)",
+    "Herstelbaarheid: verwijderen enkel via confirm(), geen undo/prullenbak; 'Alle data wissen' onherstelbaar — botst met 'destructieve acties herstelbaar waar praktisch mogelijk'",
+    "Auditbaarheid ontbreekt: statusovergangen/mutaties worden overschreven zonder logboek/tijdstempel-historiek, terwijl CLAUDE.md auditbare statusovergangen vraagt",
+    "Toegankelijkheid: veel emoji als functionele iconen, kleur soms enige signaaldrager (punten-signaalstip), geen ARIA/toetsenbordondersteuning",
+    "Beveiliging: geen app-lock/PIN/encryptie voor toegang tot gevoelige klasadministratie op een gedeeld/verloren toestel",
+    "Kleine tekst-/labelfouten: 'Rapport PDF'-knop exporteert .txt; typfout 'Comunicatie' in de fiche"
+  ],
+  "uxNotes": [
+    "Sterk teacher-first: prominente klas-switcher, FAB-snelinvoer en snelmodals overal, 'Iedereen aanwezig'-knop, maximaal enkele handelingen per registratie",
+    "Formulieren behouden na opslaan de datum/klas/leerling zodat herhaalinvoer snel gaat",
+    "Aanwezigheidsmodule vermijdt dubbele invoer door slim te synchroniseren naar de afwezigheidslog (dubbelcheck leerling+datum+klas)",
+    "Expliciete statusmodellen met status-cyclusknoppen (inhaalwerk, remediëring) en visuele overdue-markering + dashboard-alerts voor deadlines",
+    "Consistente, moderne, responsive UI: dark mode, mobiele bottom-nav, hamburger-sidebar, 44px touch targets, 16px inputs tegen iOS-zoom, toasts, empty states met iconen",
+    "Zichtbare sync-status (dot + tekst + mobiele pill) en duidelijke, stapsgewijze overdrachtsinstructies voor niet-technische leerkrachten",
+    "Globale zoekbalk en doorklikbare dashboard-metrics maken navigatie snel",
+    "Kleurcodering via een centrale badgeClass-functie zorgt voor consistente semantiek (groen/amber/rood/paars) door de hele app"
+  ]
+}

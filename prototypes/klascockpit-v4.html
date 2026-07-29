@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Klascockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --c-bg:#F5F4F1;--c-surface:#FFFFFF;--c-surface2:#F0EEE9;
+  --c-border:#E4E1DA;--c-border2:#D0CCC3;
+  --c-text:#111110;--c-text2:#6C6860;--c-text3:#9C9890;
+  --c-blue:#2563EB;--c-blue-bg:#EFF6FF;--c-blue-border:#BFDBFE;
+  --c-green:#16A34A;--c-green-bg:#F0FDF4;--c-green-border:#BBF7D0;
+  --c-red:#DC2626;--c-red-bg:#FEF2F2;--c-red-border:#FECACA;
+  --c-amber:#D97706;--c-amber-bg:#FFFBEB;--c-amber-border:#FDE68A;
+  --c-purple:#7C3AED;--c-purple-bg:#F5F3FF;--c-purple-border:#DDD6FE;
+  --c-nav-bg:#18181B;--c-nav-text:#A1A1AA;--c-nav-text-active:#FAFAFA;
+  --c-nav-hover:rgba(255,255,255,0.06);--c-nav-active:rgba(255,255,255,0.10);
+  --nav-w:232px;--r:8px;--r-sm:6px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.05);
+  --shadow:0 1px 3px rgba(0,0,0,0.1),0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+  --font:'Geist',system-ui,sans-serif;--font-mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+/* DARK MODE */
+body.dark{
+  --c-bg:#0F0F10;--c-surface:#18181B;--c-surface2:#1F1F23;
+  --c-border:#2A2A2F;--c-border2:#3A3A42;
+  --c-text:#F4F4F5;--c-text2:#A1A1AA;--c-text3:#71717A;
+  --c-blue-bg:#1E3A5F;--c-blue-border:#1D4ED8;
+  --c-green-bg:#14321E;--c-green-border:#15803D;
+  --c-red-bg:#3B1010;--c-red-border:#991B1B;
+  --c-amber-bg:#2D1F00;--c-amber-border:#92400E;
+  --c-purple-bg:#2D1F4E;--c-purple-border:#5B21B6;
+  --c-nav-bg:#09090B;
+}
+
+html,body{height:100%;font-family:var(--font);background:var(--c-bg);color:var(--c-text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background 0.2s,color 0.2s;}
+input,select,textarea,button{font:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+a{color:var(--c-blue);}
+
+/* LAYOUT */
+#shell{display:flex;height:100vh;overflow:hidden;}
+#sidebar{width:var(--nav-w);flex-shrink:0;background:var(--c-nav-bg);display:flex;flex-direction:column;height:100%;overflow-y:auto;padding:0 0 16px;transition:transform 0.22s var(--ease);z-index:50;}
+#main-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+#main{flex:1;padding:20px 24px 40px;}
+
+/* SIDEBAR */
+.sb-header{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:4px;}
+.sb-logo{font-size:15px;font-weight:600;color:var(--c-nav-text-active);letter-spacing:-0.01em;display:flex;align-items:center;gap:9px;}
+.sb-logo-mark{width:28px;height:28px;background:var(--c-blue);border-radius:7px;display:grid;place-items:center;font-size:14px;flex-shrink:0;font-style:normal;}
+.sb-subtitle{font-size:11px;color:var(--c-nav-text);margin-top:3px;padding-left:37px;}
+.sb-sync{display:flex;align-items:center;gap:6px;margin:6px 10px 4px;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-sm);font-size:11px;color:var(--c-nav-text);}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;flex-shrink:0;}
+.sync-dot.busy{background:#EAB308;animation:blink 1s step-start infinite;}
+.sync-dot.fail{background:#EF4444;}
+@keyframes blink{50%{opacity:0;}}
+
+/* CLASS SWITCHER — prominent */
+.class-switcher{padding:8px 10px 6px;}
+.class-switcher-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(161,161,170,0.45);margin-bottom:5px;padding:0 2px;}
+.class-btns{display:flex;flex-direction:column;gap:2px;}
+.class-pill{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--r-sm);font-size:12px;font-weight:500;color:var(--c-nav-text);cursor:pointer;border:none;background:none;text-align:left;width:100%;transition:background 0.1s,color 0.1s;}
+.class-pill:hover{background:var(--c-nav-hover);color:var(--c-nav-text-active);}
+.class-pill.active-class{background:rgba(37,99,235,0.25);color:#93C5FD;font-weight:600;}
+.class-pill-count{font-size:10px;opacity:0.6;}
+
+.sb-sec{padding:10px 12px 3px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:rgba(161,161,170,0.4);}
+.sb-nav{display:flex;flex-direction:column;gap:1px;padding:0 8px;}
+.sb-btn{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r-sm);color:var(--c-nav-text);font-size:13px;font-weight:400;transition:background 0.1s,color 0.1s;border:none;background:none;text-align:left;width:100%;cursor:pointer;}
+.sb-btn .ico{width:14px;height:14px;border-radius:3px;border:1.5px solid rgba(161,161,170,0.4);flex-shrink:0;transition:border-color 0.1s,background 0.1s;}
+.sb-btn:hover{background:var(--c-nav-hover);color:var(--c-nav-text-active);}
+.sb-btn:hover .ico{border-color:rgba(255,255,255,0.4);}
+.sb-btn.active{background:var(--c-nav-active);color:var(--c-nav-text-active);font-weight:500;}
+.sb-btn.active .ico{background:var(--c-blue);border-color:var(--c-blue);}
+.sb-divider{height:1px;background:rgba(255,255,255,0.07);margin:6px 10px;}
+.sb-footer-nav{margin-top:auto;padding:0 8px;}
+
+/* TOP BAR */
+#topbar{padding:9px 24px;border-bottom:1px solid var(--c-border);background:var(--c-surface);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:48px;position:sticky;top:0;z-index:40;}
+.tb-title{font-size:14px;font-weight:600;letter-spacing:-0.01em;flex:1;}
+.tb-actions{display:flex;gap:5px;align-items:center;}
+#mobile-toggle{display:none;padding:5px;color:var(--c-text);font-size:19px;line-height:1;}
+.year-chip{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:var(--c-surface2);border:1px solid var(--c-border);color:var(--c-text2);white-space:nowrap;}
+
+/* QUICK-ADD FAB */
+#fab{position:fixed;bottom:24px;right:24px;z-index:100;width:52px;height:52px;border-radius:50%;background:var(--c-blue);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);border:none;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;}
+#fab:hover{transform:scale(1.08);box-shadow:0 8px 20px rgba(37,99,235,0.4);}
+#fab-menu{position:fixed;bottom:84px;right:24px;z-index:100;display:none;flex-direction:column;gap:8px;align-items:flex-end;}
+#fab-menu.open{display:flex;}
+.fab-item{display:flex;align-items:center;gap:8px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:20px;padding:7px 14px 7px 10px;font-size:13px;font-weight:500;box-shadow:var(--shadow);cursor:pointer;white-space:nowrap;transition:background 0.1s;}
+.fab-item:hover{background:var(--c-surface2);}
+.fab-item .fab-ico{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex-shrink:0;}
+
+/* PAGE */
+.page{display:none;flex-direction:column;gap:16px;animation:fadeIn 0.14s ease;}
+.page.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.page-title{font-size:18px;font-weight:600;letter-spacing:-0.02em;}
+.page-desc{font-size:12px;color:var(--c-text2);margin-top:2px;}
+
+/* CARDS */
+.card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r);box-shadow:var(--shadow-sm);}
+.card-body{padding:14px 16px;}
+.card-header{padding:11px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.card-title{font-size:11px;font-weight:600;letter-spacing:0.01em;text-transform:uppercase;color:var(--c-text2);}
+.card-actions{display:flex;gap:6px;align-items:center;}
+.card-inner-title{font-size:14px;font-weight:600;margin-bottom:10px;letter-spacing:-0.01em;}
+
+/* INFO BANNERS */
+.info-banner{background:var(--c-blue-bg);border:1px solid var(--c-blue-border);border-radius:var(--r);padding:12px 14px;font-size:13px;line-height:1.65;color:var(--c-text);}
+.info-banner b{font-weight:600;}
+.info-banner .step{display:flex;gap:10px;padding:4px 0;align-items:flex-start;}
+.info-banner .step-num{width:20px;height:20px;border-radius:50%;background:var(--c-blue);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex-shrink:0;margin-top:1px;}
+.warn-banner{background:var(--c-amber-bg);border:1px solid var(--c-amber-border);border-radius:var(--r);padding:11px 13px;font-size:12px;line-height:1.6;color:var(--c-text2);}
+.success-banner{background:var(--c-green-bg);border:1px solid var(--c-green-border);border-radius:var(--r);padding:11px 13px;font-size:12px;line-height:1.6;color:var(--c-text2);}
+
+/* METRICS */
+.metric-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.metric-card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r);padding:13px 14px;position:relative;overflow:hidden;cursor:pointer;transition:box-shadow 0.1s;}
+.metric-card:hover{box-shadow:var(--shadow);}
+.metric-label{font-size:11px;color:var(--c-text2);font-weight:500;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;}
+.metric-val{font-size:24px;font-weight:700;letter-spacing:-0.04em;line-height:1;}
+.metric-card.blue{border-top:3px solid var(--c-blue);}
+.metric-card.green{border-top:3px solid var(--c-green);}
+.metric-card.red{border-top:3px solid var(--c-red);}
+.metric-card.amber{border-top:3px solid var(--c-amber);}
+.metric-card.purple{border-top:3px solid var(--c-purple);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r-sm);font-size:13px;font-weight:500;border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text);cursor:pointer;transition:background 0.1s,border-color 0.1s;white-space:nowrap;line-height:1.4;}
+.btn:hover{background:var(--c-surface2);border-color:var(--c-border2);}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--c-blue);color:#fff;border-color:var(--c-blue);}
+.btn-primary:hover{background:#1D4ED8;border-color:#1D4ED8;}
+.btn-sm{padding:4px 10px;font-size:12px;}
+.btn-xs{padding:3px 8px;font-size:11px;}
+.btn-danger{color:var(--c-red);border-color:var(--c-red-border);background:var(--c-red-bg);}
+.btn-danger:hover{background:#FEE2E2;}
+.btn-ghost{border-color:transparent;background:transparent;}
+.btn-ghost:hover{background:var(--c-surface2);border-color:var(--c-border);}
+.btn-success{color:var(--c-green);border-color:var(--c-green-border);background:var(--c-green-bg);}
+.btn-purple{color:var(--c-purple);border-color:var(--c-purple-border);background:var(--c-purple-bg);}
+.btn-amber{color:var(--c-amber);border-color:var(--c-amber-border);background:var(--c-amber-bg);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;border:1px solid transparent;white-space:nowrap;}
+.badge-blue{background:var(--c-blue-bg);color:var(--c-blue);border-color:var(--c-blue-border);}
+.badge-green{background:var(--c-green-bg);color:var(--c-green);border-color:var(--c-green-border);}
+.badge-red{background:var(--c-red-bg);color:var(--c-red);border-color:var(--c-red-border);}
+.badge-amber{background:var(--c-amber-bg);color:var(--c-amber);border-color:var(--c-amber-border);}
+.badge-gray{background:var(--c-surface2);color:var(--c-text2);border-color:var(--c-border);}
+.badge-purple{background:var(--c-purple-bg);color:var(--c-purple);border-color:var(--c-purple-border);}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 11px;}
+.form-grid .full{grid-column:1/-1;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field label{font-size:11px;font-weight:600;color:var(--c-text2);letter-spacing:0.03em;text-transform:uppercase;}
+.field input,.field select,.field textarea{border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px 10px;background:var(--c-surface);font-size:13px;transition:border-color 0.1s,box-shadow 0.1s;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(37,99,235,0.10);}
+.field textarea{resize:vertical;min-height:64px;}
+.field-hint{font-size:11px;color:var(--c-text3);margin-top:2px;}
+
+/* ITEMS */
+.item-list{display:flex;flex-direction:column;gap:5px;}
+.list-item{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:9px 11px;transition:border-color 0.1s;}
+.list-item:hover{border-color:var(--c-border2);}
+.list-item.is-active-cls{border-color:var(--c-blue);background:var(--c-blue-bg);}
+.list-item.overdue{border-left:3px solid var(--c-red);}
+.li-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:2px;}
+.li-title{font-size:13px;font-weight:500;}
+.li-meta{font-size:12px;color:var(--c-text2);}
+.li-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.li-actions{display:flex;gap:4px;margin-top:7px;padding-top:6px;border-top:1px solid var(--c-border);flex-wrap:wrap;}
+
+/* LAYOUT HELPERS */
+.split{display:grid;grid-template-columns:1.1fr 0.9fr;gap:14px;align-items:start;}
+.col{display:flex;flex-direction:column;gap:11px;}
+.panel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+.scrollbox{max-height:320px;overflow-y:auto;}
+
+/* WEEK */
+.week-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.week-label{font-size:14px;font-weight:600;min-width:180px;text-align:center;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead tr{border-bottom:2px solid var(--c-border);}
+th{text-align:left;padding:8px 10px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--c-text2);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--c-border);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--c-surface2);}
+td{padding:8px 10px;vertical-align:middle;}
+
+/* AANWEZIGHEID CHECKLIST */
+.presence-grid{display:flex;flex-direction:column;gap:4px;}
+.presence-row{display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r-sm);transition:background 0.1s;}
+.presence-row.absent{background:var(--c-red-bg);border-color:var(--c-red-border);}
+.presence-row.late{background:var(--c-amber-bg);border-color:var(--c-amber-border);}
+.presence-row.excused{background:var(--c-purple-bg);border-color:var(--c-purple-border);}
+.presence-name{flex:1;font-size:13px;font-weight:500;}
+.presence-btns{display:flex;gap:4px;}
+.pres-btn{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid var(--c-border);background:var(--c-surface2);cursor:pointer;transition:all 0.1s;}
+.pres-btn.active-present{background:#dcfce7;border-color:#16a34a;color:#15803d;}
+.pres-btn.active-absent{background:var(--c-red-bg);border-color:var(--c-red);color:var(--c-red);}
+.pres-btn.active-late{background:var(--c-amber-bg);border-color:var(--c-amber);color:var(--c-amber);}
+.pres-btn.active-excused{background:var(--c-purple-bg);border-color:var(--c-purple);color:var(--c-purple);}
+
+/* PUNTENBOEK */
+.punten-wrap{overflow-x:auto;}
+.punten-table{border-collapse:collapse;font-size:12px;min-width:600px;}
+.punten-table th{background:var(--c-surface2);padding:7px 10px;border:1px solid var(--c-border);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--c-text2);white-space:nowrap;}
+.punten-table td{padding:5px 8px;border:1px solid var(--c-border);vertical-align:middle;}
+.punten-table tr:hover td{background:var(--c-surface2);}
+.punten-table .stu-name{font-weight:500;min-width:140px;position:sticky;left:0;background:var(--c-surface);z-index:1;}
+.punten-table tr:hover .stu-name{background:var(--c-surface2);}
+.punten-input{border:none;background:transparent;width:60px;text-align:center;font-size:12px;font-family:var(--font-mono);padding:3px 4px;border-radius:3px;}
+.punten-input:focus{outline:none;background:var(--c-blue-bg);box-shadow:0 0 0 2px var(--c-blue);}
+.punten-avg{font-family:var(--font-mono);font-weight:600;font-size:12px;text-align:center;}
+.punten-avg.good{color:var(--c-green);}
+.punten-avg.warn{color:var(--c-amber);}
+.punten-avg.bad{color:var(--c-red);}
+.punten-sig{width:10px;height:10px;border-radius:50%;display:inline-block;margin-left:4px;}
+
+/* ZORGPROFIEL */
+.zorg-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.zorg-iac{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A;}
+.zorg-baso{background:#EDE9FE;color:#6D28D9;border:1px solid #DDD6FE;}
+.zorg-dyslexie{background:#E0F2FE;color:#0369A1;border:1px solid #BAE6FD;}
+.zorg-dyscalculie{background:#FCE7F3;color:#BE185D;border:1px solid #FBCFE8;}
+.zorg-adhd{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA;}
+.zorg-andere{background:var(--c-surface2);color:var(--c-text2);border:1px solid var(--c-border);}
+
+/* SEARCH */
+#searchBar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--c-surface);border-bottom:1px solid var(--c-border);position:sticky;top:48px;z-index:35;}
+#searchInput{flex:1;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:6px 12px;font-size:13px;background:var(--c-surface);max-width:340px;}
+#searchInput:focus{outline:none;border-color:var(--c-blue);}
+#searchResults{position:absolute;top:100%;left:14px;right:14px;max-width:400px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r);box-shadow:var(--shadow-md);z-index:200;max-height:300px;overflow-y:auto;display:none;}
+#searchResults.open{display:block;}
+.search-result-item{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--c-border);font-size:13px;display:flex;align-items:center;gap:8px;}
+.search-result-item:last-child{border-bottom:none;}
+.search-result-item:hover{background:var(--c-surface2);}
+.sr-label{font-weight:500;}
+.sr-sub{font-size:11px;color:var(--c-text2);}
+
+/* TOAST */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:var(--shadow-md);pointer-events:auto;animation:toastIn 0.18s var(--ease);}
+.toast.ok{background:#18181B;color:#D4D4D8;}
+.toast.err{background:#450A0A;color:#FCA5A5;}
+.toast.warn{background:#451A00;color:#FDE68A;}
+@keyframes toastIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}
+
+/* HELP & MISC */
+.help{background:var(--c-surface2);border:1px dashed var(--c-border2);border-radius:var(--r-sm);padding:9px 11px;font-size:12px;color:var(--c-text2);line-height:1.65;}
+.mono{font-family:var(--font-mono);font-size:11px;background:var(--c-border);padding:1px 5px;border-radius:3px;}
+.empty{text-align:center;padding:20px 12px;color:var(--c-text3);font-size:13px;}
+.empty-icon{font-size:24px;margin-bottom:4px;}
+
+/* TABS */
+.tab-row{display:flex;gap:0;border-bottom:2px solid var(--c-border);margin-bottom:13px;overflow-x:auto;}
+.tab{padding:7px 13px;font-size:13px;font-weight:500;color:var(--c-text2);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color 0.1s,border-color 0.1s;white-space:nowrap;}
+.tab:hover{color:var(--c-text);}
+.tab.active{color:var(--c-blue);border-bottom-color:var(--c-blue);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+/* MODAL */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--c-surface);border-radius:var(--r);box-shadow:var(--shadow-md);padding:22px;width:min(520px,100%);max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:14px;letter-spacing:-0.01em;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+
+/* OVERLAY */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:45;}
+#overlay.open{display:block;}
+
+/* MOBILE */
+/* ── TOUCH TARGETS ── alle interactieve elementen minstens 44px hoog op mobiel */
+@media(max-width:768px){
+  /* Layout */
+  #shell{flex-direction:column;height:auto;overflow:visible;}
+  #sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);z-index:50;width:82vw;max-width:300px;}
+  #sidebar.open{transform:translateX(0);}
+  #main-scroll{overflow-y:visible;}
+  #main{padding:10px 10px 140px;} /* extra bottom padding voor bottom nav + FAB */
+  #topbar{position:sticky;top:0;z-index:40;padding:8px 12px;min-height:52px;}
+  #mobile-toggle{display:block;padding:8px;font-size:22px;min-width:44px;min-height:44px;}
+  #searchBar{padding:6px 10px;}
+  #searchInput{font-size:16px;} /* 16px voorkomt zoom op iOS */
+
+  /* Grids */
+  .split{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-grid .full{grid-column:1;}
+  .metric-row{grid-template-columns:repeat(2,1fr);}
+  .panel-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .three-col{grid-template-columns:1fr;}
+
+  /* Grotere touch targets voor knoppen */
+  .btn{min-height:44px;padding:10px 14px;font-size:14px;}
+  .btn-sm{min-height:38px;padding:8px 12px;font-size:13px;}
+  .btn-xs{min-height:34px;padding:6px 10px;font-size:12px;}
+
+  /* Formuliervelden groter */
+  .field input,.field select,.field textarea{
+    font-size:16px; /* voorkomt iOS zoom */
+    padding:11px 12px;
+    min-height:44px;
+  }
+  .field textarea{min-height:80px;}
+  .field label{font-size:12px;margin-bottom:5px;}
+
+  /* Aanwezigheid knoppen groter */
+  .pres-btn{padding:8px 12px;font-size:13px;min-height:40px;min-width:40px;}
+  .presence-row{padding:10px 12px;gap:8px;}
+  .presence-name{font-size:14px;}
+
+  /* Kaarten */
+  .card-body{padding:12px;}
+  .card-header{padding:10px 12px 0;}
+
+  /* List items */
+  .list-item{padding:11px 12px;}
+  .li-title{font-size:14px;}
+  .li-meta{font-size:13px;}
+  .li-actions{gap:6px;margin-top:10px;padding-top:8px;}
+
+  /* Metrics */
+  .metric-card{padding:12px;}
+  .metric-val{font-size:28px;}
+  .metric-label{font-size:10px;}
+
+  /* Modals volledig scherm op gsm */
+  .modal-backdrop{padding:0;align-items:flex-end;}
+  .modal{border-radius:16px 16px 0 0;padding:20px 16px 32px;width:100%;max-height:90vh;}
+  .modal-title{font-size:17px;margin-bottom:16px;}
+  .modal-actions{gap:10px;margin-top:16px;}
+  .modal-actions .btn{flex:1;justify-content:center;min-height:48px;}
+
+  /* Topbar compacter */
+  .tb-title{font-size:15px;}
+  .year-chip{display:none;} /* verberg op gsm */
+  #tbExport,.btn-ghost{display:none;}
+  label[for="tbImport"]{display:none;}
+  #openYearModal{display:none;}
+  #darkToggle{display:none;}
+  #mobileSyncPill{display:flex !important;}
+
+  /* FAB */
+  #fab{bottom:84px;right:16px;width:56px;height:56px;font-size:26px;}
+  #fab-menu{bottom:152px;right:16px;}
+  .fab-item{padding:10px 16px 10px 12px;font-size:14px;}
+
+  /* Puntenboek input */
+  .punten-input{font-size:14px;width:56px;min-height:36px;}
+
+  /* Page title */
+  .page-title{font-size:17px;}
+  .page-desc{font-size:12px;}
+
+  /* Week strip */
+  .week-strip{gap:8px;}
+  .week-label{font-size:13px;min-width:auto;flex:1;text-align:center;}
+
+  /* Sidebar nav items groter */
+  .sb-btn{padding:11px 10px;font-size:14px;}
+  .class-pill{padding:11px 10px;font-size:13px;}
+}
+
+/* ── BOTTOM NAV (alleen mobiel) ── */
+#bottom-nav{display:none;}
+@media(max-width:768px){
+  #bottom-nav{
+    display:flex;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    z-index:60;
+    background:var(--c-nav-bg);
+    border-top:1px solid rgba(255,255,255,0.08);
+    padding:0 0 env(safe-area-inset-bottom,0);
+    height:64px;
+  }
+  .bnav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;color:var(--c-nav-text);font-size:10px;font-weight:500;
+    border:none;background:none;cursor:pointer;padding:6px 4px;
+    transition:color 0.1s;min-height:44px;
+  }
+  .bnav-item.active{color:#93C5FD;}
+  .bnav-item .bnav-ico{font-size:20px;line-height:1;}
+  .bnav-item .bnav-lbl{font-size:9px;letter-spacing:0.01em;}
+}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--c-border2);border-radius:4px;}
+</style>
+</head>
+<body>
+<div id="overlay"></div>
+<div id="toasts"></div>
+
+<!-- MODAL: Schooljaar -->
+<div class="modal-backdrop" id="yearModal">
+  <div class="modal">
+    <div class="modal-title">Schooljaar toevoegen / beheren</div>
+    <div class="form-grid">
+      <div class="field"><label>Label *</label><input id="mYLabel" placeholder="bv. 2026-2027"/></div>
+      <div class="field"></div>
+      <div class="field"><label>Startdatum</label><input id="mYStart" type="date"/></div>
+      <div class="field"><label>Einddatum</label><input id="mYEnd" type="date"/></div>
+      <div class="field full"><label>Klassen kopiëren van</label>
+        <select id="mYCopyFrom"><option value="">— niet kopiëren —</option></select></div>
+      <div class="field full">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:13px;">
+          <input id="mYCopyStus" type="checkbox" checked style="width:auto;"/> Leerlingen meenemen (zonder registraties)
+        </label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="yearModalCancel">Annuleren</button>
+      <button class="btn btn-primary" id="yearModalSave">Aanmaken</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Snelle invoer -->
+<div class="modal-backdrop" id="quickModal">
+  <div class="modal">
+    <div class="modal-title" id="quickModalTitle">Snel toevoegen</div>
+    <div id="quickModalBody"></div>
+    <div class="modal-actions">
+      <button class="btn" id="quickModalCancel">Annuleren</button>
+      <button class="btn btn-primary" id="quickModalSave">Bewaren</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Leerling bewerken -->
+<div class="modal-backdrop" id="stuEditModal">
+  <div class="modal">
+    <div class="modal-title">Leerling bewerken</div>
+    <div class="form-grid">
+      <div class="field full"><label>Naam / code</label><input id="mSeId"/></div>
+      <div class="field full"><label>E-mail</label><input id="mSeEmail" type="email"/></div>
+      <div class="field full"><label>Interne notitie</label><textarea id="mSeNote"></textarea></div>
+      <div class="field full"><label>Zorgmaatregelen</label>
+        <div id="mSeZorg" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
+      </div>
+      <div class="field full"><label>Zorgmaatregel toevoegen</label>
+        <div style="display:flex;gap:6px;">
+          <select id="mSeZorgType" style="flex:1;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:6px 8px;background:var(--c-surface);">
+            <option value="iac">IAC</option><option value="baso">BaSO-fiche</option>
+            <option value="dyslexie">Dyslexie</option><option value="dyscalculie">Dyscalculie</option>
+            <option value="adhd">ADHD</option><option value="andere">Andere</option>
+          </select>
+          <input id="mSeZorgNote" placeholder="Toelichting (opt.)" style="flex:2;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:6px 10px;background:var(--c-surface);font-size:13px;"/>
+          <button class="btn btn-sm" onclick="addZorgItem()">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="$('stuEditModal').classList.remove('open')">Annuleren</button>
+      <button class="btn btn-primary" id="stuEditSave">Bewaren</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Klasnotitie -->
+<div class="modal-backdrop" id="klasNoteModal">
+  <div class="modal">
+    <div class="modal-title" id="klasNoteTitle">Klasnotitie</div>
+    <div class="field">
+      <label>Notitie voor de klas</label>
+      <textarea id="klasNoteText" style="min-height:120px;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:9px;font-size:13px;width:100%;font-family:var(--font);"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="$('klasNoteModal').classList.remove('open')">Annuleren</button>
+      <button class="btn btn-primary" id="klasNoteSave">Bewaren</button>
+    </div>
+  </div>
+</div>
+
+<div id="shell">
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════ -->
+<aside id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo"><em class="sb-logo-mark">🎓</em>Klascockpit</div>
+    <div class="sb-subtitle">Persoonlijk lerarendashboard</div>
+  </div>
+  <div class="sb-sync">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncText">Verbinden…</span>
+  </div>
+
+  <!-- KLAS SWITCHER -->
+  <div class="class-switcher">
+    <div class="class-switcher-label">Actieve klas</div>
+    <div class="class-btns" id="classSwitcherBtns"></div>
+  </div>
+
+  <div class="sb-divider"></div>
+  <div class="sb-sec">Overzicht</div>
+  <div class="sb-nav">
+    <button class="sb-btn active" data-page="dashboard"><span class="ico"></span>Dashboard</button>
+    <button class="sb-btn" data-page="week"><span class="ico"></span>Weekoverzicht</button>
+  </div>
+  <div class="sb-sec">Klassen & leerlingen</div>
+  <div class="sb-nav">
+    <button class="sb-btn" data-page="klassen"><span class="ico"></span>Mijn klassen</button>
+    <button class="sb-btn" data-page="leerling"><span class="ico"></span>Leerlingfiche</button>
+  </div>
+  <div class="sb-sec">Dagelijks werk</div>
+  <div class="sb-nav">
+    <button class="sb-btn" data-page="aanwezigheid"><span class="ico"></span>Aanwezigheid</button>
+    <button class="sb-btn" data-page="afwezigheden"><span class="ico"></span>Afwezigheidslog</button>
+    <button class="sb-btn" data-page="observaties"><span class="ico"></span>Observaties</button>
+    <button class="sb-btn" data-page="evaluaties"><span class="ico"></span>Evaluaties</button>
+    <button class="sb-btn" data-page="puntenboek"><span class="ico"></span>Puntenboek</button>
+    <button class="sb-btn" data-page="communicatie"><span class="ico"></span>Communicatie</button>
+    <button class="sb-btn" data-page="acties"><span class="ico"></span>Acties</button>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-nav sb-footer-nav">
+    <button class="sb-btn" data-page="sync"><span class="ico"></span>Sync & apparaten</button>
+    <button class="sb-btn" data-page="instellingen"><span class="ico"></span>Instellingen</button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ═════════════════════════════════════════════════════ -->
+<div id="main-scroll">
+  <div id="topbar">
+    <button id="mobile-toggle">☰</button>
+    <div class="tb-title" id="tbTitle">Dashboard</div>
+    <div class="tb-actions">
+      <span class="year-chip" id="yearChip">—</span>
+      <button class="btn btn-sm btn-ghost" id="openYearModal" style="">+ Schooljaar</button>
+      <button class="btn btn-sm" title="Donkere modus" id="darkToggle">🌙</button>
+      <button class="btn btn-sm" id="tbExport">↓ Export</button>
+      <label class="btn btn-sm btn-primary" style="cursor:pointer">↑ Import<input id="tbImport" type="file" accept=".json" style="display:none"/></label>
+      <!-- Mobile: sync status pill -->
+      <span id="mobileSyncPill" style="display:none;align-items:center;gap:5px;font-size:11px;color:var(--c-text2);"></span>
+    </div>
+  </div>
+
+  <!-- ZOEKBALK -->
+  <div id="searchBar">
+    <span style="font-size:16px;color:var(--c-text3);">🔍</span>
+    <input id="searchInput" placeholder="Zoek leerling, klas, actie…" autocomplete="off"/>
+    <div id="searchResults"></div>
+  </div>
+
+  <div id="main">
+
+<!-- ══ DASHBOARD ════════════════════════════════════════════════ -->
+<section id="page-dashboard" class="page active">
+  <div class="page-head">
+    <div>
+      <div class="page-title" id="dashGreet">Goedemorgen</div>
+      <div class="page-desc" id="dashDesc">Hier is je dagelijks overzicht.</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-primary" onclick="openPage('aanwezigheid')">✓ Aanwezigheid registreren</button>
+    </div>
+  </div>
+  <div class="metric-row" id="metricsGrid"></div>
+
+  <!-- KLASNOTITIE STRIP -->
+  <div id="klasNoteStrip" style="display:none;" class="warn-banner" style="cursor:pointer;"></div>
+
+  <div class="panel-grid">
+    <div class="card">
+      <div class="card-header"><div class="card-title">⚠ Aandachtspunten</div></div>
+      <div class="card-body"><div id="dashAlerts" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">📋 Open acties</div></div>
+      <div class="card-body"><div id="dashActions" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">📬 Communicatie gepland</div>
+        <div id="commOverdueWarn"></div>
+      </div>
+      <div class="card-body"><div id="dashComm" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔧 Remediëring lopend</div></div>
+      <div class="card-body"><div id="dashRem" class="item-list"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WEEKOVERZICHT ════════════════════════════════════════════ -->
+<section id="page-week" class="page">
+  <div class="page-head"><div class="page-title">Weekoverzicht</div></div>
+  <div class="card card-body">
+    <div class="week-strip">
+      <button class="btn btn-sm btn-ghost" id="prevWeekBtn">← Vorige</button>
+      <div class="week-label" id="weekLabel">—</div>
+      <button class="btn btn-sm btn-ghost" id="nextWeekBtn">Volgende →</button>
+      <button class="btn btn-sm" id="todayBtn">Vandaag</button>
+    </div>
+  </div>
+  <div class="panel-grid">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Afwezigheden</div></div>
+      <div class="card-body"><div id="weekAbsences" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Evaluaties</div></div>
+      <div class="card-body"><div id="weekEvals" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Open acties</div></div>
+      <div class="card-body"><div id="weekActs" class="item-list"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Communicatie</div></div>
+      <div class="card-body"><div id="weekComm" class="item-list"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Weeknotitie</div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-xs btn-primary" onclick="openPage('aanwezigheid')">+ Aanwezigheid</button>
+        <button class="btn btn-xs" onclick="openPage('afwezigheden')">+ Afwezigheid</button>
+        <button class="btn btn-xs" onclick="openPage('evaluaties')">+ Evaluatie</button>
+      </div>
+    </div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+      <textarea id="weekNote" style="width:100%;min-height:80px;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;font-family:var(--font);background:var(--c-surface);" placeholder="Notities voor deze week…"></textarea>
+      <div><button class="btn btn-sm btn-primary" id="saveWeekNote">Weeknotitie bewaren</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ KLASSEN ══════════════════════════════════════════════════ -->
+<section id="page-klassen" class="page">
+  <div class="page-head">
+    <div class="page-title">Mijn klassen</div>
+    <div style="display:flex;gap:6px;">
+      <select id="filterYear" class="btn btn-sm"><option value="">Alle schooljaren</option></select>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Klassen</div>
+          <div class="card-actions"><span id="classBadge" class="badge badge-gray">0</span></div>
+        </div>
+        <div class="card-body scrollbox"><div id="classesList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Leerlingen — actieve klas</div>
+          <div class="card-actions"><span id="stuBadge" class="badge badge-gray">0</span></div>
+        </div>
+        <div class="card-body scrollbox"><div id="studentsList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">CSV-import</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="help">
+            Ondersteunde kolommen: <span class="mono">voornaam</span> + <span class="mono">achternaam</span>, <span class="mono">volledige_naam</span>, <span class="mono">Leerling</span>.<br>
+            De bestandsnaam wordt gebruikt als klasnaam. Optioneel: <span class="mono">school_year</span>, <span class="mono">email</span>.
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <label class="btn btn-sm" style="cursor:pointer;">📂 CSV kiezen<input id="csvFile" type="file" accept=".csv" style="display:none"/></label>
+            <button class="btn btn-sm btn-primary" id="importCsvBtn">Importeren</button>
+            <span id="csvStatus" style="font-size:12px;color:var(--c-text2);"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Klas toevoegen</div></div>
+        <div class="card-body">
+          <form id="classForm" class="form-grid">
+            <div class="field"><label>Naam *</label><input id="fCN" required placeholder="bv. 4A"/></div>
+            <div class="field"><label>Schooljaar *</label><select id="fCY" required></select></div>
+            <div class="field"><label>Vak</label><input id="fCS" placeholder="bv. Spaans"/></div>
+            <div class="field"><label>Leerjaar / graad</label><input id="fCL" placeholder="bv. 3e jaar"/></div>
+            <div class="field full"><label>Notitie</label><textarea id="fCNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Klas bewaren</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Leerling toevoegen</div></div>
+        <div class="card-body">
+          <form id="studentForm" class="form-grid">
+            <div class="field"><label>Naam *</label><input id="fSI" required placeholder="Voornaam Achternaam"/></div>
+            <div class="field"><label>Klas *</label><select id="fSC" required></select></div>
+            <div class="field full"><label>E-mail</label><input id="fSE" type="email"/></div>
+            <div class="field full"><label>Interne notitie</label><textarea id="fSNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Leerling toevoegen</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LEERLINGFICHE ════════════════════════════════════════════ -->
+<section id="page-leerling" class="page">
+  <div class="page-head">
+    <div class="page-title">Leerlingfiche</div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn-sm btn-ghost" id="prevStu">← Vorige</button>
+      <select id="ficheSelect" class="btn btn-sm" style="min-width:180px;"></select>
+      <button class="btn btn-sm btn-ghost" id="nextStu">Volgende →</button>
+    </div>
+  </div>
+  <!-- Snelle actieknoppen vanuit de fiche -->
+  <div id="ficheQuickActions" style="display:none;flex-wrap:wrap;gap:6px;">
+    <button class="btn btn-sm" id="ficheAddAbs">+ Afwezigheid</button>
+    <button class="btn btn-sm" id="ficheAddObs">+ Observatie</button>
+    <button class="btn btn-sm" id="ficheAddComm">+ Communicatie</button>
+    <button class="btn btn-sm" id="ficheAddActie">+ Actie</button>
+    <button class="btn btn-sm btn-amber" id="ficheEditBtn">✏ Bewerken</button>
+    <button class="btn btn-sm" id="ficheExportBtn">↓ Rapport PDF</button>
+  </div>
+  <div id="ficheContent"><div class="empty"><div class="empty-icon">👤</div>Selecteer een leerling.</div></div>
+</section>
+
+<!-- ══ AANWEZIGHEID (NIEUW) ══════════════════════════════════════ -->
+<section id="page-aanwezigheid" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Aanwezigheid registreren</div>
+      <div class="page-desc">Snel de volledige klas afwerken</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <input id="aanwDatum" type="date" class="btn btn-sm" style="font-size:12px;"/>
+      <select id="aanwKlas" class="btn btn-sm"></select>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title" id="aanwKlasLabel">Klas</div>
+      <div class="card-actions">
+        <button class="btn btn-xs btn-ghost" id="aanwAllesAanwezig">✓ Iedereen aanwezig</button>
+        <span id="aanwSummary" class="badge badge-gray" style="font-size:11px;"></span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:8px;margin-bottom:10px;font-size:12px;color:var(--c-text2);flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:4px;"><span class="pres-btn active-present" style="cursor:default;">A</span> Aanwezig</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span class="pres-btn active-absent" style="cursor:default;">X</span> Afwezig</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span class="pres-btn active-late" style="cursor:default;">L</span> Te laat</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span class="pres-btn active-excused" style="cursor:default;">G</span> Gewettigd</span>
+      </div>
+      <div id="aanwGrid" class="presence-grid"></div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" id="aanwSaveBtn">💾 Aanwezigheid bewaren</button>
+        <span style="font-size:12px;color:var(--c-text3);align-self:center;" id="aanwLastSaved"></span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Afwezigheidshistoriek — actieve klas</div></div>
+    <div class="card-body scrollbox" style="max-height:220px;"><div id="aanwHistoriek" class="item-list"></div></div>
+  </div>
+</section>
+
+<!-- ══ AFWEZIGHEIDSLOG ══════════════════════════════════════════ -->
+<section id="page-afwezigheden" class="page">
+  <div class="page-head"><div class="page-title">Afwezigheidslog & inhaalwerk</div></div>
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Afwezigheidslog</div><span id="absBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="absencesList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Inhaalopvolgingen</div><span id="mkBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="makeupsList" class="item-list"></div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Afwezigheid registreren</div></div>
+        <div class="card-body">
+          <form id="absForm" class="form-grid">
+            <div class="field"><label>Datum *</label><input id="fAD" type="date" required/></div>
+            <div class="field"><label>Leerling *</label><select id="fAS" required></select></div>
+            <div class="field"><label>Type</label>
+              <select id="fAT">
+                <option>afwezig ongewettigd</option>
+                <option>afwezig gewettigd</option>
+                <option>te laat</option>
+                <option>deel gemist</option>
+                <option>andere</option>
+              </select>
+            </div>
+            <div class="field"><label>Inhaalwerk nodig?</label><select id="fAM"><option value="nee">Nee</option><option value="ja">Ja</option></select></div>
+            <div class="field full"><label>Notitie</label><textarea id="fANote"></textarea></div>
+            <div class="full" style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary btn-sm">Bewaren</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Inhaalwerk koppelen</div></div>
+        <div class="card-body">
+          <form id="mkForm" class="form-grid">
+            <div class="field full"><label>Afwezigheid *</label><select id="fMkA" required></select></div>
+            <div class="field"><label>Type gemist</label>
+              <select id="fMkT"><option>toets</option><option>taak</option><option>mondeling</option><option>lesinhoud</option><option>andere</option></select>
+            </div>
+            <div class="field"><label>Status</label>
+              <select id="fMkS"><option>open</option><option>wacht op afspraak</option><option>ingepland</option><option>afgelegd</option><option>niet opgedaagd</option><option>afgesloten</option></select>
+            </div>
+            <div class="field full"><label>Titel *</label><input id="fMkTi" required placeholder="bv. Hoofdstuk 3 toets"/></div>
+            <div class="field"><label>Afspraakdatum</label><input id="fMkD" type="date"/></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OBSERVATIES ══════════════════════════════════════════════ -->
+<section id="page-observaties" class="page">
+  <div class="page-head"><div class="page-title">Observaties & klasmanagement</div></div>
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Observaties</div><span id="obsBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="obsList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Klasmanagement</div><span id="cmBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="cmList" class="item-list"></div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Observatie registreren</div></div>
+        <div class="card-body">
+          <form id="obsForm" class="form-grid">
+            <div class="field"><label>Datum *</label><input id="fObD" type="date" required/></div>
+            <div class="field"><label>Leerling *</label><select id="fObS" required></select></div>
+            <div class="field"><label>Categorie</label>
+              <select id="fObCat">
+                <option>werkhouding</option><option>gedrag</option><option>sociale vaardigheden</option>
+                <option>motivatie</option><option>klasparticipatie</option><option>positief</option><option>andere</option>
+              </select>
+            </div>
+            <div class="field"><label>Opvolging nodig?</label>
+              <select id="fObFU"><option value="nee">Nee</option><option value="ja">Ja</option></select>
+            </div>
+            <div class="field full"><label>Notitie *</label><textarea id="fObNote" required></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Klasmanagement-item</div></div>
+        <div class="card-body">
+          <form id="cmForm" class="form-grid">
+            <div class="field"><label>Datum *</label><input id="fCmD" type="date" required/></div>
+            <div class="field"><label>Leerling *</label><select id="fCmS" required></select></div>
+            <div class="field"><label>Categorie</label>
+              <select id="fCmCat"><option>gedrag</option><option>materiaal</option><option>taalgebruik</option><option>samenwerking</option><option>andere</option></select>
+            </div>
+            <div class="field"><label>Ernst</label>
+              <select id="fCmSev"><option>licht</option><option>herhaald</option><option>herhaald probleem</option><option>ernstig</option></select>
+            </div>
+            <div class="field"><label>Maatregel</label>
+              <select id="fCmMeas"><option>geen</option><option>gesprek leerling</option><option>nablijven</option><option>oudercontact</option><option>rapport directie</option><option>andere</option></select>
+            </div>
+            <div class="field"><label>Status</label>
+              <select id="fCmSt"><option>geregistreerd</option><option>opvolgen</option><option>besproken</option><option>afgerond</option></select>
+            </div>
+            <div class="field full"><label>Notitie *</label><textarea id="fCmNote" required></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EVALUATIES ═══════════════════════════════════════════════ -->
+<section id="page-evaluaties" class="page">
+  <div class="page-head"><div class="page-title">Evaluaties & remediëring</div></div>
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Evaluaties</div><span id="evBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="evalList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Resultaten</div></div>
+        <div class="card-body scrollbox"><div id="resultList" class="item-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Remediëring</div></div>
+        <div class="card-body scrollbox"><div id="remList" class="item-list"></div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Evaluatie toevoegen</div></div>
+        <div class="card-body">
+          <form id="evalForm" class="form-grid">
+            <div class="field"><label>Datum *</label><input id="fEvD" type="date" required/></div>
+            <div class="field"><label>Type</label><select id="fEvT"><option>toets</option><option>taak</option><option>mondeling</option><option>oefening</option><option>observatie</option><option>andere</option></select></div>
+            <div class="field full"><label>Titel *</label><input id="fEvTi" required placeholder="bv. Werkwoordentoets"/></div>
+            <div class="field"><label>Max. punten</label><input id="fEvMax" type="number" placeholder="20" min="1"/></div>
+            <div class="field"><label>Gewicht (%)</label><input id="fEvWeight" type="number" placeholder="100" min="1" max="100"/></div>
+            <div class="field full"><label>Thema / leerplandoelen</label><input id="fEvTh"/></div>
+            <div class="field full"><label>Notitie</label><textarea id="fEvNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Resultaat registreren</div></div>
+        <div class="card-body">
+          <form id="resultForm" class="form-grid">
+            <div class="field"><label>Evaluatie *</label><select id="fRsEv" required></select></div>
+            <div class="field"><label>Leerling *</label><select id="fRsSt" required></select></div>
+            <div class="field"><label>Resultaat</label><input id="fRsVal" placeholder="bv. 14/20"/></div>
+            <div class="field"><label>Signaal</label><select id="fRsSig"><option>voldoende</option><option>goed</option><option>onvoldoende</option><option>remediëring nodig</option><option>afwezig</option></select></div>
+            <div class="field full"><label>Notitie</label><textarea id="fRsNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PUNTENBOEK (NIEUW) ════════════════════════════════════════ -->
+<section id="page-puntenboek" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Puntenboek</div>
+      <div class="page-desc">Alle resultaten per klas in één overzicht</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <select id="pbKlasSelect" class="btn btn-sm"></select>
+      <button class="btn btn-sm btn-success" id="pbExportCsv">↓ Exporteer als CSV</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div id="puntenboekWrap" class="punten-wrap">
+        <div class="empty"><div class="empty-icon">📊</div>Selecteer een klas om het puntenboek te zien.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Remediëring opvolging</div></div>
+    <div class="card-body">
+      <div id="remOpvolgList" class="item-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMUNICATIE ═════════════════════════════════════════════ -->
+<section id="page-communicatie" class="page">
+  <div class="page-head"><div class="page-title">Communicatie</div></div>
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Logboek</div><span id="coBadge" class="badge badge-gray">0</span></div>
+        <div class="card-body scrollbox"><div id="commList" class="item-list"></div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Registreren</div></div>
+        <div class="card-body">
+          <form id="commForm" class="form-grid">
+            <div class="field"><label>Datum *</label><input id="fCoD" type="date" required/></div>
+            <div class="field"><label>Leerling *</label><select id="fCoSt" required></select></div>
+            <div class="field"><label>Type</label>
+              <select id="fCoTy"><option>e-mail ouder</option><option>telefoongesprek</option><option>gesprek leerling</option><option>gesprek ouder</option><option>brief</option><option>CLB-contact</option><option>andere</option></select>
+            </div>
+            <div class="field"><label>Status</label>
+              <select id="fCoSt2"><option>voorbereid</option><option>verstuurd</option><option>besproken</option><option>afgerond</option></select>
+            </div>
+            <div class="field"><label>Deadline opvolging</label><input id="fCoDead" type="date"/></div>
+            <div class="field"></div>
+            <div class="field full"><label>Onderwerp *</label><input id="fCoSub" required/></div>
+            <div class="field full"><label>Notitie</label><textarea id="fCoNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ACTIES ═══════════════════════════════════════════════════ -->
+<section id="page-acties" class="page">
+  <div class="page-head">
+    <div class="page-title">Acties & opvolgpunten</div>
+    <button class="btn btn-sm btn-ghost" id="toggleOpenBtn">Toon alleen open</button>
+  </div>
+  <div class="split">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Actielijst</div><span id="actBadge" class="badge badge-gray">0 open</span></div>
+        <div class="card-body scrollbox" style="max-height:500px;"><div id="actionsList" class="item-list"></div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Actie toevoegen</div></div>
+        <div class="card-body">
+          <form id="actForm" class="form-grid">
+            <div class="field full"><label>Omschrijving *</label><input id="fAcTi" required/></div>
+            <div class="field"><label>Klas</label><select id="fAcCl"></select></div>
+            <div class="field"><label>Leerling</label><select id="fAcStu"></select></div>
+            <div class="field"><label>Prioriteit</label><select id="fAcPr"><option>normaal</option><option>hoog</option><option>dringend</option></select></div>
+            <div class="field"><label>Status</label><select id="fAcSt"><option>open</option><option>in uitvoering</option><option>afgerond</option></select></div>
+            <div class="field"><label>Vervaldag</label><input id="fAcDu" type="date"/></div>
+            <div class="field full"><label>Notitie</label><textarea id="fAcNote"></textarea></div>
+            <div class="full"><button type="submit" class="btn btn-primary btn-sm">Bewaren</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SYNC ══════════════════════════════════════════════════════ -->
+<section id="page-sync" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Overdracht tussen apparaten</div>
+      <div class="page-desc">Zet je data van laptop naar gsm of omgekeerd</div>
+    </div>
+  </div>
+
+  <!-- OPSLAG STATUS BANNER -->
+  <div id="storageStatusCard" class="card" style="border-left:4px solid var(--c-blue);">
+    <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:160px;">
+          <div style="font-size:11px;color:var(--c-text2);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.05em;">Data op dit apparaat</div>
+          <div id="syncStatLine" style="font-size:13px;font-weight:500;">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" id="bigExportBtn">📤 Download bestand</button>
+          <label class="btn btn-sm btn-success" style="cursor:pointer;">📥 Importeer bestand<input id="bigImportFile" type="file" accept=".json" style="display:none"/></label>
+          <button class="btn btn-sm" id="forceSyncBtn">↺ Cloud-sync</button>
+        </div>
+      </div>
+      <!-- SNELSTE METHODE: kopieer link -->
+      <div style="border-top:1px solid var(--c-border);padding-top:10px;">
+        <div style="font-size:11px;font-weight:600;color:var(--c-text2);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;">⚡ Snelste methode — stuur data als link</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-primary btn-sm" id="genDataLinkBtn">🔗 Genereer overdrachtslink</button>
+          <button class="btn btn-sm btn-success" id="copyDataLinkBtn" style="display:none;">📋 Kopieer link</button>
+        </div>
+        <div id="dataLinkBox" style="display:none;margin-top:8px;">
+          <textarea id="dataLinkText" readonly style="width:100%;height:56px;font-size:11px;font-family:monospace;border:1px solid var(--c-border);border-radius:6px;padding:7px;background:var(--c-surface2);resize:none;"></textarea>
+          <div style="font-size:11px;color:var(--c-text2);margin-top:4px;">📲 Stuur deze link via WhatsApp of e-mail naar jezelf. Open op het andere apparaat en de data wordt automatisch geladen.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <div class="tab active" id="ttab-btn-lg" onclick="switchTransferTab('laptop-gsm',this)">💻 → 📱 Laptop naar gsm</div>
+    <div class="tab" id="ttab-btn-gl" onclick="switchTransferTab('gsm-laptop',this)">📱 → 💻 Gsm naar laptop</div>
+    <div class="tab" id="ttab-btn-em" onclick="switchTransferTab('email',this)">✉ Via e-mail</div>
+    <div class="tab" id="ttab-btn-qr" onclick="switchTransferTab('qr',this)">🔗 Deel via link</div>
+  </div>
+
+  <div id="ttab-laptop-gsm">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Stap 1 — Op de laptop</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="info-banner">
+            <div class="step"><div class="step-num">1</div><div>Klik op <b>"📤 Exporteer nu"</b> hierboven. Er wordt een bestand <code style="background:rgba(0,0,0,0.07);padding:1px 5px;border-radius:3px;font-size:11px;">klascockpit-datum.json</code> gedownload.</div></div>
+            <div class="step"><div class="step-num">2</div><div>Stuur dat bestand naar jezelf via <b>WhatsApp, e-mail, Airdrop of Google Drive</b>.</div></div>
+            <div class="step"><div class="step-num">3</div><div>Open het bericht op je <b>gsm</b> en volg Stap 2.</div></div>
+          </div>
+          <button class="btn btn-primary" id="exportForGsm">📤 Exporteer bestand</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Stap 2 — Op de gsm</div></div>
+        <div class="card-body">
+          <div class="info-banner">
+            <div class="step"><div class="step-num">1</div><div>Open de app op je gsm en ga naar <b>Overdracht</b>.</div></div>
+            <div class="step"><div class="step-num">2</div><div>Tik op <b>"📥 Importeer bestand"</b> bovenaan deze pagina.</div></div>
+            <div class="step"><div class="step-num">3</div><div>Selecteer het ontvangen bestand → <b>klaar!</b></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ttab-gsm-laptop" style="display:none;">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Stap 1 — Op de gsm</div></div>
+        <div class="card-body">
+          <div class="info-banner">
+            <div class="step"><div class="step-num">1</div><div>Open de app op je gsm en ga naar <b>Overdracht</b>.</div></div>
+            <div class="step"><div class="step-num">2</div><div>Tik op <b>"📤 Exporteer nu"</b> bovenaan. Het bestand wordt gedownload.</div></div>
+            <div class="step"><div class="step-num">3</div><div>Stuur het naar jezelf via <b>WhatsApp, e-mail, Airdrop of Google Drive</b>.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Stap 2 — Op de laptop</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="info-banner">
+            <div class="step"><div class="step-num">1</div><div>Ontvang het bestand op je laptop.</div></div>
+            <div class="step"><div class="step-num">2</div><div>Klik hieronder op <b>"📥 Importeer van gsm"</b> en selecteer het bestand.</div></div>
+            <div class="step"><div class="step-num">3</div><div>Data wordt samengevoegd — bestaande data blijft behouden.</div></div>
+          </div>
+          <label class="btn btn-success" style="cursor:pointer;justify-content:center;">📥 Importeer van gsm<input id="impFromGsm" type="file" accept=".json" style="display:none"/></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ttab-email" style="display:none;">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Verstuur je data via e-mail</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+        <p style="font-size:13px;color:var(--c-text2);line-height:1.7;">Vul je eigen e-mailadres in. De data wordt gedownload én je e-mailprogramma opent met een kant-en-klaar bericht. Voeg het gedownloade bestand als bijlage toe.</p>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+          <div class="field" style="flex:1;min-width:200px;">
+            <label>Jouw e-mailadres</label>
+            <input id="emailTransferAddr" type="email" placeholder="jij@school.be"/>
+          </div>
+          <button class="btn btn-primary" id="sendByEmailBtn">📧 Download + open e-mail</button>
+        </div>
+        <div class="warn-banner">
+          <b>Stap na klikken:</b> het bestand wordt gedownload én je e-mailprogramma opent. Voeg het <code style="background:rgba(0,0,0,0.07);padding:1px 4px;border-radius:3px;">.json</code> bestand manueel toe als bijlage voor je verstuurt.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ttab-qr" style="display:none;">
+    <div class="two-col">
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-header"><div class="card-title">Deel via link — data rechtstreeks naar gsm</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
+          <div class="info-banner">
+            <div class="step"><div class="step-num">1</div><div>Klik op <b>"Genereer deellink"</b>. Je volledige data wordt ingebakken in een URL.</div></div>
+            <div class="step"><div class="step-num">2</div><div>Scan de QR-code met je gsm-camera, of tik op <b>"Deel via WhatsApp"</b> om de link naar jezelf te sturen.</div></div>
+            <div class="step"><div class="step-num">3</div><div>Op je gsm: open de link — de app opent en <b>laadt automatisch alle data in</b>. Klaar.</div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary" id="genShareLinkBtn">🔗 Genereer deellink</button>
+            <button class="btn btn-sm" id="copyShareLinkBtn" style="display:none;">📋 Kopieer link</button>
+            <button class="btn btn-sm btn-success" id="waShareLinkBtn" style="display:none;">💬 WhatsApp naar mijzelf</button>
+          </div>
+          <div id="shareQrWrap" style="display:none;flex-direction:column;gap:10px;align-items:flex-start;">
+            <div style="background:#fff;padding:14px;border-radius:var(--r);border:1px solid var(--c-border);display:inline-block;">
+              <div id="shareQrImg" style="width:200px;height:200px;"></div>
+            </div>
+            <div id="shareLinkBox" style="max-width:500px;width:100%;">
+              <input id="shareLinkInput" readonly style="width:100%;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px 10px;font-size:11px;font-family:var(--font-mono);background:var(--c-surface2);color:var(--c-text2);" value=""/>
+            </div>
+            <div class="warn-banner" style="max-width:500px;">
+              <b>Privacy:</b> de link bevat al je schooldata. Stuur hem alleen naar jezelf.
+            </div>
+          </div>
+          <div id="shareLinkStatus" style="font-size:12px;color:var(--c-green);display:none;font-weight:600;"></div>
+        </div>
+      </div>
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-header"><div class="card-title">Synchronisatiestatus</div></div>
+        <div class="card-body" id="syncPanel" style="font-size:13px;color:var(--c-text2);line-height:2.2;">Laden...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">📦 Wekelijkse back-up</div></div>
+    <div class="card-body" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <button class="btn btn-sm" id="expBtn2">↓ Download back-up (JSON)</button>
+      <label class="btn btn-sm" style="cursor:pointer;">↑ Herstel vanuit back-up<input id="impFile2" type="file" accept=".json" style="display:none"/></label>
+      <span style="font-size:12px;color:var(--c-text3);">Sla regelmatig een back-up op als extra veiligheid.</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ INSTELLINGEN ══════════════════════════════════════════════ -->
+<section id="page-instellingen" class="page">
+  <div class="page-head"><div class="page-title">Instellingen</div></div>
+  <div class="panel-grid">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Profiel</div></div>
+      <div class="card-body">
+        <form id="profileForm" class="form-grid">
+          <div class="field full"><label>Naam / label</label><input id="fPN" placeholder="bv. Leerkracht Spaans 2025-2026"/></div>
+          <div class="field"><label>Standaard schooljaar</label><select id="fPY"></select></div>
+          <div class="field"><label>Startdatum</label><input id="fPS" type="date"/></div>
+          <div class="field"><label>Einddatum</label><input id="fPE" type="date"/></div>
+          <div class="full"><button type="submit" class="btn btn-primary btn-sm">Profiel bewaren</button></div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Schooljaren</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+        <div id="yearsList" class="item-list"></div>
+        <button class="btn btn-sm btn-primary" id="openYearModal2">+ Schooljaar toevoegen</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Data beheer</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-sm" id="expBtn3">↓ Exporteer alles (JSON)</button>
+        <label class="btn btn-sm" style="cursor:pointer;">↑ Importeer JSON<input id="impFile3" type="file" accept=".json" style="display:none"/></label>
+        <div style="height:1px;background:var(--c-border);margin:2px 0;"></div>
+        <button class="btn btn-sm btn-danger" id="clearBtn">🗑 Alle data wissen</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Weergave</div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="darkModeCheck" style="width:auto;"/> Donkere modus
+        </label>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </div><!-- /main -->
+</div><!-- /main-scroll -->
+</div><!-- /shell -->
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <button class="bnav-item active" data-bnav="dashboard"><span class="bnav-ico">🏠</span><span class="bnav-lbl">Home</span></button>
+  <button class="bnav-item" data-bnav="aanwezigheid"><span class="bnav-ico">✓</span><span class="bnav-lbl">Aanwezig</span></button>
+  <button class="bnav-item" data-bnav="puntenboek"><span class="bnav-ico">📊</span><span class="bnav-lbl">Punten</span></button>
+  <button class="bnav-item" data-bnav="leerling"><span class="bnav-ico">👤</span><span class="bnav-lbl">Fiche</span></button>
+  <button class="bnav-item" data-bnav="meer"><span class="bnav-ico">☰</span><span class="bnav-lbl">Meer</span></button>
+</nav>
+
+<!-- FAB -->
+<button id="fab" title="Snel toevoegen">＋</button>
+<div id="fab-menu">
+  <div class="fab-item" onclick="openPage('aanwezigheid');closeFab()"><span class="fab-ico" style="background:#dcfce7;">✓</span>Aanwezigheid</div>
+  <div class="fab-item" onclick="quickAdd('afwezigheid')"><span class="fab-ico" style="background:var(--c-amber-bg);">📋</span>Afwezigheid</div>
+  <div class="fab-item" onclick="quickAdd('observatie')"><span class="fab-ico" style="background:var(--c-purple-bg);">👁</span>Observatie</div>
+  <div class="fab-item" onclick="quickAdd('actie')"><span class="fab-ico" style="background:var(--c-blue-bg);">⚡</span>Actie</div>
+  <div class="fab-item" onclick="quickAdd('communicatie')"><span class="fab-ico" style="background:var(--c-green-bg);">💬</span>Communicatie</div>
+</div>
+
+<script>
+// ─── STORAGE ─────────────────────────────────────────────────────
+const SKEY='klascockpit-v4';
+let lastSync=null, syncTimer=null;
+var _hasCloud=false; // set during initSync
+
+async function storageSave(d){
+  var json=JSON.stringify(d);
+  // Always save locally first (works in browser + app)
+  try{localStorage.setItem(SKEY,json);}catch(e){}
+  // Also save to cloud if available (claude.ai browser only)
+  if(_hasCloud){
+    try{await window.storage.set(SKEY,json);return 'cloud';}catch(e){_hasCloud=false;}
+  }
+  return 'local';
+}
+async function storageLoad(){
+  // Check cloud first
+  try{
+    if(window.storage&&typeof window.storage.set==='function'&&typeof window.storage.get==='function'){
+      var r=await window.storage.get(SKEY);
+      if(r&&r.value){
+        _hasCloud=true;
+        try{localStorage.setItem(SKEY,r.value);}catch(e){}
+        return JSON.parse(r.value);
+      }
+      _hasCloud=true; // cloud exists but empty
+    }
+  }catch(e){_hasCloud=false;}
+  // Fall back to localStorage (Claude app, downloaded file, etc.)
+  try{var local=localStorage.getItem(SKEY);if(local)return JSON.parse(local);}catch(e){}
+  return null;
+}
+
+// ─── STATE ───────────────────────────────────────────────────────
+let state={
+  profile:{name:'',schoolYear:'2025-2026',startDate:'2025-09-01',endDate:'2026-06-30'},
+  schoolYears:[{label:'2025-2026',startDate:'2025-09-01',endDate:'2026-06-30'}],
+  activeClassId:null, currentWeek:null, weekNotes:{},
+  showOpenOnly:false, filterYear:'', darkMode:false,
+  classes:[], students:[], absences:[], makeups:[],
+  observations:[], classManagement:[],
+  evaluations:[], evalResults:[], remediation:[],
+  communication:[], actions:[],
+  klasNotes:{},  // classId → note string
+  zorgProfielen:{}, // studentId → [{type, note}]
+  aanwezigheid:{} // 'YYYY-MM-DD_classId' → {studentId: status}
+};
+
+// ─── UTILS ───────────────────────────────────────────────────────
+function uid(p){return p+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);}
+function isoToday(){return new Date().toISOString().slice(0,10);}
+function weekOf(d){const dd=new Date(d);const day=dd.getDay();dd.setDate(dd.getDate()+(day===0?-6:1-day));return dd.toISOString().slice(0,10);}
+function addDays(iso,n){const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function fmtD(iso){if(!iso)return'—';const[y,m,dd]=iso.split('-');return`${dd}/${m}/${y}`;}
+function fmtDNL(iso){if(!iso)return'—';const[y,m,dd]=iso.split('-');const mn=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];return`${parseInt(dd)} ${mn[parseInt(m)-1]} ${y}`;}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function daysDiff(isoA,isoB){return Math.round((new Date(isoA)-new Date(isoB))/(86400000));}
+const $=id=>document.getElementById(id);
+
+function toast(msg,type='ok'){
+  const c=$('toasts');const el=document.createElement('div');
+  el.className='toast '+type;el.textContent=msg;c.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// ─── DARK MODE ───────────────────────────────────────────────────
+function applyDark(on){
+  document.body.classList.toggle('dark',on);
+  const cb=$('darkModeCheck');if(cb)cb.checked=on;
+  const btn=$('darkToggle');if(btn)btn.textContent=on?'☀️':'🌙';
+}
+$('darkToggle').onclick=()=>{state.darkMode=!state.darkMode;applyDark(state.darkMode);save();};
+$('darkModeCheck')&&($('darkModeCheck').onchange=e=>{state.darkMode=e.target.checked;applyDark(state.darkMode);save();});
+
+// ─── SYNC ────────────────────────────────────────────────────────
+function setSyncUI(s,t){
+  const d=$('syncDot'),tx=$('syncText');
+  if(d){d.className='sync-dot'+(s==='busy'?' busy':s==='fail'?' fail':'');tx.textContent=t;}
+  // Mobile pill in topbar
+  const pill=$('mobileSyncPill');
+  if(pill){
+    const dot=s==='busy'?'🟡':s==='fail'?'🔴':'🟢';
+    pill.textContent=dot+' '+t;
+    pill.style.display='flex';
+  }
+}
+async function syncUp(){
+  setSyncUI('busy','Bewaren...');
+  var result=await storageSave(state);
+  lastSync=new Date();
+  var t=lastSync.toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});
+  setSyncUI('',result==='cloud'?'☁ Cloud '+t:'📱 Lokaal '+t);
+  updateSyncPanel();
+  updateSyncStatLine();
+}
+async function initSync(){
+  setSyncUI('busy','Laden...');
+  var data=await storageLoad();
+  if(data){
+    mergeState(data);
+    setSyncUI('',_hasCloud?'☁ Cloud actief':'📱 Lokaal gereed');
+  } else {
+    setSyncUI('',_hasCloud?'☁ Cloud (leeg)':'📱 Lokaal (leeg)');
+  }
+  // Show storage mode banner if not cloud
+  if(!_hasCloud) showLocalStorageBanner();
+}
+function showLocalStorageBanner(){
+  // Show a one-time notice that cloud is unavailable
+  var existing=document.getElementById('storageModeBanner');
+  if(existing)return;
+  var b=document.createElement('div');
+  b.id='storageModeBanner';
+  b.style.cssText='position:fixed;top:52px;left:0;right:0;z-index:35;background:#1e3a5f;color:#93c5fd;font-size:12px;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;';
+  var span=document.createElement('span');
+  span.innerHTML='📱 Lokale opslag actief — cloud niet beschikbaar in de Claude-app. Gebruik <b>Overdracht</b> om te syncen.';
+  var btn2=document.createElement('button');
+  btn2.textContent='Overdracht →';
+  btn2.style.cssText='background:rgba(255,255,255,0.15);border:none;color:#93c5fd;padding:4px 10px;border-radius:4px;cursor:pointer;white-space:nowrap;font-size:12px;';
+  btn2.onclick=function(){openPage('sync');b.remove();};
+  b.appendChild(span);b.appendChild(btn2);
+  document.getElementById('main-scroll').prepend(b);
+}
+function mergeState(remote){
+  const defaults={observations:[],classManagement:[],klasNotes:{},zorgProfielen:{},aanwezigheid:{},
+    schoolYears:[{label:'2025-2026',startDate:'2025-09-01',endDate:'2026-06-30'}]};
+  Object.assign(state,defaults,remote);
+  if(!state.currentWeek)state.currentWeek=weekOf(new Date());
+}
+function save(msg){syncUp();renderAll();if(msg)toast(msg);}
+function schedulePoll(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncUp();schedulePoll();},30000);}
+function updateSyncPanel(){
+  const p=$('syncPanel');if(!p)return;
+  p.innerHTML=`Laatste sync: ${lastSync?lastSync.toLocaleString('nl-BE'):'nog niet'}<br>Klassen: ${state.classes.length}<br>Leerlingen: ${state.students.length}<br>Afwezigheden: ${state.absences.length}<br>Evaluaties: ${state.evaluations.length}<br>Acties: ${state.actions.length}`;
+}
+
+// ─── BOTTOM NAV ──────────────────────────────────────────────────
+function updateBottomNav(pageId){
+  document.querySelectorAll('.bnav-item[data-bnav]').forEach(function(b){
+    var isActive=b.dataset.bnav===pageId||(b.dataset.bnav==='meer'&&!['dashboard','aanwezigheid','puntenboek','leerling'].includes(pageId));
+    b.classList.toggle('active',isActive);
+  });
+}
+document.querySelectorAll('.bnav-item[data-bnav]').forEach(function(b){
+  b.onclick=function(){
+    var pg=b.dataset.bnav;
+    if(pg==='meer'){$('sidebar').classList.toggle('open');$('overlay').classList.toggle('open');}
+    else openPage(pg);
+  };
+});
+
+// ─── NAVIGATION ──────────────────────────────────────────────────
+const PAGES={dashboard:'Dashboard',week:'Weekoverzicht',klassen:'Mijn klassen',leerling:'Leerlingfiche',
+  aanwezigheid:'Aanwezigheid',afwezigheden:'Afwezigheidslog',observaties:'Observaties',evaluaties:'Evaluaties',
+  puntenboek:'Puntenboek',communicatie:'Communicatie',acties:'Acties',sync:'Sync & apparaten',instellingen:'Instellingen'};
+function openPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn[data-page]').forEach(b=>b.classList.remove('active'));
+  const pg=$('page-'+id);if(pg)pg.classList.add('active');
+  document.querySelectorAll(`.sb-btn[data-page="${id}"]`).forEach(b=>b.classList.add('active'));
+  $('tbTitle').textContent=PAGES[id]||id;
+  closeSidebar();
+  if(id==='aanwezigheid')renderAanwezigheid();
+  if(id==='puntenboek')renderPuntenboek();
+  updateBottomNav(id);
+}
+function closeSidebar(){$('sidebar').classList.remove('open');$('overlay').classList.remove('open');}
+document.querySelectorAll('.sb-btn[data-page]').forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+$('mobile-toggle').onclick=()=>{$('sidebar').classList.toggle('open');$('overlay').classList.toggle('open');};
+$('overlay').onclick=closeSidebar;
+
+// ─── FAB ─────────────────────────────────────────────────────────
+let fabOpen=false;
+$('fab').onclick=e=>{e.stopPropagation();fabOpen=!fabOpen;$('fab').textContent=fabOpen?'✕':'＋';$('fab-menu').classList.toggle('open',fabOpen);};
+document.addEventListener('click',()=>{if(fabOpen)closeFab();});
+function closeFab(){fabOpen=false;$('fab').textContent='＋';$('fab-menu').classList.remove('open');}
+
+// ─── QUICK ADD (FAB) ─────────────────────────────────────────────
+let _quickSaveFn=null;
+function quickAdd(type){
+  closeFab();
+  const ac=getAC();
+  const stus=ac?getStudsForClass(ac.id):state.students;
+  const stuOpts='<option value="">— kies leerling —</option>'+stus.map(s=>'<option value="'+s.id+'">'+esc(s.identifier)+'</option>').join('');
+  const today=isoToday();
+
+  if(type==='afwezigheid'){
+    $('quickModalTitle').textContent='Afwezigheid registreren';
+    $('quickModalBody').innerHTML=`<div class="form-grid">
+      <div class="field"><label>Datum</label><input id="qD" type="date" value="${today}"/></div>
+      <div class="field"><label>Leerling *</label><select id="qS">${stuOpts}</select></div>
+      <div class="field"><label>Type</label><select id="qT"><option>afwezig ongewettigd</option><option>afwezig gewettigd</option><option>te laat</option><option>deel gemist</option></select></div>
+      <div class="field"><label>Inhaalwerk?</label><select id="qM"><option value="nee">Nee</option><option value="ja">Ja</option></select></div>
+      <div class="field full"><label>Notitie</label><textarea id="qN" style="min-height:50px;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px;font-size:13px;width:100%;background:var(--c-surface);font-family:var(--font);"></textarea></div>
+    </div>`;
+    _quickSaveFn=()=>{
+      const s=$('qS').value;if(!s){toast('Kies een leerling','err');return;}
+      const stu=getStu(s);
+      state.absences.push({id:uid('abs'),date:$('qD').value,studentId:s,classId:stu?.classId||state.activeClassId,type:$('qT').value,hasMissed:$('qM').value,note:$('qN').value.trim()});
+      $('quickModal').classList.remove('open');save('Afwezigheid bewaard.');
+    };
+  } else if(type==='observatie'){
+    $('quickModalTitle').textContent='Observatie registreren';
+    $('quickModalBody').innerHTML=`<div class="form-grid">
+      <div class="field"><label>Datum</label><input id="qD" type="date" value="${today}"/></div>
+      <div class="field"><label>Leerling *</label><select id="qS">${stuOpts}</select></div>
+      <div class="field"><label>Categorie</label><select id="qCat"><option>werkhouding</option><option>gedrag</option><option>sociale vaardigheden</option><option>motivatie</option><option>positief</option><option>andere</option></select></div>
+      <div class="field"><label>Opvolging?</label><select id="qFU"><option value="nee">Nee</option><option value="ja">Ja</option></select></div>
+      <div class="field full"><label>Notitie *</label><textarea id="qN" required style="min-height:60px;border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px;font-size:13px;width:100%;background:var(--c-surface);font-family:var(--font);"></textarea></div>
+    </div>`;
+    _quickSaveFn=()=>{
+      const s=$('qS').value,n=$('qN').value.trim();if(!s||!n){toast('Vul leerling en notitie in','err');return;}
+      const stu=getStu(s);
+      if(!state.observations)state.observations=[];
+      state.observations.push({id:uid('obs'),date:$('qD').value,studentId:s,classId:stu?.classId||state.activeClassId,category:$('qCat').value,followUp:$('qFU').value,note:n});
+      $('quickModal').classList.remove('open');save('Observatie bewaard.');
+    };
+  } else if(type==='actie'){
+    $('quickModalTitle').textContent='Actie toevoegen';
+    $('quickModalBody').innerHTML=`<div class="form-grid">
+      <div class="field full"><label>Omschrijving *</label><input id="qTi" style="border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px 10px;font-size:13px;width:100%;background:var(--c-surface);"/></div>
+      <div class="field"><label>Prioriteit</label><select id="qPr"><option>normaal</option><option>hoog</option><option>dringend</option></select></div>
+      <div class="field"><label>Vervaldag</label><input id="qDu" type="date"/></div>
+    </div>`;
+    _quickSaveFn=()=>{
+      const ti=$('qTi').value.trim();if(!ti){toast('Vul een omschrijving in','err');return;}
+      state.actions.push({id:uid('ac'),title:ti,classId:state.activeClassId||null,studentId:null,priority:$('qPr').value,status:'open',dueDate:$('qDu').value||'',note:''});
+      $('quickModal').classList.remove('open');save('Actie bewaard.');
+    };
+  } else if(type==='communicatie'){
+    $('quickModalTitle').textContent='Communicatie registreren';
+    $('quickModalBody').innerHTML=`<div class="form-grid">
+      <div class="field"><label>Datum</label><input id="qD" type="date" value="${today}"/></div>
+      <div class="field"><label>Leerling *</label><select id="qS">${stuOpts}</select></div>
+      <div class="field"><label>Type</label><select id="qTy"><option>e-mail ouder</option><option>telefoongesprek</option><option>gesprek leerling</option><option>gesprek ouder</option><option>CLB-contact</option><option>andere</option></select></div>
+      <div class="field"><label>Status</label><select id="qSt2"><option>voorbereid</option><option>verstuurd</option><option>besproken</option><option>afgerond</option></select></div>
+      <div class="field full"><label>Onderwerp *</label><input id="qSub" style="border:1px solid var(--c-border);border-radius:var(--r-sm);padding:7px 10px;font-size:13px;width:100%;background:var(--c-surface);"/></div>
+    </div>`;
+    _quickSaveFn=()=>{
+      const s=$('qS').value,sub=$('qSub').value.trim();if(!s||!sub){toast('Vul leerling en onderwerp in','err');return;}
+      const stu=getStu(s);
+      state.communication.push({id:uid('co'),date:$('qD').value,studentId:s,classId:stu?.classId||state.activeClassId,type:$('qTy').value,status:$('qSt2').value,subject:sub,note:'',deadline:''});
+      $('quickModal').classList.remove('open');save('Communicatie bewaard.');
+    };
+  }
+  $('quickModal').classList.add('open');
+}
+$('quickModalCancel').onclick=()=>$('quickModal').classList.remove('open');
+$('quickModalSave').onclick=()=>{if(_quickSaveFn)_quickSaveFn();};
+
+// ─── SEARCH ──────────────────────────────────────────────────────
+$('searchInput').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  const res=$('searchResults');
+  if(q.length<2){res.classList.remove('open');res.innerHTML='';return;}
+  const hits=[];
+  state.students.filter(s=>s.identifier.toLowerCase().includes(q)).slice(0,6).forEach(s=>{
+    const cls=getCls(s.classId);
+    hits.push(`<div class="search-result-item" onclick="goFiche('${s.id}')"><span style="font-size:18px;">👤</span><div><div class="sr-label">${esc(s.identifier)}</div><div class="sr-sub">${cls?esc(cls.name):''}</div></div></div>`);
+  });
+  state.classes.filter(c=>c.name.toLowerCase().includes(q)).slice(0,4).forEach(c=>{
+    hits.push(`<div class="search-result-item" onclick="setAC('${c.id}');openPage('klassen')"><span style="font-size:18px;">🏫</span><div><div class="sr-label">${esc(c.name)}</div><div class="sr-sub">${esc(c.schoolYear)}</div></div></div>`);
+  });
+  state.actions.filter(a=>a.title.toLowerCase().includes(q)&&a.status!=='afgerond').slice(0,3).forEach(a=>{
+    hits.push(`<div class="search-result-item" onclick="openPage('acties')"><span style="font-size:18px;">⚡</span><div><div class="sr-label">${esc(a.title)}</div><div class="sr-sub">Actie</div></div></div>`);
+  });
+  if(hits.length){res.innerHTML=hits.join('');res.classList.add('open');}
+  else{res.innerHTML='<div class="search-result-item" style="color:var(--c-text3);">Geen resultaten</div>';res.classList.add('open');}
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#searchBar'))$('searchResults').classList.remove('open');});
+
+// ─── GETTERS ─────────────────────────────────────────────────────
+const getAC=()=>state.classes.find(c=>c.id===state.activeClassId)||null;
+const getStu=id=>state.students.find(s=>s.id===id)||null;
+const getCls=id=>state.classes.find(c=>c.id===id)||null;
+const getStudsForClass=cid=>state.students.filter(s=>s.classId===cid);
+const getYears=()=>state.schoolYears||[];
+const getDistinctYears=()=>[...new Set([...getYears().map(y=>y.label),...state.classes.map(c=>c.schoolYear)])].filter(Boolean).sort();
+
+// ─── RENDER HELPERS ──────────────────────────────────────────────
+function emptyHtml(icon,txt){return`<div class="empty"><div class="empty-icon">${icon}</div>${txt}</div>`;}
+function badgeClass(s){
+  if(['afgerond','afgelegd','afgesloten','voldoende','goed','verstuurd','besproken','positief','aanwezig'].includes(s))return'badge-green';
+  if(['niet opgedaagd','niet gemaakt','dringend','remediëring nodig','onvoldoende','ernstig','afwezig ongewettigd'].includes(s))return'badge-red';
+  if(['hoog','wacht op afspraak','open','voorbereid','in uitvoering','opvolgen','herhaald','herhaald probleem','te laat','afwezig gewettigd'].includes(s))return'badge-amber';
+  if(['gedrag','werkhouding','gewettigd'].includes(s))return'badge-purple';
+  return'badge-gray';
+}
+function zorgHtml(stuId){
+  const z=(state.zorgProfielen||{})[stuId]||[];
+  if(!z.length)return'';
+  return z.map(zi=>`<span class="zorg-badge zorg-${zi.type}">${esc(zi.type.toUpperCase())}${zi.note?`: ${esc(zi.note)}`:''}</span>`).join(' ');
+}
+
+// ─── KLASNOTE STRIP ──────────────────────────────────────────────
+function renderKlasNoteStrip(){
+  const ac=getAC();
+  const strip=$('klasNoteStrip');
+  if(!strip)return;
+  if(ac&&state.klasNotes[ac.id]){
+    strip.style.display='block';
+    strip.innerHTML=`<b>📌 Klasnotitie ${esc(ac.name)}:</b> ${esc(state.klasNotes[ac.id])} <button class="btn btn-xs" onclick="openKlasNote()" style="margin-left:8px;">Bewerken</button>`;
+  } else {
+    strip.style.display='none';
+  }
+}
+function openKlasNote(){
+  const ac=getAC();if(!ac)return;
+  $('klasNoteTitle').textContent='Klasnotitie — '+ac.name;
+  $('klasNoteText').value=state.klasNotes[ac.id]||'';
+  $('klasNoteModal').classList.add('open');
+  $('klasNoteSave').onclick=()=>{
+    state.klasNotes[ac.id]=$('klasNoteText').value.trim();
+    $('klasNoteModal').classList.remove('open');
+    save('Klasnotitie bewaard.');
+  };
+}
+
+// ─── CLASS SWITCHER ──────────────────────────────────────────────
+function renderClassSwitcher(){
+  const wrap=$('classSwitcherBtns');
+  if(!wrap)return;
+  const yr=state.profile.schoolYear||'';
+  const classes=state.classes.filter(c=>!yr||c.schoolYear===yr);
+  if(!classes.length){wrap.innerHTML='<div style="font-size:11px;color:rgba(161,161,170,0.4);padding:4px 10px;">Geen klassen</div>';return;}
+  wrap.innerHTML=classes.map(c=>{
+    const n=getStudsForClass(c.id).length;
+    return`<button class="class-pill${c.id===state.activeClassId?' active-class':''}" onclick="setAC('${c.id}')">${esc(c.name)}<span class="class-pill-count">${n}</span></button>`;
+  }).join('');
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────
+function renderDash(){
+  const ac=getAC();const hr=new Date().getHours();
+  $('dashGreet').textContent=hr<12?'Goedemorgen':hr<18?'Goedemiddag':'Goedenavond';
+  $('dashDesc').textContent=`${fmtDNL(isoToday())}${ac?' · Actieve klas: '+ac.name:''}`;
+  $('yearChip').textContent=state.profile.schoolYear||'—';
+  renderKlasNoteStrip();
+
+  const nStu=ac?getStudsForClass(ac.id).length:state.students.length;
+  const openMk=state.makeups.filter(m=>!['afgelegd','afgesloten'].includes(m.status)).length;
+  const openAct=state.actions.filter(a=>a.status!=='afgerond').length;
+  const openComm=state.communication.filter(c=>c.status==='voorbereid').length;
+  const absProblem=state.makeups.filter(m=>m.status==='niet opgedaagd').length;
+  const obsFollowUp=(state.observations||[]).filter(o=>o.followUp==='ja').length;
+  const overdueAct=state.actions.filter(a=>a.status!=='afgerond'&&a.dueDate&&a.dueDate<isoToday()).length;
+
+  $('metricsGrid').innerHTML=[
+    {val:state.classes.length,label:'Klassen',color:'blue',page:'klassen'},
+    {val:nStu,label:ac?`Lln. ${ac.name}`:'Leerlingen',color:'blue',page:'leerling'},
+    {val:openAct,label:'Open acties',color:overdueAct?'red':openAct?'amber':'green',page:'acties'},
+    {val:openMk,label:'Open inhaalwerk',color:openMk?'amber':'green',page:'afwezigheden'},
+    {val:openComm,label:'Comm. gepland',color:openComm?'amber':'green',page:'communicatie'},
+    {val:absProblem,label:'Niet opgedaagd',color:absProblem?'red':'green',page:'afwezigheden'},
+    {val:obsFollowUp,label:'Obs. opvolging',color:obsFollowUp?'purple':'green',page:'observaties'},
+  ].map(m=>`<div class="metric-card ${m.color}" onclick="openPage('${m.page}')"><div class="metric-label">${esc(m.label)}</div><div class="metric-val">${m.val}</div></div>`).join('');
+
+  // Alerts
+  const alerts=[];
+  const today=isoToday();
+  state.makeups.filter(m=>m.status==='niet opgedaagd').forEach(m=>{const s=getStu(m.studentId);alerts.push({t:`${s?esc(s.identifier):'?'}: "${esc(m.title)}" — niet opgedaagd`,c:'red'});});
+  state.actions.filter(a=>a.priority==='dringend'&&a.status!=='afgerond').forEach(a=>alerts.push({t:'Dringend: '+esc(a.title),c:'red'}));
+  state.actions.filter(a=>a.status!=='afgerond'&&a.dueDate&&a.dueDate<today).forEach(a=>alerts.push({t:`Vervallen: ${esc(a.title)} (${fmtD(a.dueDate)})`,c:'red'}));
+  state.communication.filter(c=>c.status==='voorbereid'&&c.deadline&&c.deadline<today).forEach(c=>{const s=getStu(c.studentId);alerts.push({t:`Comm. deadline verstreken: ${s?esc(s.identifier):'?'} — ${esc(c.subject)}`,c:'red'});});
+  (state.observations||[]).filter(o=>o.followUp==='ja').slice(0,3).forEach(o=>{const s=getStu(o.studentId);alerts.push({t:`Opvolging: ${s?esc(s.identifier):'?'} — ${esc(o.category)}`,c:'amber'});});
+  $('dashAlerts').innerHTML=alerts.length?alerts.map(a=>`<div class="list-item${a.c==='red'?' overdue':''}"><div class="li-title">${a.t}</div></div>`).join(''):emptyHtml('✅','Geen aandachtspunten');
+
+  $('dashActions').innerHTML=state.actions.filter(a=>a.status!=='afgerond').slice(0,5).map(a=>{
+    const overdue=a.dueDate&&a.dueDate<today;
+    return`<div class="list-item${overdue?' overdue':''}"><div class="li-head"><span class="li-title">${esc(a.title)}</span><span class="badge ${badgeClass(a.priority)}">${esc(a.priority)}</span></div>${a.dueDate?`<div class="li-meta">${overdue?'⚠ Vervallen: ':''}${fmtD(a.dueDate)}</div>`:''}</div>`;
+  }).join('')||emptyHtml('🎉','Geen open acties');
+
+  const overdueComm=state.communication.filter(c=>c.status==='voorbereid'&&c.deadline&&c.deadline<today);
+  $('commOverdueWarn').innerHTML=overdueComm.length?`<span class="badge badge-red">⚠ ${overdueComm.length} te laat</span>`:'';
+  $('dashComm').innerHTML=state.communication.filter(c=>c.status==='voorbereid').slice(0,5).map(c=>{
+    const s=getStu(c.studentId);const overdue=c.deadline&&c.deadline<today;
+    return`<div class="list-item${overdue?' overdue':''}"><div class="li-head"><span class="li-title">${esc(c.subject)}</span><span class="badge badge-amber">gepland</span></div><div class="li-meta">${s?esc(s.identifier):'?'}${c.deadline?' · deadline: '+fmtD(c.deadline):''}</div></div>`;
+  }).join('')||emptyHtml('📬','Niets gepland');
+
+  $('dashRem').innerHTML=state.remediation.filter(r=>r.status!=='afgerond').slice(0,5).map(r=>{
+    const s=getStu(r.studentId);const ev=state.evaluations.find(e=>e.id===r.evaluationId);
+    return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'}</span><span class="badge ${badgeClass(r.status)}">${esc(r.status)}</span></div><div class="li-meta">${ev?esc(ev.title):'?'}</div></div>`;
+  }).join('')||emptyHtml('✅','Geen lopende remediëring');
+}
+
+// ─── WEEK ─────────────────────────────────────────────────────────
+function renderWeek(){
+  if(!state.currentWeek)state.currentWeek=weekOf(new Date());
+  const ws=state.currentWeek,we=addDays(ws,6);
+  $('weekLabel').textContent=`${fmtD(ws)} – ${fmtD(we)}`;
+  $('weekNote').value=state.weekNotes[ws]||'';
+  const ac=getAC();
+  const abs=state.absences.filter(a=>a.date>=ws&&a.date<=we&&(ac?a.classId===ac.id:true));
+  $('weekAbsences').innerHTML=abs.length?abs.map(a=>{const s=getStu(a.studentId);return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'}</span><span class="badge ${badgeClass(a.type)}">${esc(a.type)}</span></div><div class="li-meta">${fmtD(a.date)}</div></div>`;}).join(''):emptyHtml('✅','Geen afwezigheden');
+  const evs=state.evaluations.filter(e=>e.date>=ws&&e.date<=we&&(ac?e.classId===ac.id:true));
+  $('weekEvals').innerHTML=evs.length?evs.map(e=>`<div class="list-item"><div class="li-head"><span class="li-title">${esc(e.title)}</span><span class="badge badge-blue">${esc(e.type)}</span></div><div class="li-meta">${fmtD(e.date)}</div></div>`).join(''):emptyHtml('📝','Geen evaluaties');
+  const acts=state.actions.filter(a=>a.status!=='afgerond').slice(0,5);
+  $('weekActs').innerHTML=acts.length?acts.map(a=>`<div class="list-item"><div class="li-head"><span class="li-title">${esc(a.title)}</span><span class="badge ${badgeClass(a.priority)}">${esc(a.priority)}</span></div></div>`).join(''):emptyHtml('✅','Geen acties');
+  const comms=state.communication.filter(c=>c.status==='voorbereid').slice(0,4);
+  $('weekComm').innerHTML=comms.length?comms.map(c=>{const s=getStu(c.studentId);return`<div class="list-item"><div class="li-head"><span class="li-title">${esc(c.subject)}</span></div><div class="li-meta">${s?esc(s.identifier):'?'}</div></div>`;}).join(''):emptyHtml('📬','Niets gepland');
+}
+
+// ─── AANWEZIGHEID (NIEUW) ─────────────────────────────────────────
+let aanwState={}; // studentId → 'aanwezig'|'afwezig'|'te_laat'|'gewettigd'
+
+function renderAanwezigheid(){
+  const datum=$('aanwDatum').value||isoToday();
+  $('aanwDatum').value=datum;
+  // Populate klas dropdown
+  const klasSel=$('aanwKlas');
+  const prevKlas=klasSel.value||state.activeClassId||'';
+  klasSel.innerHTML=state.classes.map(c=>`<option value="${c.id}"${c.id===prevKlas?' selected':''}>${esc(c.name)}</option>`).join('');
+  if(prevKlas&&!klasSel.value)klasSel.value=prevKlas;
+  const klasId=klasSel.value;
+  const cls=getCls(klasId);
+  $('aanwKlasLabel').textContent=cls?`${esc(cls.name)} — ${fmtD(datum)}`:'Klas';
+
+  const stus=getStudsForClass(klasId);
+  const key=datum+'_'+klasId;
+  const saved=state.aanwezigheid[key]||{};
+
+  // Init state
+  aanwState={};
+  stus.forEach(s=>{ aanwState[s.id]=saved[s.id]||'aanwezig'; });
+
+  renderAanwGrid(stus);
+  renderAanwSummary(stus);
+
+  // Historiek
+  const ac2=getCls(klasId);
+  const hist=state.absences.filter(a=>a.classId===klasId).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);
+  $('aanwHistoriek').innerHTML=hist.length?hist.map(a=>{const s=getStu(a.studentId);return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'}</span><span class="badge ${badgeClass(a.type)}">${esc(a.type)}</span></div><div class="li-meta">${fmtD(a.date)}</div></div>`;}).join(''):emptyHtml('📋','Geen historiek');
+}
+function renderAanwGrid(stus){
+  const grid=$('aanwGrid');
+  if(!stus.length){grid.innerHTML=emptyHtml('👥','Geen leerlingen in deze klas.');return;}
+  grid.innerHTML=stus.map(s=>{
+    const st=aanwState[s.id]||'aanwezig';
+    const zorg=((state.zorgProfielen||{})[s.id]||[]).map(z=>`<span class="zorg-badge zorg-${z.type}" style="font-size:9px;padding:1px 5px;">${z.type.toUpperCase()}</span>`).join('');
+    return`<div class="presence-row${st==='afwezig'?' absent':st==='te_laat'?' late':st==='gewettigd'?' excused':''}" id="pr_${s.id}">
+      <div class="presence-name">${esc(s.identifier)}${zorg?` <span style="margin-left:4px;">${zorg}</span>`:''}</div>
+      <div class="presence-btns">
+        <button class="pres-btn${st==='aanwezig'?' active-present':''}" onclick="setPres('${s.id}','aanwezig')" title="Aanwezig">A</button>
+        <button class="pres-btn${st==='afwezig'?' active-absent':''}" onclick="setPres('${s.id}','afwezig')" title="Afwezig">X</button>
+        <button class="pres-btn${st==='te_laat'?' active-late':''}" onclick="setPres('${s.id}','te_laat')" title="Te laat">L</button>
+        <button class="pres-btn${st==='gewettigd'?' active-excused':''}" onclick="setPres('${s.id}','gewettigd')" title="Gewettigd afwezig">G</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setPres(stuId,status){
+  aanwState[stuId]=status;
+  const row=$('pr_'+stuId);
+  if(row){
+    row.className='presence-row'+(status==='afwezig'?' absent':status==='te_laat'?' late':status==='gewettigd'?' excused':'');
+    row.querySelectorAll('.pres-btn').forEach(b=>{
+      b.className='pres-btn';
+      if(b.textContent==='A'&&status==='aanwezig')b.classList.add('active-present');
+      if(b.textContent==='X'&&status==='afwezig')b.classList.add('active-absent');
+      if(b.textContent==='L'&&status==='te_laat')b.classList.add('active-late');
+      if(b.textContent==='G'&&status==='gewettigd')b.classList.add('active-excused');
+    });
+  }
+  const klasId=$('aanwKlas').value;
+  const stus=getStudsForClass(klasId);
+  renderAanwSummary(stus);
+}
+function renderAanwSummary(stus){
+  const counts={aanwezig:0,afwezig:0,te_laat:0,gewettigd:0};
+  stus.forEach(s=>{const st=aanwState[s.id]||'aanwezig';counts[st]=(counts[st]||0)+1;});
+  $('aanwSummary').textContent=`✓${counts.aanwezig} X${counts.afwezig} L${counts.te_laat} G${counts.gewettigd}`;
+}
+$('aanwAllesAanwezig').onclick=()=>{
+  const klasId=$('aanwKlas').value;
+  getStudsForClass(klasId).forEach(s=>{aanwState[s.id]='aanwezig';});
+  renderAanwGrid(getStudsForClass(klasId));
+  renderAanwSummary(getStudsForClass(klasId));
+};
+$('aanwKlas').onchange=()=>renderAanwezigheid();
+$('aanwDatum').onchange=()=>renderAanwezigheid();
+$('aanwSaveBtn').onclick=()=>{
+  const datum=$('aanwDatum').value;
+  const klasId=$('aanwKlas').value;
+  if(!klasId){toast('Kies een klas','err');return;}
+  const key=datum+'_'+klasId;
+  state.aanwezigheid[key]=Object.assign({},aanwState);
+
+  // Sync afwezigen naar absences log (vermijd dubbels)
+  let nieuw=0;
+  Object.entries(aanwState).forEach(([stuId,status])=>{
+    if(status==='aanwezig')return;
+    const typeMap={afwezig:'afwezig ongewettigd',te_laat:'te laat',gewettigd:'afwezig gewettigd'};
+    const alBestaand=state.absences.find(a=>a.studentId===stuId&&a.date===datum&&a.classId===klasId);
+    if(!alBestaand){
+      state.absences.push({id:uid('abs'),date:datum,studentId:stuId,classId:klasId,type:typeMap[status]||status,hasMissed:'nee',note:''});
+      nieuw++;
+    }
+  });
+  $('aanwLastSaved').textContent=`Bewaard om ${new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'})}`;
+  save(nieuw?`Aanwezigheid bewaard. ${nieuw} afwezighe${nieuw===1?'id':'den'} geregistreerd.`:'Aanwezigheid bewaard.');
+};
+
+// ─── KLASSEN ─────────────────────────────────────────────────────
+function renderKlassen(){
+  const fyEl=$('filterYear');
+  const prevFY=fyEl.value||state.filterYear||'';
+  fyEl.innerHTML='<option value="">Alle schooljaren</option>'+getDistinctYears().map(y=>`<option value="${y}"${y===prevFY?' selected':''}>${esc(y)}</option>`).join('');
+  const fy=fyEl.value;
+  let cls=[...state.classes];
+  if(fy)cls=cls.filter(c=>c.schoolYear===fy);
+  $('classBadge').textContent=cls.length;
+  $('classesList').innerHTML=cls.length?cls.map(c=>{
+    const note=state.klasNotes[c.id];
+    return`<div class="list-item${c.id===state.activeClassId?' is-active-cls':''}">
+      <div class="li-head">
+        <span class="li-title">${esc(c.name)}</span>
+        <div style="display:flex;gap:4px;">
+          <span class="badge badge-gray">${esc(c.schoolYear)}</span>
+          <span class="badge badge-blue">${getStudsForClass(c.id).length} ll.</span>
+        </div>
+      </div>
+      <div class="li-meta">${[c.subject,c.level].filter(Boolean).map(esc).join(' · ')||'—'}</div>
+      ${note?`<div class="li-meta" style="margin-top:3px;">📌 ${esc(note.slice(0,60))}${note.length>60?'…':''}</div>`:''}
+      <div class="li-actions">
+        <button class="btn btn-xs" onclick="setAC('${c.id}')">Selecteren</button>
+        <button class="btn btn-xs btn-ghost" onclick="state.activeClassId='${c.id}';openKlasNote()">📝 Notitie</button>
+        <button class="btn btn-xs btn-danger" onclick="delClass('${c.id}')">Verwijderen</button>
+      </div>
+    </div>`;
+  }).join(''):emptyHtml('🏫','Geen klassen gevonden.');
+
+  const ac=getAC();const stus=ac?getStudsForClass(ac.id):[];
+  $('stuBadge').textContent=stus.length;
+  $('studentsList').innerHTML=stus.length?stus.map(s=>{
+    const zorg=((state.zorgProfielen||{})[s.id]||[]);
+    return`<div class="list-item">
+      <div class="li-head">
+        <span class="li-title">${esc(s.identifier)}</span>
+        ${s.email?`<span class="badge badge-gray" style="font-size:10px;">${esc(s.email)}</span>`:''}
+      </div>
+      ${zorg.length?`<div class="li-badges">${zorg.map(z=>`<span class="zorg-badge zorg-${z.type}">${z.type.toUpperCase()}</span>`).join('')}</div>`:''}
+      ${s.note?`<div class="li-meta">${esc(s.note)}</div>`:''}
+      <div class="li-actions">
+        <button class="btn btn-xs" onclick="goFiche('${s.id}')">Fiche →</button>
+        <button class="btn btn-xs btn-amber" onclick="openStuEdit('${s.id}')">✏ Bewerken</button>
+        <button class="btn btn-xs btn-danger" onclick="delStu('${s.id}')">Verw.</button>
+      </div>
+    </div>`;
+  }).join(''):emptyHtml('👥',ac?'Geen leerlingen.':'Selecteer een klas.');
+}
+
+// ─── LEERLING BEWERKEN / ZORGPROFIEL ─────────────────────────────
+let _editStuId=null;
+function openStuEdit(id){
+  _editStuId=id;const s=getStu(id);if(!s)return;
+  $('mSeId').value=s.identifier;
+  $('mSeEmail').value=s.email||'';
+  $('mSeNote').value=s.note||'';
+  renderZorgTags(id);
+  $('stuEditModal').classList.add('open');
+}
+function renderZorgTags(stuId){
+  const z=(state.zorgProfielen||{})[stuId]||[];
+  $('mSeZorg').innerHTML=z.map((zi,i)=>`<span class="zorg-badge zorg-${zi.type}">${zi.type.toUpperCase()}${zi.note?`: ${esc(zi.note)}`:''} <button onclick="removeZorg(${i})" style="background:none;border:none;cursor:pointer;margin-left:3px;font-size:10px;">✕</button></span>`).join('')||'<span style="font-size:12px;color:var(--c-text3);">Geen zorgmaatregelen</span>';
+}
+function addZorgItem(){
+  if(!_editStuId)return;
+  if(!state.zorgProfielen)state.zorgProfielen={};
+  if(!state.zorgProfielen[_editStuId])state.zorgProfielen[_editStuId]=[];
+  state.zorgProfielen[_editStuId].push({type:$('mSeZorgType').value,note:$('mSeZorgNote').value.trim()});
+  $('mSeZorgNote').value='';
+  renderZorgTags(_editStuId);
+}
+function removeZorg(idx){
+  if(!_editStuId)return;
+  state.zorgProfielen[_editStuId].splice(idx,1);
+  renderZorgTags(_editStuId);
+}
+$('stuEditSave').onclick=()=>{
+  if(!_editStuId)return;
+  const s=getStu(_editStuId);if(!s)return;
+  s.identifier=$('mSeId').value.trim()||s.identifier;
+  s.email=$('mSeEmail').value.trim();
+  s.note=$('mSeNote').value.trim();
+  $('stuEditModal').classList.remove('open');
+  save('Leerling bijgewerkt.');
+};
+
+// ─── FICHE ────────────────────────────────────────────────────────
+function renderFiche(){
+  const sel=$('ficheSelect');
+  const ac=getAC();const stus=ac?getStudsForClass(ac.id):state.students;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— kies leerling —</option>'+stus.map(s=>`<option value="${s.id}"${s.id===cur?' selected':''}>${esc(s.identifier)}</option>`).join('');
+  const sid=sel.value;
+  const qa=$('ficheQuickActions');
+  if(!sid){$('ficheContent').innerHTML=emptyHtml('👤','Selecteer een leerling.');if(qa)qa.style.display='none';return;}
+  if(qa)qa.style.display='flex';
+  const stu=getStu(sid);if(!stu){$('ficheContent').innerHTML='';return;}
+  const cls=getCls(stu.classId);
+  const abs=state.absences.filter(a=>a.studentId===sid);
+  const mks=state.makeups.filter(m=>m.studentId===sid);
+  const obs=(state.observations||[]).filter(o=>o.studentId===sid);
+  const cm=(state.classManagement||[]).filter(c=>c.studentId===sid);
+  const evr=state.evalResults.filter(e=>e.studentId===sid);
+  const com=state.communication.filter(c=>c.studentId===sid);
+  const act=state.actions.filter(a=>a.studentId===sid);
+  const zorg=((state.zorgProfielen||{})[sid]||[]);
+  const ungewettigd=abs.filter(a=>a.type==='afwezig ongewettigd').length;
+  const gewettigd=abs.filter(a=>a.type==='afwezig gewettigd').length;
+
+  $('ficheContent').innerHTML=`
+  <div class="panel-grid">
+    <div class="card" style="border-top:3px solid var(--c-blue);">
+      <div class="card-body">
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:3px;">${esc(stu.identifier)}</div>
+        <div style="font-size:12px;color:var(--c-text2);">${cls?esc(cls.name)+' · ':''} ${esc(stu.schoolYear||state.profile.schoolYear)}</div>
+        ${stu.email?`<div style="font-size:12px;margin-top:5px;color:var(--c-text2);">✉ ${esc(stu.email)}</div>`:''}
+        ${zorg.length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">${zorg.map(z=>`<span class="zorg-badge zorg-${z.type}">${z.type.toUpperCase()}${z.note?': '+esc(z.note):''}</span>`).join('')}</div>`:''}
+        ${stu.note?`<div style="font-size:12px;margin-top:6px;color:var(--c-text2);font-style:italic;border-top:1px solid var(--c-border);padding-top:6px;">${esc(stu.note)}</div>`:''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;">
+          ${abs.length?`<span class="badge badge-amber">${abs.length} afwez. (${ungewettigd}↑ ${gewettigd}G)</span>`:''}
+          ${mks.filter(m=>!['afgesloten','afgelegd'].includes(m.status)).length?`<span class="badge badge-amber">${mks.filter(m=>!['afgesloten','afgelegd'].includes(m.status)).length} inhaalwerk</span>`:''}
+          ${obs.filter(o=>o.followUp==='ja').length?`<span class="badge badge-purple">${obs.filter(o=>o.followUp==='ja').length} obs. opvolging</span>`:''}
+          ${evr.filter(e=>e.signal==='remediëring nodig').length?`<span class="badge badge-red">${evr.filter(e=>e.signal==='remediëring nodig').length} remediëring</span>`:''}
+          ${act.filter(a=>a.status!=='afgerond').length?`<span class="badge badge-gray">${act.filter(a=>a.status!=='afgerond').length} acties</span>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><div class="card-title">Afwezigheidsoverzicht (${abs.length})</div></div><div class="card-body scrollbox" style="max-height:180px;">
+      ${abs.length?abs.map(a=>`<div class="list-item" style="margin-bottom:4px;"><div class="li-head"><span class="li-title">${fmtD(a.date)}</span><span class="badge ${badgeClass(a.type)}">${esc(a.type)}</span></div></div>`).join(''):emptyHtml('','Geen')}
+    </div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Observaties (${obs.length})</div></div><div class="card-body scrollbox" style="max-height:180px;">
+      ${obs.length?obs.map(o=>`<div class="list-item" style="margin-bottom:4px;"><div class="li-head"><span class="li-title">${esc(o.category)}</span>${o.followUp==='ja'?'<span class="badge badge-amber">opvolging</span>':''}</div><div class="li-meta">${fmtD(o.date)} · ${esc(o.note?.slice(0,60))}${(o.note?.length||0)>60?'…':''}</div></div>`).join(''):emptyHtml('','Geen')}
+    </div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Evaluaties & punten (${evr.length})</div></div><div class="card-body scrollbox" style="max-height:180px;">
+      ${evr.length?evr.map(e=>{const ev=state.evaluations.find(x=>x.id===e.evaluationId);return`<div class="list-item" style="margin-bottom:4px;"><div class="li-head"><span class="li-title">${ev?esc(ev.title):'?'}</span><span class="badge ${badgeClass(e.signal)}">${esc(e.resultVal||'—')}</span></div></div>`;}).join(''):emptyHtml('','Geen')}
+    </div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Comunicatie (${com.length})</div></div><div class="card-body scrollbox" style="max-height:180px;">
+      ${com.length?com.map(c=>`<div class="list-item" style="margin-bottom:4px;"><div class="li-head"><span class="li-title">${esc(c.subject)}</span><span class="badge ${badgeClass(c.status)}">${esc(c.status)}</span></div><div class="li-meta">${fmtD(c.date)}</div></div>`).join(''):emptyHtml('','Geen')}
+    </div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Klasmanagement (${cm.length})</div></div><div class="card-body scrollbox" style="max-height:180px;">
+      ${cm.length?cm.map(c=>`<div class="list-item" style="margin-bottom:4px;"><div class="li-head"><span class="li-title">${esc(c.category)}</span><span class="badge ${badgeClass(c.severity)}">${esc(c.severity)}</span></div><div class="li-meta">${fmtD(c.date)} · ${esc(c.note?.slice(0,60))}…</div></div>`).join(''):emptyHtml('','Geen')}
+    </div></div>
+  </div>`;
+}
+
+// ─── AFWEZIGHEDEN ─────────────────────────────────────────────────
+function renderAfwez(){
+  const ac=getAC();
+  const abs=state.absences.filter(a=>ac?a.classId===ac.id:true).sort((a,b)=>b.date.localeCompare(a.date));
+  $('absBadge').textContent=abs.length;
+  $('absencesList').innerHTML=abs.length?abs.map(a=>{const s=getStu(a.studentId);return`
+    <div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'} <span style="font-weight:400;color:var(--c-text2);">${fmtD(a.date)}</span></span><span class="badge ${badgeClass(a.type)}">${esc(a.type)}</span></div>
+    ${a.note?`<div class="li-meta">${esc(a.note)}</div>`:''}
+    ${a.hasMissed==='ja'?'<div class="li-badges"><span class="badge badge-blue">+ inhaalwerk</span></div>':''}
+    <div class="li-actions"><button class="btn btn-xs btn-danger" onclick="delItemConfirm('absences','${a.id}','Afwezigheid verwijderen?')">Verw.</button></div></div>`;
+  }).join(''):emptyHtml('📋','Geen afwezigheden.');
+
+  const mks=state.makeups.filter(m=>ac?m.classId===ac.id:true).sort((a,b)=>(b.missedDate||'').localeCompare(a.missedDate||''));
+  $('mkBadge').textContent=mks.length;
+  $('makeupsList').innerHTML=mks.length?mks.map(m=>{const s=getStu(m.studentId);return`
+    <div class="list-item"><div class="li-head"><span class="li-title">${esc(m.title)}</span><span class="badge ${badgeClass(m.status)}">${esc(m.status)}</span></div>
+    <div class="li-meta">${s?esc(s.identifier):'?'} · ${esc(m.type)}${m.scheduledDate?' · afspraak: '+fmtD(m.scheduledDate):''}</div>
+    <div class="li-actions">
+      <button class="btn btn-xs" onclick="cycleStatus('${m.id}')">Volgende status</button>
+      <button class="btn btn-xs btn-danger" onclick="delItemConfirm('makeups','${m.id}','Inhaalwerk verwijderen?')">Verw.</button>
+    </div></div>`;
+  }).join(''):emptyHtml('✅','Geen inhaalwerk.');
+}
+
+// ─── OBSERVATIES ─────────────────────────────────────────────────
+function renderObs(){
+  const ac=getAC();
+  const obs=(state.observations||[]).filter(o=>ac?o.classId===ac.id:true).sort((a,b)=>b.date.localeCompare(a.date));
+  $('obsBadge').textContent=obs.length;
+  $('obsList').innerHTML=obs.length?obs.map(o=>{const s=getStu(o.studentId);return`
+    <div class="list-item"><div class="li-head">
+      <span class="li-title">${s?esc(s.identifier):'?'} <span style="font-weight:400;color:var(--c-text2);">${fmtD(o.date)}</span></span>
+      <div style="display:flex;gap:4px;">
+        <span class="badge ${badgeClass(o.category)}">${esc(o.category)}</span>
+        ${o.followUp==='ja'?'<span class="badge badge-amber">opvolging</span>':''}
+      </div>
+    </div>
+    <div class="li-meta">${esc(o.note?.slice(0,100))}${(o.note?.length||0)>100?'…':''}</div>
+    <div class="li-actions"><button class="btn btn-xs btn-danger" onclick="delItemConfirm('observations','${o.id}','Observatie verwijderen?')">Verw.</button></div></div>`;
+  }).join(''):emptyHtml('👁','Geen observaties.');
+
+  const cms=(state.classManagement||[]).filter(c=>ac?c.classId===ac.id:true).sort((a,b)=>b.date.localeCompare(a.date));
+  $('cmBadge').textContent=cms.length;
+  $('cmList').innerHTML=cms.length?cms.map(c=>{const s=getStu(c.studentId);return`
+    <div class="list-item"><div class="li-head">
+      <span class="li-title">${s?esc(s.identifier):'?'}</span>
+      <div style="display:flex;gap:4px;">
+        <span class="badge ${badgeClass(c.category)}">${esc(c.category)}</span>
+        <span class="badge ${badgeClass(c.severity)}">${esc(c.severity)}</span>
+      </div>
+    </div>
+    <div class="li-meta">${fmtD(c.date)} · ${esc(c.maatregel||c.measure||'')} · ${esc(c.note?.slice(0,60))}…</div>
+    <div class="li-actions"><button class="btn btn-xs btn-danger" onclick="delItemConfirm('classManagement','${c.id}','CM-item verwijderen?')">Verw.</button></div></div>`;
+  }).join(''):emptyHtml('🎯','Geen klasmanagement-items.');
+}
+
+// ─── EVALUATIES ───────────────────────────────────────────────────
+function renderEvals(){
+  const ac=getAC();
+  const evs=state.evaluations.filter(e=>ac?e.classId===ac.id:true).sort((a,b)=>b.date.localeCompare(a.date));
+  $('evBadge').textContent=evs.length;
+  $('evalList').innerHTML=evs.length?evs.map(e=>`
+    <div class="list-item">
+      <div class="li-head"><span class="li-title">${esc(e.title)}</span><span class="badge badge-blue">${esc(e.type)}</span></div>
+      <div class="li-meta">${fmtD(e.date)}${e.maxPunten?' · /'+e.maxPunten:''}${e.weight?' · gewicht: '+e.weight+'%':''}${e.topic?' · '+esc(e.topic):''}</div>
+      <div class="li-actions">
+        <button class="btn btn-xs btn-primary" onclick="openPage('puntenboek')">Puntenboek →</button>
+        <button class="btn btn-xs btn-danger" onclick="delItemConfirm('evaluations','${e.id}','Evaluatie verwijderen?')">Verw.</button>
+      </div>
+    </div>`).join(''):emptyHtml('📝','Geen evaluaties.');
+
+  const evrs=state.evalResults.filter(r=>ac?r.classId===ac.id:true);
+  $('resultList').innerHTML=evrs.length?evrs.slice(-20).reverse().map(r=>{
+    const ev=state.evaluations.find(e=>e.id===r.evaluationId);const s=getStu(r.studentId);
+    return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'} — ${ev?esc(ev.title):'?'}</span><span class="badge ${badgeClass(r.signal)}">${esc(r.resultVal||r.signal)}</span></div></div>`;
+  }).join(''):emptyHtml('📊','Geen resultaten.');
+
+  const rems=state.remediation.filter(r=>ac?r.classId===ac.id:true);
+  $('remList').innerHTML=rems.length?rems.map(r=>{
+    const s=getStu(r.studentId);const ev=state.evaluations.find(e=>e.id===r.evaluationId);
+    return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'}</span><span class="badge ${badgeClass(r.status)}">${esc(r.status)}</span></div>
+      <div class="li-meta">${ev?esc(ev.title):'?'}${r.startDate?' · '+fmtD(r.startDate):''}</div>
+      <div class="li-actions">
+        <button class="btn btn-xs" onclick="cycleRemStatus('${r.id}')">Volgende status</button>
+        <button class="btn btn-xs btn-danger" onclick="delItemConfirm('remediation','${r.id}','Remediëring verwijderen?')">Verw.</button>
+      </div></div>`;
+  }).join(''):emptyHtml('✅','Geen remediëring.');
+}
+
+// ─── PUNTENBOEK ──────────────────────────────────────────────────
+function renderPuntenboek(){
+  const pbSel=$('pbKlasSelect');
+  const prevKlas=pbSel.value||state.activeClassId||'';
+  pbSel.innerHTML=state.classes.map(c=>`<option value="${c.id}"${c.id===prevKlas?' selected':''}>${esc(c.name)}</option>`).join('');
+  if(prevKlas)pbSel.value=prevKlas;
+  const klasId=pbSel.value;
+  if(!klasId){$('puntenboekWrap').innerHTML=emptyHtml('📊','Selecteer een klas.');return;}
+
+  const stus=getStudsForClass(klasId);
+  const evs=state.evaluations.filter(e=>e.classId===klasId).sort((a,b)=>a.date.localeCompare(b.date));
+
+  if(!evs.length){$('puntenboekWrap').innerHTML=emptyHtml('📊','Nog geen evaluaties voor deze klas.');return;}
+  if(!stus.length){$('puntenboekWrap').innerHTML=emptyHtml('👥','Geen leerlingen in deze klas.');return;}
+
+  const getRes=(stuId,evId)=>state.evalResults.find(r=>r.studentId===stuId&&r.evaluationId===evId);
+  const parseScore=(val,max)=>{
+    if(!val)return null;
+    const m=val.match(/^(\d+(?:[.,]\d+)?)\s*(?:\/.*)?$/);
+    if(m){const v=parseFloat(m[1].replace(',','.'));return max?v/max*100:v;}
+    return null;
+  };
+
+  let html=`<table class="punten-table"><thead><tr>
+    <th class="stu-name">Leerling</th>
+    ${evs.map(e=>`<th title="${esc(e.type)}${e.maxPunten?' /'+e.maxPunten:''}">${esc(e.title.slice(0,18))}${e.title.length>18?'…':''}<br><span style="font-weight:400;font-size:10px;">${fmtD(e.date)}</span></th>`).join('')}
+    <th>Gem.</th>
+  </tr></thead><tbody>`;
+
+  stus.forEach(s=>{
+    const scores=[];
+    const cells=evs.map(e=>{
+      const r=getRes(s.id,e.id);
+      const sc=r?parseScore(r.resultVal,e.maxPunten?parseFloat(e.maxPunten):null):null;
+      if(sc!==null)scores.push(sc);
+      const sigColor=r?badgeClass(r.signal):'';
+      return`<td style="text-align:center;">
+        <input class="punten-input" data-stu="${s.id}" data-ev="${e.id}" value="${r?esc(r.resultVal||''):''}" placeholder="—" onchange="savePunten(this,'${s.id}','${e.id}')" />
+        ${r&&r.signal?`<span class="punten-sig" style="background:${sigColor.includes('red')?'var(--c-red)':sigColor.includes('green')?'var(--c-green)':sigColor.includes('amber')?'var(--c-amber)':'var(--c-border2)'}"></span>`:''}
+      </td>`;
+    }).join('');
+    const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+    const avgClass=avg===null?'':avg>=70?'good':avg>=50?'warn':'bad';
+    html+=`<tr><td class="stu-name">${esc(s.identifier)}</td>${cells}<td><span class="punten-avg ${avgClass}">${avg!==null?avg+'%':'—'}</span></td></tr>`;
+  });
+  html+='</tbody></table>';
+  $('puntenboekWrap').innerHTML=html;
+
+  // Remediëring opvolging
+  const ac=getCls(klasId);
+  const rems=state.remediation.filter(r=>r.classId===klasId&&r.status!=='afgerond');
+  $('remOpvolgList').innerHTML=rems.length?rems.map(r=>{
+    const s=getStu(r.studentId);const ev=state.evaluations.find(e=>e.id===r.evaluationId);
+    return`<div class="list-item"><div class="li-head"><span class="li-title">${s?esc(s.identifier):'?'} — ${ev?esc(ev.title):'?'}</span><span class="badge ${badgeClass(r.status)}">${esc(r.status)}</span></div>
+      <div class="li-actions">
+        <button class="btn btn-xs" onclick="cycleRemStatus('${r.id}')">Volgende status</button>
+      </div></div>`;
+  }).join(''):emptyHtml('✅','Geen lopende remediëring');
+}
+function savePunten(input,stuId,evId){
+  const val=input.value.trim();
+  const ev=state.evaluations.find(e=>e.id===evId);
+  const existing=state.evalResults.find(r=>r.studentId===stuId&&r.evaluationId===evId);
+  if(existing){
+    existing.resultVal=val;
+    existing.signal=autoSignal(val,ev);
+  } else if(val){
+    state.evalResults.push({id:uid('er'),evaluationId:evId,studentId:stuId,classId:ev?.classId||state.activeClassId,resultVal:val,signal:autoSignal(val,ev),note:''});
+    if(['remediëring nodig','onvoldoende'].includes(autoSignal(val,ev)))
+      state.remediation.push({id:uid('rm'),studentId:stuId,classId:ev?.classId||state.activeClassId,evaluationId:evId,type:'herhaling',status:'gepland',startDate:isoToday(),note:''});
+  }
+  syncUp();// quiet save, no re-render (stay in puntenboek)
+  toast('Punt bewaard.');
+}
+function autoSignal(val,ev){
+  if(!val)return'afwezig';
+  const m=val.match(/^(\d+(?:[.,]\d+)?)/);
+  if(!m)return'voldoende';
+  const v=parseFloat(m[1].replace(',','.'));
+  const max=ev&&ev.maxPunten?parseFloat(ev.maxPunten):20;
+  const pct=v/max*100;
+  if(pct>=70)return'goed';
+  if(pct>=50)return'voldoende';
+  if(pct>=40)return'onvoldoende';
+  return'remediëring nodig';
+}
+$('pbKlasSelect').onchange=()=>renderPuntenboek();
+$('pbExportCsv').onclick=()=>{
+  const klasId=$('pbKlasSelect').value;
+  if(!klasId){toast('Kies eerst een klas','err');return;}
+  const stus=getStudsForClass(klasId);
+  const evs=state.evaluations.filter(e=>e.classId===klasId).sort((a,b)=>a.date.localeCompare(b.date));
+  const header=['Leerling',...evs.map(e=>e.title+' ('+e.date+')'),'Gemiddelde %'].join(',');
+  const rows=stus.map(s=>{
+    const scores=[];
+    const cols=evs.map(e=>{
+      const r=state.evalResults.find(x=>x.studentId===s.id&&x.evaluationId===e.id);
+      return r?r.resultVal:'';
+    });
+    const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b)/scores.length):'';
+    return[s.identifier,...cols,avg].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',');
+  });
+  const csv=[header,...rows].join('\n');
+  const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`puntenboek-${getCls(klasId)?.name||klasId}-${isoToday()}.csv`;a.click();
+  toast('CSV geëxporteerd!');
+};
+
+// ─── COMMUNICATIE ─────────────────────────────────────────────────
+function renderComm(){
+  const ac=getAC();
+  const comms=state.communication.filter(c=>ac?c.classId===ac.id:true).sort((a,b)=>b.date.localeCompare(a.date));
+  $('coBadge').textContent=comms.length;
+  const today=isoToday();
+  $('commList').innerHTML=comms.length?comms.map(c=>{const s=getStu(c.studentId);const overdue=c.deadline&&c.deadline<today&&c.status==='voorbereid';return`
+    <div class="list-item${overdue?' overdue':''}">
+      <div class="li-head"><span class="li-title">${esc(c.subject)}</span><span class="badge ${badgeClass(c.status)}">${esc(c.status)}</span></div>
+      <div class="li-meta">${s?esc(s.identifier):'?'} · ${esc(c.type)} · ${fmtD(c.date)}${c.deadline?' · deadline: '+fmtD(c.deadline):''}</div>
+      ${overdue?'<div class="li-badges"><span class="badge badge-red">⚠ Deadline verstreken</span></div>':''}
+      <div class="li-actions">
+        <button class="btn btn-xs btn-success" onclick="markCommDone('${c.id}')">✓ Afgerond</button>
+        <button class="btn btn-xs btn-danger" onclick="delItemConfirm('communication','${c.id}','Communicatie-item verwijderen?')">Verw.</button>
+      </div>
+    </div>`;
+  }).join(''):emptyHtml('💬','Geen communicatie.');
+}
+
+// ─── ACTIES ───────────────────────────────────────────────────────
+function renderActies(){
+  let acts=state.actions.filter(a=>state.showOpenOnly?a.status!=='afgerond':true).sort((a,b)=>{
+    const prio={dringend:0,hoog:1,normaal:2};
+    return(prio[a.priority]||2)-(prio[b.priority]||2);
+  });
+  const today=isoToday();
+  $('actBadge').textContent=state.actions.filter(a=>a.status!=='afgerond').length+' open';
+  $('actionsList').innerHTML=acts.length?acts.map(a=>{
+    const overdue=a.dueDate&&a.dueDate<today&&a.status!=='afgerond';
+    const cls=getCls(a.classId);const s=getStu(a.studentId);
+    return`<div class="list-item${overdue?' overdue':''}">
+      <div class="li-head"><span class="li-title">${esc(a.title)}</span>
+        <div style="display:flex;gap:4px;">
+          <span class="badge ${badgeClass(a.priority)}">${esc(a.priority)}</span>
+          <span class="badge ${badgeClass(a.status)}">${esc(a.status)}</span>
+        </div>
+      </div>
+      <div class="li-meta">${[cls?esc(cls.name):'',s?esc(s.identifier):'',a.dueDate?fmtD(a.dueDate):''].filter(Boolean).join(' · ')}</div>
+      ${overdue?'<div class="li-badges"><span class="badge badge-red">⚠ Vervallen</span></div>':''}
+      <div class="li-actions">
+        <button class="btn btn-xs btn-success" onclick="markActDone('${a.id}')">✓ Afgerond</button>
+        <button class="btn btn-xs btn-danger" onclick="delItemConfirm('actions','${a.id}','Actie verwijderen?')">Verw.</button>
+      </div>
+    </div>`;
+  }).join(''):emptyHtml('✅','Geen acties.');
+  $('toggleOpenBtn').textContent=state.showOpenOnly?'✓ Alleen open':'Toon alleen open';
+  $('toggleOpenBtn').classList.toggle('btn-primary',state.showOpenOnly);
+}
+
+// ─── INSTELLINGEN ─────────────────────────────────────────────────
+function renderInst(){
+  $('fPN').value=state.profile.name||'';
+  $('fPS').value=state.profile.startDate||'';
+  $('fPE').value=state.profile.endDate||'';
+  const yrs=getDistinctYears();
+  $('fPY').innerHTML=yrs.map(y=>`<option value="${y}"${y===state.profile.schoolYear?' selected':''}>${esc(y)}</option>`).join('');
+  $('yearsList').innerHTML=(state.schoolYears||[]).length?state.schoolYears.map(y=>`
+    <div class="list-item"><div class="li-head">
+      <span class="li-title">${esc(y.label)}</span>
+      <span class="badge badge-gray">${fmtD(y.startDate)} – ${fmtD(y.endDate)}</span>
+    </div>
+    <div class="li-actions">
+      <button class="btn btn-xs" onclick="setActiveYear('${y.label}')">Instellen als actief</button>
+      <button class="btn btn-xs btn-danger" onclick="delYear('${y.label}')">Verw.</button>
+    </div></div>`).join(''):emptyHtml('📅','Geen schooljaren.');
+  applyDark(state.darkMode||false);
+  updateSyncPanel();
+}
+
+// ─── SELECTS ─────────────────────────────────────────────────────
+function populateSelects(){
+  const yrs=getDistinctYears();
+  const yrOpts=yrs.map(y=>`<option value="${y}">${esc(y)}</option>`).join('');
+  [$('fCY')].forEach(s=>{if(s){const v=s.value;s.innerHTML=yrOpts;if(v)s.value=v;else if(yrs.includes(state.profile.schoolYear))s.value=state.profile.schoolYear;}});
+
+  const clsOpts=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)} (${esc(c.schoolYear)})</option>`).join('');
+  const emptyC='<option value="">— kies klas —</option>';
+  [$('fAcCl')].forEach(s=>{if(s){const v=s.value;s.innerHTML=emptyC+clsOpts;if(v)s.value=v;}});
+
+  const ac=getAC();
+  const stus=ac?getStudsForClass(ac.id):state.students;
+  const stuOpts=stus.map(s=>`<option value="${s.id}">${esc(s.identifier)}</option>`).join('');
+  const emptyS='<option value="">— kies leerling —</option>';
+  [$('fSC')].forEach(s=>{if(s){const v=s.value;s.innerHTML=emptyC+clsOpts;if(v)s.value=v;}});
+  [$('fAS'),$('fCoSt'),$('fRsSt'),$('fObS'),$('fCmS')].forEach(s=>{if(s){const v=s.value;s.innerHTML=emptyS+stuOpts;if(v)s.value=v;}});
+  $('fAcStu').innerHTML=emptyS+stuOpts;
+  const ficheEl=$('ficheSelect');
+  if(ficheEl){const v=ficheEl.value;ficheEl.innerHTML=emptyS+stuOpts;if(v)ficheEl.value=v;}
+
+  const evs=state.evaluations.filter(e=>e.classId===state.activeClassId);
+  $('fRsEv').innerHTML='<option value="">— kies evaluatie —</option>'+evs.map(e=>`<option value="${e.id}">${esc(e.title)}</option>`).join('');
+  const abs=state.absences.filter(a=>a.classId===state.activeClassId);
+  $('fMkA').innerHTML='<option value="">— kies afwezigheid —</option>'+abs.map(a=>{const s=getStu(a.studentId);return`<option value="${a.id}">${s?esc(s.identifier):'?'} – ${fmtD(a.date)}</option>`;}).join('');
+
+  const myCF=$('mYCopyFrom');
+  if(myCF)myCF.innerHTML='<option value="">— niet kopiëren —</option>'+yrs.map(y=>`<option value="${y}">${esc(y)}</option>`).join('');
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────
+function renderAll(){
+  populateSelects();
+  renderClassSwitcher();
+  renderDash();renderWeek();renderKlassen();renderFiche();
+  renderAfwez();renderObs();renderEvals();renderComm();renderActies();renderInst();
+  // Puntenboek renders on-demand
+}
+
+// ─── MUTATIONS ───────────────────────────────────────────────────
+function setAC(id){state.activeClassId=id;save('Klas geselecteerd: '+(getCls(id)?.name||''));}
+function setActiveYear(label){
+  const yr=state.schoolYears.find(y=>y.label===label);
+  if(yr){state.profile.schoolYear=label;state.profile.startDate=yr.startDate;state.profile.endDate=yr.endDate;}
+  else state.profile.schoolYear=label;
+  save('Actief schooljaar: '+label);
+}
+function delYear(label){
+  if(!confirm(`Schooljaar "${label}" verwijderen?`))return;
+  state.schoolYears=state.schoolYears.filter(y=>y.label!==label);
+  save('Schooljaar verwijderd.');
+}
+function delClass(id){
+  if(!confirm('Klas en alle gekoppelde data verwijderen?'))return;
+  const stuIds=state.students.filter(s=>s.classId===id).map(s=>s.id);
+  state.classes=state.classes.filter(c=>c.id!==id);
+  state.students=state.students.filter(s=>s.classId!==id);
+  ['absences','makeups','evaluations','evalResults','remediation','communication','actions','observations','classManagement'].forEach(k=>{
+    if(state[k])state[k]=state[k].filter(x=>x.classId!==id&&!stuIds.includes(x.studentId));
+  });
+  if(state.activeClassId===id)state.activeClassId=state.classes[0]?.id||null;
+  save('Klas verwijderd.');
+}
+function delStu(id){
+  if(!confirm('Leerling verwijderen?'))return;
+  state.students=state.students.filter(s=>s.id!==id);
+  ['absences','makeups','evalResults','remediation','communication','actions','observations','classManagement'].forEach(k=>{if(state[k])state[k]=state[k].filter(x=>x.studentId!==id);});
+  save('Leerling verwijderd.');
+}
+function delItem(col,id){state[col]=state[col].filter(x=>x.id!==id);save('Item verwijderd.');}
+function delItemConfirm(col,id,msg){if(confirm(msg||'Verwijderen?'))delItem(col,id);}
+function markCommDone(id){const c=state.communication.find(x=>x.id===id);if(c){c.status='afgerond';save('Afgerond!');}}
+function markActDone(id){const a=state.actions.find(x=>x.id===id);if(a){a.status='afgerond';save('Actie afgerond!');}}
+function goFiche(id){$('ficheSelect').value=id;openPage('leerling');renderFiche();}
+function cycleStatus(id){
+  const mk=state.makeups.find(m=>m.id===id);if(!mk)return;
+  const st=['open','wacht op afspraak','ingepland','afgelegd','niet opgedaagd','afgesloten'];
+  mk.status=st[(st.indexOf(mk.status)+1)%st.length];save('Status: '+mk.status);
+}
+function cycleRemStatus(id){
+  const r=state.remediation.find(x=>x.id===id);if(!r)return;
+  const st=['gepland','in uitvoering','afgerond'];
+  r.status=st[(st.indexOf(r.status)+1)%st.length];save('Remediëring: '+r.status);
+}
+
+// ─── SCHOOLJAAR MODAL ─────────────────────────────────────────────
+function openYearModal(){$('mYLabel').value='';$('mYStart').value='';$('mYEnd').value='';$('yearModal').classList.add('open');}
+function closeYearModal(){$('yearModal').classList.remove('open');}
+$('openYearModal').onclick=openYearModal;
+$('openYearModal2').onclick=openYearModal;
+$('yearModalCancel').onclick=closeYearModal;
+$('yearModal').onclick=e=>{if(e.target===$('yearModal'))closeYearModal();};
+$('yearModalSave').onclick=()=>{
+  const label=$('mYLabel').value.trim();
+  if(!label){toast('Vul een schooljaarlabel in','err');return;}
+  if(!/^\d{4}-\d{4}$/.test(label)){toast('Gebruik het formaat JJJJ-JJJJ','err');return;}
+  if(state.schoolYears.find(y=>y.label===label)){toast('Dit schooljaar bestaat al','err');return;}
+  const ny={label,startDate:$('mYStart').value||'',endDate:$('mYEnd').value||''};
+  state.schoolYears.push(ny);
+  const copyFrom=$('mYCopyFrom').value;
+  const copyStus=$('mYCopyStus').checked;
+  if(copyFrom){
+    const srcClasses=state.classes.filter(c=>c.schoolYear===copyFrom);
+    const idMap={};
+    srcClasses.forEach(c=>{const newId=uid('cls');idMap[c.id]=newId;state.classes.push({...c,id:newId,schoolYear:label,note:''});});
+    if(copyStus){state.students.filter(s=>srcClasses.some(c=>c.id===s.classId)).forEach(s=>{state.students.push({...s,id:uid('stu'),classId:idMap[s.classId],schoolYear:label});});}
+  }
+  closeYearModal();save(`Schooljaar "${label}" aangemaakt.`);
+};
+
+// ─── FORMS ───────────────────────────────────────────────────────
+$('classForm').onsubmit=e=>{
+  e.preventDefault();
+  const name=$('fCN').value.trim(),year=$('fCY').value;
+  if(!name||!year)return;
+  state.classes.push({id:uid('cls'),name,schoolYear:year,subject:$('fCS').value.trim(),level:$('fCL').value.trim(),note:$('fCNote').value.trim()});
+  if(!state.activeClassId)state.activeClassId=state.classes.at(-1).id;
+  // Preserve year field, reset rest
+  const y=year;$('classForm').reset();$('fCY').value=y;
+  save(`Klas "${name}" toegevoegd.`);
+};
+$('studentForm').onsubmit=e=>{
+  e.preventDefault();
+  const id=$('fSI').value.trim(),cid=$('fSC').value;
+  if(!id||!cid)return;
+  const cls=getCls(cid);
+  state.students.push({id:uid('stu'),identifier:id,classId:cid,schoolYear:cls?.schoolYear||state.profile.schoolYear,email:$('fSE').value.trim(),note:$('fSNote').value.trim()});
+  // Keep class selected, reset name/email/note
+  $('fSI').value='';$('fSE').value='';$('fSNote').value='';
+  save(`Leerling "${id}" toegevoegd.`);
+};
+$('absForm').onsubmit=e=>{
+  e.preventDefault();
+  const date=$('fAD').value,stuId=$('fAS').value;
+  if(!date||!stuId)return;
+  const stu=getStu(stuId);
+  state.absences.push({id:uid('abs'),date,studentId:stuId,classId:stu?.classId||state.activeClassId,type:$('fAT').value,hasMissed:$('fAM').value,note:$('fANote').value.trim()});
+  // Keep date and klas, reset leerling/note
+  const d=date,t=$('fAT').value;$('absForm').reset();$('fAD').value=d;$('fAT').value=t;
+  save('Afwezigheid geregistreerd.');
+};
+$('mkForm').onsubmit=e=>{
+  e.preventDefault();
+  const absId=$('fMkA').value,title=$('fMkTi').value.trim();
+  if(!absId||!title)return;
+  const abs=state.absences.find(a=>a.id===absId);
+  state.makeups.push({id:uid('mk'),absenceId:absId,studentId:abs?.studentId,classId:abs?.classId||state.activeClassId,type:$('fMkT').value,title,status:$('fMkS').value,scheduledDate:$('fMkD').value,missedDate:abs?.date||''});
+  $('mkForm').reset();save('Inhaalwerk bewaard.');
+};
+$('obsForm').onsubmit=e=>{
+  e.preventDefault();
+  const date=$('fObD').value,stuId=$('fObS').value,note=$('fObNote').value.trim();
+  if(!date||!stuId||!note)return;
+  const stu=getStu(stuId);
+  if(!state.observations)state.observations=[];
+  state.observations.push({id:uid('obs'),date,studentId:stuId,classId:stu?.classId||state.activeClassId,category:$('fObCat').value,followUp:$('fObFU').value,note});
+  const d=date,s=stuId;$('obsForm').reset();$('fObD').value=d;$('fObS').value=s;
+  save('Observatie bewaard.');
+};
+$('cmForm').onsubmit=e=>{
+  e.preventDefault();
+  const date=$('fCmD').value,stuId=$('fCmS').value,note=$('fCmNote').value.trim();
+  if(!date||!stuId||!note)return;
+  const stu=getStu(stuId);
+  if(!state.classManagement)state.classManagement=[];
+  state.classManagement.push({id:uid('cm'),date,studentId:stuId,classId:stu?.classId||state.activeClassId,category:$('fCmCat').value,severity:$('fCmSev').value,measure:$('fCmMeas').value,status:$('fCmSt').value,note});
+  const d=date,s=stuId;$('cmForm').reset();$('fCmD').value=d;$('fCmS').value=s;
+  save('Klasmanagement-item bewaard.');
+};
+$('evalForm').onsubmit=e=>{
+  e.preventDefault();
+  const date=$('fEvD').value,title=$('fEvTi').value.trim();
+  if(!date||!title||!state.activeClassId)return;
+  state.evaluations.push({id:uid('ev'),date,classId:state.activeClassId,title,type:$('fEvT').value,maxPunten:$('fEvMax').value||'',weight:$('fEvWeight').value||'',topic:$('fEvTh').value.trim(),note:$('fEvNote').value.trim()});
+  const d=date;$('evalForm').reset();$('fEvD').value=d;
+  save('Evaluatie bewaard.');
+};
+$('resultForm').onsubmit=e=>{
+  e.preventDefault();
+  const evId=$('fRsEv').value,stuId=$('fRsSt').value;
+  if(!evId||!stuId)return;
+  const sig=$('fRsSig').value;
+  const ev=state.evaluations.find(x=>x.id===evId);
+  state.evalResults.push({id:uid('er'),evaluationId:evId,studentId:stuId,classId:state.activeClassId,resultVal:$('fRsVal').value.trim(),signal:sig,note:$('fRsNote').value.trim()});
+  if(['remediëring nodig','onvoldoende'].includes(sig))
+    state.remediation.push({id:uid('rm'),studentId:stuId,classId:state.activeClassId,evaluationId:evId,type:'herhaling',status:'gepland',startDate:isoToday(),note:''});
+  const ev2=$('fRsEv').value;$('resultForm').reset();$('fRsEv').value=ev2;
+  save('Resultaat bewaard.');
+};
+$('commForm').onsubmit=e=>{
+  e.preventDefault();
+  const date=$('fCoD').value,stuId=$('fCoSt').value,subj=$('fCoSub').value.trim();
+  if(!date||!stuId||!subj)return;
+  state.communication.push({id:uid('co'),date,studentId:stuId,classId:state.activeClassId,type:$('fCoTy').value,status:$('fCoSt2').value,subject:subj,note:$('fCoNote').value.trim(),deadline:$('fCoDead').value||''});
+  const d=date,s=stuId;$('commForm').reset();$('fCoD').value=d;$('fCoSt').value=s;
+  save('Communicatie bewaard.');
+};
+$('actForm').onsubmit=e=>{
+  e.preventDefault();
+  const title=$('fAcTi').value.trim();
+  if(!title)return;
+  state.actions.push({id:uid('ac'),title,classId:$('fAcCl').value||state.activeClassId||null,studentId:$('fAcStu').value||null,priority:$('fAcPr').value,status:$('fAcSt').value,dueDate:$('fAcDu').value||'',note:$('fAcNote').value.trim()});
+  $('actForm').reset();save('Actie bewaard.');
+};
+$('profileForm').onsubmit=e=>{
+  e.preventDefault();
+  state.profile={name:$('fPN').value.trim(),schoolYear:$('fPY').value,startDate:$('fPS').value,endDate:$('fPE').value};
+  save('Profiel bewaard.');
+};
+
+// ─── FICHE QUICK ACTIONS ─────────────────────────────────────────
+$('ficheAddAbs').onclick=()=>{const id=$('ficheSelect').value;if(id){$('fAS').value=id;}openPage('afwezigheden');};
+$('ficheAddObs').onclick=()=>{const id=$('ficheSelect').value;if(id){$('fObS').value=id;}openPage('observaties');};
+$('ficheAddComm').onclick=()=>{const id=$('ficheSelect').value;if(id){$('fCoSt').value=id;}openPage('communicatie');};
+$('ficheAddActie').onclick=()=>{const id=$('ficheSelect').value;if(id){$('fAcStu').value=id;}openPage('acties');};
+$('ficheEditBtn').onclick=()=>{const id=$('ficheSelect').value;if(id)openStuEdit(id);};
+$('ficheExportBtn').onclick=()=>{
+  const sid=$('ficheSelect').value;if(!sid)return;
+  const s=getStu(sid);const cls=getCls(s?.classId);
+  const abs=state.absences.filter(a=>a.studentId===sid);
+  const obs=(state.observations||[]).filter(o=>o.studentId===sid);
+  const evr=state.evalResults.filter(e=>e.studentId===sid);
+  const com=state.communication.filter(c=>c.studentId===sid);
+  const zorg=((state.zorgProfielen||{})[sid]||[]);
+  let txt=`LEERLINGRAPPORT — ${s?.identifier||'?'}\n`;
+  txt+=`Klas: ${cls?.name||'?'} | Schooljaar: ${s?.schoolYear||''}\n`;
+  if(zorg.length)txt+=`Zorgmaatregelen: ${zorg.map(z=>z.type+(z.note?': '+z.note:'')).join(', ')}\n`;
+  txt+=`\n--- AFWEZIGHEDEN (${abs.length}) ---\n`;
+  abs.forEach(a=>txt+=`${fmtD(a.date)} | ${a.type}\n`);
+  txt+=`\n--- OBSERVATIES (${obs.length}) ---\n`;
+  obs.forEach(o=>txt+=`${fmtD(o.date)} | ${o.category} | ${o.note}\n`);
+  txt+=`\n--- EVALUATIES (${evr.length}) ---\n`;
+  evr.forEach(r=>{const ev=state.evaluations.find(e=>e.id===r.evaluationId);txt+=`${ev?.title||'?'} | ${r.resultVal||'—'} | ${r.signal}\n`;});
+  txt+=`\n--- COMMUNICATIE (${com.length}) ---\n`;
+  com.forEach(c=>txt+=`${fmtD(c.date)} | ${c.type} | ${c.subject} | ${c.status}\n`);
+  const b=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`rapport-${(s?.identifier||'leerling').replace(/\s+/g,'_')}-${isoToday()}.txt`;a.click();
+  toast('Rapport geëxporteerd!');
+};
+
+// ─── NAV BUTTONS ─────────────────────────────────────────────────
+$('prevWeekBtn').onclick=()=>{state.currentWeek=addDays(state.currentWeek,-7);renderWeek();};
+$('nextWeekBtn').onclick=()=>{state.currentWeek=addDays(state.currentWeek,7);renderWeek();};
+$('todayBtn').onclick=()=>{state.currentWeek=weekOf(new Date());renderWeek();};
+$('saveWeekNote').onclick=()=>{state.weekNotes[state.currentWeek]=$('weekNote').value;save('Weeknotitie bewaard.');};
+$('ficheSelect').onchange=()=>renderFiche();
+$('prevStu').onclick=()=>{
+  const ac=getAC();const stus=ac?getStudsForClass(ac.id):state.students;
+  const i=stus.findIndex(s=>s.id===$('ficheSelect').value);
+  if(i>0){$('ficheSelect').value=stus[i-1].id;renderFiche();}
+};
+$('nextStu').onclick=()=>{
+  const ac=getAC();const stus=ac?getStudsForClass(ac.id):state.students;
+  const i=stus.findIndex(s=>s.id===$('ficheSelect').value);
+  if(i<stus.length-1){$('ficheSelect').value=stus[i+1].id;renderFiche();}
+};
+$('filterYear').onchange=e=>{state.filterYear=e.target.value;renderKlassen();};
+$('toggleOpenBtn').onclick=()=>{state.showOpenOnly=!state.showOpenOnly;renderActies();};
+
+// ─── EXPORT / IMPORT ─────────────────────────────────────────────
+function doExport(){
+  const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`klascockpit-${isoToday()}.json`;a.click();
+  toast('Data geëxporteerd!');
+}
+function doImport(file){
+  if(!file)return;
+  if(file.name.endsWith('.csv')){toast('Gebruik de CSV-importknop op de pagina "Mijn klassen" voor CSV-bestanden.','err');return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    const txt=ev.target.result;
+    try{
+      const data=JSON.parse(txt);
+      mergeState(data);save('Data geïmporteerd!');
+    }catch(ex){
+      if(txt.includes(',')&&!txt.trim().startsWith('{')){
+        toast('Dit lijkt een CSV-bestand. Gebruik de CSV-importknop op "Mijn klassen".','err');
+      } else {
+        toast('Importfout: ongeldig JSON-bestand.','err');
+      }
+    }
+  };
+  r.readAsText(file);
+}
+$('tbExport').onclick=doExport;
+[$('expBtn2'),$('expBtn3')].forEach(b=>{if(b)b.onclick=doExport;});
+$('tbImport').onchange=e=>doImport(e.target.files[0]);
+[$('impFile2'),$('impFile3')].forEach(f=>{if(f)f.onchange=e=>doImport(e.target.files[0]);});
+$('clearBtn').onclick=()=>{
+  if(!confirm('Alle data wissen? Dit kan niet ongedaan worden.'))return;
+  ['classes','students','absences','makeups','evaluations','evalResults','remediation','communication','actions','observations','classManagement'].forEach(k=>state[k]=[]);
+  state.schoolYears=[{label:'2025-2026',startDate:'2025-09-01',endDate:'2026-06-30'}];
+  state.klasNotes={};state.zorgProfielen={};state.aanwezigheid={};
+  save('Data gewist.');
+};
+$('forceSyncBtn').onclick=()=>{syncUp();toast('Sync gestart!');};
+
+// ─── URL DATA TRANSFER ───────────────────────────────────────────
+// Encode state into a URL hash so it can be shared as a link
+function genDataLink(){
+  try{
+    var json=JSON.stringify(state);
+    var b64=btoa(unescape(encodeURIComponent(json)));
+    var url=window.location.href.split('#')[0]+'#data='+b64;
+    $('dataLinkText').value=url;
+    $('dataLinkBox').style.display='block';
+    $('copyDataLinkBtn').style.display='inline-flex';
+    toast('Link gegenereerd! Kopieer en stuur naar jezelf.');
+  }catch(e){toast('Data te groot voor link — gebruik bestand-export','err');}
+}
+// single checkUrlData — supports #data= format
+function checkUrlData(){
+  try{
+    var hash=window.location.hash;
+    if(!hash.startsWith('#data='))return false;
+    var b64=hash.slice(6);
+    var json=decodeURIComponent(escape(atob(b64)));
+    var data=JSON.parse(json);
+    mergeState(data);
+    history.replaceState(null,'',window.location.pathname+window.location.search);
+    toast('✅ Data overgedragen vanuit link!');
+    return true;
+  }catch(e){return false;}
+}
+$('genDataLinkBtn')&&($('genDataLinkBtn').onclick=genDataLink);
+$('copyDataLinkBtn')&&($('copyDataLinkBtn').onclick=()=>{
+  var txt=$('dataLinkText').value;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast('Link gekopieerd!'));}
+  else{$('dataLinkText').select();document.execCommand('copy');toast('Link gekopieerd!');}
+});
+
+// ─── TRANSFER FUNCTIES ───────────────────────────────────────────
+function switchTransferTab(name, el){
+  ['laptop-gsm','gsm-laptop','email','qr'].forEach(t=>{
+    const p=$('ttab-'+t);if(p)p.style.display=t===name?'':'none';
+  });
+  document.querySelectorAll('#page-sync .tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  if(name==='qr')updateSyncPanel();
+}
+function updateSyncStatLine(){
+  const el=$('syncStatLine');if(!el)return;
+  el.textContent=state.classes.length+' klassen · '+state.students.length+' leerlingen · '+state.absences.length+' afwezigheid · '+state.evaluations.length+' evaluaties · '+state.actions.length+' acties';
+}
+// Big export/import buttons
+$('bigExportBtn')&&($('bigExportBtn').onclick=doExport);
+$('bigImportFile')&&($('bigImportFile').onchange=e=>doImport(e.target.files[0]));
+$('exportForGsm')&&($('exportForGsm').onclick=doExport);
+$('impFromGsm')&&($('impFromGsm').onchange=e=>{
+  doImport(e.target.files[0]);
+  const s=$('impFromGsm').closest('label');
+});
+
+// E-mail transfer
+$('sendByEmailBtn')&&($('sendByEmailBtn').onclick=()=>{
+  const addr=($('emailTransferAddr').value||'').trim();
+  if(!addr){toast('Vul eerst een e-mailadres in','err');return;}
+  doExport(); // download the file
+  const today=isoToday();
+  const subj=encodeURIComponent('Klascockpit data '+today);
+  const body=encodeURIComponent('Dag,\n\nIn bijlage het Klascockpit-bestand van '+today+'.\n\nOpen de app, ga naar Overdracht en gebruik Importeer bestand om het te laden.\n\nVoeg het .json bestand toe als bijlage voor je verstuurt.');
+  setTimeout(()=>{window.location.href='mailto:'+addr+'?subject='+subj+'&body='+body;},600);
+  toast('Bestand gedownload — e-mail opent zo...');
+});
+
+// ─── DEEL VIA LINK ───────────────────────────────────────────────
+// Comprimeer state naar base64 via DeflateRaw (browser-native)
+async function compressState(){
+  var json=JSON.stringify(state);
+  var bytes=new TextEncoder().encode(json);
+  var cs=new CompressionStream('deflate-raw');
+  var writer=cs.writable.getWriter();
+  writer.write(bytes);writer.close();
+  var chunks=[];var reader=cs.readable.getReader();
+  while(true){var r=await reader.read();if(r.done)break;chunks.push(r.value);}
+  var total=chunks.reduce(function(a,b){return a+b.length;},0);
+  var merged=new Uint8Array(total);var offset=0;
+  chunks.forEach(function(c){merged.set(c,offset);offset+=c.length;});
+  // base64url encode
+  var binary='';merged.forEach(function(b){binary+=String.fromCharCode(b);});
+  return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+}
+async function decompressData(b64){
+  var binary=atob(b64.replace(/-/g,'+').replace(/_/g,'/'));
+  var bytes=new Uint8Array(binary.length);
+  for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  var ds=new DecompressionStream('deflate-raw');
+  var writer=ds.writable.getWriter();writer.write(bytes);writer.close();
+  var chunks=[];var reader=ds.readable.getReader();
+  while(true){var r=await reader.read();if(r.done)break;chunks.push(r.value);}
+  var total=chunks.reduce(function(a,b){return a+b.length;},0);
+  var merged=new Uint8Array(total);var offset=0;
+  chunks.forEach(function(c){merged.set(c,offset);offset+=c.length;});
+  return new TextDecoder().decode(merged);
+}
+
+// Check bij laden of er data in de URL zit
+
+
+$('genShareLinkBtn')&&($('genShareLinkBtn').onclick=async function(){
+  $('genShareLinkBtn').textContent='Bezig...';$('genShareLinkBtn').disabled=true;
+  try{
+    var compressed=await compressState();
+    var baseUrl=window.location.href.split('#')[0].split('?')[0];
+    var shareUrl=baseUrl+'#d='+compressed;
+    // Toon link
+    var inp=$('shareLinkInput');if(inp)inp.value=shareUrl;
+    $('shareQrWrap').style.display='flex';
+    $('shareLinkBox').style.display='block';
+    $('copyShareLinkBtn').style.display='inline-flex';
+    $('waShareLinkBtn').style.display='inline-flex';
+    // Genereer QR van de shareUrl
+    var qrApiUrl='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(shareUrl);
+    var wrap=$('shareQrImg');
+    if(wrap){
+      var img=document.createElement('img');img.src=qrApiUrl;img.width=200;img.height=200;img.alt='QR';
+      img.onerror=function(){wrap.textContent='QR niet beschikbaar (geen internet)';};
+      wrap.innerHTML='';wrap.appendChild(img);
+    }
+    var st=$('shareLinkStatus');
+    if(st){st.textContent='Link gegenereerd! Grootte: '+Math.round(compressed.length/1024*10)/10+' KB';st.style.display='block';}
+    toast('Deellink klaar!');
+  }catch(e){
+    toast('Genereren mislukt: '+e.message,'err');
+  }
+  $('genShareLinkBtn').textContent='Vernieuwen';$('genShareLinkBtn').disabled=false;
+});
+
+$('copyShareLinkBtn')&&($('copyShareLinkBtn').onclick=function(){
+  var inp=$('shareLinkInput');if(!inp)return;
+  inp.select();
+  try{
+    navigator.clipboard.writeText(inp.value).then(function(){toast('Link gekopieerd!');}).catch(function(){document.execCommand('copy');toast('Link gekopieerd!');});
+  }catch(e){document.execCommand('copy');toast('Link gekopieerd!');}
+});
+
+$('waShareLinkBtn')&&($('waShareLinkBtn').onclick=function(){
+  var inp=$('shareLinkInput');if(!inp||!inp.value)return;
+  window.open('https://wa.me/?text='+encodeURIComponent('Klascockpit data: '+inp.value),'_blank');
+});
+
+// ─── CSV IMPORT ───────────────────────────────────────────────────
+let csvRaw=null, csvFileName='';
+$('csvFile').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  csvFileName=f.name.replace(/\.csv$/i,'');
+  const r=new FileReader();
+  r.onload=ev=>{csvRaw=ev.target.result;$('csvStatus').textContent='✓ '+f.name;};
+  r.readAsText(f,'UTF-8');
+};
+function parseCsvLine(line){
+  const cols=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
+    else cur+=c;
+  }
+  cols.push(cur.trim());return cols;
+}
+$('importCsvBtn').onclick=()=>{
+  if(!csvRaw){toast('Kies eerst een CSV-bestand','err');return;}
+  const raw=csvRaw.replace(/^\uFEFF/,'');
+  const lines=raw.trim().split(/\r?\n/);
+  if(lines.length<2){toast('CSV te kort','err');return;}
+  const hdrs=parseCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+  const ci=ns=>ns.map(n=>hdrs.indexOf(n)).find(i=>i>=0)??-1;
+  const iCl=ci(['class_name','klas','klasse']);
+  const iYr=ci(['school_year','schooljaar','jaar']);
+  const iVN=ci(['voornaam','firstname','first_name','prenom']);
+  const iAN=ci(['achternaam','familienaam','lastname','last_name','nom']);
+  const iVol=ci(['volledige_naam','naam','student_identifier','leerling','student','name','full_name']);
+  const iEm=ci(['email','e-mail','mail']);
+  const iSu=ci(['subject','vak']);const iLv=ci(['level','leerjaar','graad']);
+  if(iVN<0&&iAN<0&&iVol<0){toast('Geen naamkolom gevonden','err');return;}
+  const cY=iYr>=0?'':state.profile.schoolYear||'2025-2026';
+  let n=0;
+  lines.slice(1).forEach(line=>{
+    if(!line.trim())return;
+    const cols=parseCsvLine(line);
+    const cN=iCl>=0?(cols[iCl]||'').trim():csvFileName;
+    const rowYear=iYr>=0?(cols[iYr]||'').trim()||cY:cY;
+    let sN='';
+    if(iVol>=0&&cols[iVol])sN=cols[iVol].trim();
+    else if(iVN>=0||iAN>=0){const vn=iVN>=0?(cols[iVN]||'').trim():'';const an=iAN>=0?(cols[iAN]||'').trim():'';sN=[vn,an].filter(Boolean).join(' ');}
+    const sE=iEm>=0?(cols[iEm]||'').trim():'';
+    if(!cN||!sN||sN===cN)return;
+    let cls=state.classes.find(c=>c.name===cN&&c.schoolYear===rowYear);
+    if(!cls){
+      cls={id:uid('cls'),name:cN,schoolYear:rowYear,subject:iSu>=0?(cols[iSu]||'').trim():'',level:iLv>=0?(cols[iLv]||'').trim():'',note:''};
+      state.classes.push(cls);
+      if(!state.activeClassId)state.activeClassId=cls.id;
+      if(!state.schoolYears.find(y=>y.label===rowYear))state.schoolYears.push({label:rowYear,startDate:'',endDate:''});
+    }
+    if(!state.students.find(s=>s.identifier===sN&&s.classId===cls.id)){
+      state.students.push({id:uid('stu'),identifier:sN,classId:cls.id,schoolYear:rowYear,email:sE,note:''});n++;
+    }
+  });
+  csvRaw=null;csvFileName='';$('csvStatus').textContent='';$('csvFile').value='';
+  save(`${n} leerlingen geïmporteerd.`);
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────
+async function init(){
+  // Controleer eerst of er data in de URL zit (deellink)
+  var urlHadData=checkUrlData();
+  if(!urlHadData)await initSync();
+  if(!state.currentWeek)state.currentWeek=weekOf(new Date());
+  const t=isoToday();
+  ['fAD','fCoD','fEvD','fObD','fCmD'].forEach(id=>{const el=$(id);if(el)el.value=t;});
+  $('aanwDatum').value=t;
+  applyDark(state.darkMode||false);
+  renderAll();
+  schedulePoll();
+}
+init();
+</script>
+</body>
+</html>

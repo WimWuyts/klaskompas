@@ -1,0 +1,11 @@
+{
+  "name": "klaskompas",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Lokaal-eerst hulpmiddel voor klasadministratie en visueel klasmanagement.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "smoke": "node test/smoke.mjs"
+  }
+}
